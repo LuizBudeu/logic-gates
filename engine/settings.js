@@ -1,6 +1,9 @@
 const Settings = {
     CANVAS_BACKGROUND_COLOR: "#282828",
     IO_CIRCLE_RADIUS: 20,
+    COMPONENT_IO_OFF_COLOR: "#1C2027",
+    COMPONENT_IO_ON_COLOR: "#348c20",
+    COMPONENT_IO_CIRCLE_RADIUS: 10,
 };
 
 export default Settings;

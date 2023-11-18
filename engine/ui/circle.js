@@ -14,6 +14,7 @@ class Circle {
     }
 
     at(x = null, y = null) {
+        if (x === null && y === null) return { x: this.x, y: this.y }; // Return the current position
         if (x !== null) this.x = x;
         if (y !== null) this.y = y;
         return this;

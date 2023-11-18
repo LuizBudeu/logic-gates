@@ -18,6 +18,7 @@ class Rect {
     }
 
     at(x = null, y = null) {
+        if (x === null && y === null) return { x: this.x, y: this.y }; // Return the current position if no arguments are passed
         if (x) this.x = x;
         if (y) this.y = y;
         return this;
