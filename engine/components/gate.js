@@ -4,7 +4,7 @@ import Input from "./input.js";
 import Output from "./output.js";
 
 class Gate {
-    constructor(ctx, logic) {
+    constructor(ctx, logic, scene) {
         this.ctx = ctx;
         this.logic = logic;
 
@@ -22,7 +22,7 @@ class Gate {
 
         // Position the inputs and output
         const rectPos = this.rect.at();
-        this.inputs = [new Input(this.ctx), new Input(this.ctx)]; // TODO add possibility of multiple inputs
+        this.inputs = [new Input(this.ctx, scene), new Input(this.ctx, scene)]; // TODO add possibility of multiple inputs
         this.inputs[0].circle
             .at(rectPos.x, rectPos.y + this.rect.width / 3)
             .radius(Settings.COMPONENT_IO_CIRCLE_RADIUS)

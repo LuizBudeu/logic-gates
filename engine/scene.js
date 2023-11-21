@@ -1,9 +1,13 @@
 import Settings from "./settings.js";
 import Rect from "./ui/rect.js";
 import Circle from "./ui/circle.js";
+import Input from "./components/input.js";
+import Output from "./components/output.js";
 import Gate from "./components/gate.js";
+import Wire from "./components/wire.js";
 import OR from "./components/logic/OR.js";
 import Text from "./ui/text.js";
+import Signal from "./signal.js";
 
 class Scene {
     constructor(canvas, ctx) {
@@ -12,17 +16,41 @@ class Scene {
         /** @type {CanvasRenderingContext2D} */
         this.ctx = ctx;
         this.gameObjects = [];
+
+        Signal.setSceneInstance(this);
     }
 
     start() {
-        // TODO move this
-        this.gate = new Gate(this.ctx, OR);
+        // Inputs
+        this.input1 = new Input(this.ctx, this);
+        this.input1.circle.at(50, 313).radius(Settings.IO_CIRCLE_RADIUS).color(Settings.COMPONENT_IO_OFF_COLOR);
+
+        this.input2 = new Input(this.ctx, this);
+        this.input2.circle.at(50, 576).radius(Settings.IO_CIRCLE_RADIUS).color(Settings.COMPONENT_IO_OFF_COLOR);
+
+        // Output
+        this.output = new Output(this.ctx);
+        this.output.circle
+            .at(this.canvas.width - 50, this.canvas.height / 2 - Settings.IO_CIRCLE_RADIUS)
+            .radius(Settings.IO_CIRCLE_RADIUS)
+            .color(Settings.COMPONENT_IO_OFF_COLOR);
+
+        // Gate
+        this.gate = new Gate(this.ctx, OR, this);
         this.gate.inputs[0].value(true);
         this.gate.inputs[1].value(true);
+
+        // // Wire
+        // this.wire = new Wire(this.ctx);
+        // this.wire.connect(this.input1.circle.x, this.input1.circle.y, this.gate.inputs[0].circle.x, this.gate.inputs[0].circle.y);
     }
 
     place(gameObject) {
         this.gameObjects.push(gameObject);
+    }
+
+    remove(gameObject) {
+        this.gameObjects = this.gameObjects.filter((obj) => obj !== gameObject);
     }
 
     update() {
@@ -37,11 +65,30 @@ class Scene {
         this.drawBindingBox();
         this.drawInputs();
         this.drawOutput();
-        this.drawANDGate();
+        this.drawGate();
+        // this.drawWire();
 
         this.gameObjects.forEach((gameObject) => {
             gameObject.draw();
         });
+    }
+
+    drawInputs() {
+        this.input1.circle.draw();
+        this.input2.circle.draw();
+    }
+
+    drawOutput() {
+        this.output.circle.draw();
+    }
+
+    drawGate() {
+        this.gate.compute();
+        this.gate.draw();
+    }
+
+    drawWire() {
+        this.wire.draw();
     }
 
     setupCanvas() {
@@ -76,27 +123,6 @@ class Scene {
             .size(this.canvas.width - 100, this.canvas.height - 170)
             .color("#3D3D3D")
             .draw();
-    }
-
-    drawInputs() {
-        // TODO make them proper inputs
-        const circle1 = new Circle(this.ctx).at(50, 313).radius(Settings.IO_CIRCLE_RADIUS).color(Settings.COMPONENT_IO_OFF_COLOR).draw();
-
-        const circle2 = new Circle(this.ctx).at(50, 576).radius(Settings.IO_CIRCLE_RADIUS).color(Settings.COMPONENT_IO_OFF_COLOR).draw();
-    }
-
-    drawOutput() {
-        // TODO make proper output
-        const circle = new Circle(this.ctx)
-            .at(this.canvas.width - 50, this.canvas.height / 2 - Settings.IO_CIRCLE_RADIUS)
-            .radius(Settings.IO_CIRCLE_RADIUS)
-            .color(Settings.COMPONENT_IO_OFF_COLOR)
-            .draw();
-    }
-
-    drawANDGate() {
-        this.gate.compute();
-        this.gate.draw();
     }
 }
 
