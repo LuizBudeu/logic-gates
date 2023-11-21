@@ -1,3 +1,5 @@
+import Text from "./text.js";
+
 class Rect {
     constructor(ctx) {
         /** @type {CanvasRenderingContext2D} */
@@ -9,7 +11,9 @@ class Rect {
         this.rectColor = "#000"; // Default color is black
         this.lineWidth = 1; // Default line width is 1
         this.debugging = false;
+        // eu amo a momoooo
 
+        this.innerText = new Text(this.ctx);
         this.isDragging = false;
         this.isResizing = false;
         this.dragStartX = 0;
@@ -21,6 +25,13 @@ class Rect {
         if (x === null && y === null) return { x: this.x, y: this.y }; // Return the current position if no arguments are passed
         if (x) this.x = x;
         if (y) this.y = y;
+        return this;
+    }
+
+    center(x = null, y = null) {
+        if (x === null && y === null) return { x: this.x + this.width / 2, y: this.y + this.height / 2 }; // Return the current center if no arguments are passed
+        if (x) this.x = x - this.width / 2;
+        if (y) this.y = y - this.height / 2;
         return this;
     }
 
@@ -44,6 +55,14 @@ class Rect {
             this.ctx.canvas.addEventListener("mousedown", this.handleMouseDown.bind(this));
             this.ctx.canvas.addEventListener("mousemove", this.handleMouseMove.bind(this));
             this.ctx.canvas.addEventListener("mouseup", this.handleMouseUp.bind(this));
+
+            this.debugTextContent = `(${this.x}, ${this.y}) - ${this.width}x${this.height}`;
+            const textWidth = this.ctx.measureText(this.debugTextContent).width;
+
+            this.debugText = new Text(this.ctx)
+                .at(this.x + this.width / 2 - textWidth / 2, this.y - 5)
+                .content(this.debugTextContent)
+                .style("Arial", 11, "#fff");
         } else {
             // Remove event listeners
             this.ctx.canvas.removeEventListener("mousedown", this.handleMouseDown.bind(this));
@@ -61,14 +80,12 @@ class Rect {
         this.ctx.fillRect(this.x, this.y, this.width, this.height);
         this.ctx.strokeRect(this.x, this.y, this.width, this.height);
 
-        if (this.debugging) {
-            // Draw the debug text
-            const debugText = `(${this.x}, ${this.y}) - ${this.width}x${this.height}`;
-            const textWidth = this.ctx.measureText(debugText).width;
+        // Draw the inner text
+        const textWidth = this.ctx.measureText(this.innerText).width; // TODO fix this
+        this.innerText.draw();
 
-            this.ctx.fillStyle = "#fff";
-            this.ctx.font = "11px Arial";
-            this.ctx.fillText(debugText, this.x + this.width / 2 - textWidth / 2, this.y - 5);
+        if (this.debugging) {
+            this.debugText.draw();
 
             // Draw little red dots at each corner
             const dotSize = this.cornerHitBox / 3;

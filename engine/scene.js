@@ -1,8 +1,9 @@
 import Settings from "./settings.js";
 import Rect from "./ui/rect.js";
 import Circle from "./ui/circle.js";
-import Gate from "./components/logicGates/gate.js";
-import { AND } from "./components/logicGates/logic.js";
+import Gate from "./components/gate.js";
+import OR from "./components/logic/OR.js";
+import Text from "./ui/text.js";
 
 class Scene {
     constructor(canvas, ctx) {
@@ -14,32 +15,10 @@ class Scene {
     }
 
     start() {
-        // // Canvas background
-        // this.place(new Rect(this.ctx).at(0, 0).size(this.canvas.width, this.canvas.height).color(Settings.CANVAS_BACKGROUND_COLOR));
-        // // Toolbox
-        // this.place(
-        //     new Rect(this.ctx)
-        //         .at(0, this.canvas.height - 60)
-        //         .size(this.canvas.width, 60)
-        //         .color("#0C0C0C")
-        // );
-        // // Binding box
-        // this.place(
-        //     new Rect(this.ctx)
-        //         .at(50, 80)
-        //         .size(this.canvas.width - 100, this.canvas.height - 170)
-        //         .color("#3D3D3D")
-        // );
-        // // Inputs
-        // this.place(new Circle(this.ctx).at(50, 313).radius(Settings.IO_CIRCLE_RADIUS).color("#1C2027"));
-        // this.place(new Circle(this.ctx).at(50, 576).radius(Settings.IO_CIRCLE_RADIUS).color("#1C2027"));
-        // // Output
-        // this.place(
-        //     new Circle(this.ctx)
-        //         .at(this.canvas.width - 50, this.canvas.height / 2 - Settings.IO_CIRCLE_RADIUS)
-        //         .radius(Settings.IO_CIRCLE_RADIUS)
-        //         .color("#1C2027")
-        // );
+        // TODO move this
+        this.gate = new Gate(this.ctx, OR);
+        this.gate.inputs[0].value(true);
+        this.gate.inputs[1].value(true);
     }
 
     place(gameObject) {
@@ -116,11 +95,8 @@ class Scene {
     }
 
     drawANDGate() {
-        const gate = new Gate(this.ctx, AND);
-        gate.inputs[0].setValue(true);
-        gate.inputs[1].setValue(true);
-        gate.compute();
-        gate.draw();
+        this.gate.compute();
+        this.gate.draw();
     }
 }
 

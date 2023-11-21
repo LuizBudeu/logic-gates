@@ -6,15 +6,16 @@ class Output {
         /** @type {CanvasRenderingContext2D} */
         this.ctx = ctx;
         this.circle = new Circle(this.ctx);
-        this.value = false;
+        this._value = false;
     }
 
-    setValue(value) {
-        this.value = value;
+    value(value = null) {
+        if (value === null) return this._value;
+        this._value = value;
         if (value) {
-            this.circle.circleColor = Settings.COMPONENT_IO_ON_COLOR;
+            this.circle.color(Settings.COMPONENT_IO_ON_COLOR);
         } else {
-            this.circle.circleColor = Settings.COMPONENT_IO_OFF_COLOR;
+            this.circle.color(Settings.COMPONENT_IO_OFF_COLOR);
         }
     }
 }
