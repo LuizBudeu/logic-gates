@@ -1,5 +1,9 @@
-class Circle {
+import gameObject from "../baseScript.js";
+
+class Circle extends gameObject {
     constructor(ctx) {
+        super(ctx);
+
         /** @type {CanvasRenderingContext2D} */
         this.ctx = ctx;
         this.x = 100;

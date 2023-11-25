@@ -8,6 +8,7 @@ import Wire from "./components/wire.js";
 import OR from "./components/logic/OR.js";
 import Text from "./ui/text.js";
 import Signal from "./signal.js";
+import TwoWayMap from "./utils/twoWayMap.js";
 
 class Scene {
     constructor(canvas, ctx) {
@@ -30,6 +31,9 @@ class Scene {
             10: [],
         };
 
+        this.gameObjectId = 0;
+        this.gameObjectsMap = new TwoWayMap();
+
         Signal.setSceneInstance(this);
     }
 
@@ -37,11 +41,13 @@ class Scene {
         this.setupBackground();
 
         // Inputs
-        this.input1 = new Input(this.ctx, this);
+        this.input1 = new Input(this.ctx, true);
         this.input1.circle.at(50, 313).radius(Settings.IO_CIRCLE_RADIUS).color(Settings.COMPONENT_IO_OFF_COLOR);
+        this.place(this.input1);
 
-        this.input2 = new Input(this.ctx, this);
+        this.input2 = new Input(this.ctx, true);
         this.input2.circle.at(50, 576).radius(Settings.IO_CIRCLE_RADIUS).color(Settings.COMPONENT_IO_OFF_COLOR);
+        this.place(this.input2);
 
         // Output
         this.output = new Output(this.ctx);
@@ -50,68 +56,63 @@ class Scene {
             .radius(Settings.IO_CIRCLE_RADIUS)
             .color(Settings.COMPONENT_IO_OFF_COLOR);
 
-        // Gate
-        this.gate = new Gate(this.ctx, OR, this);
-        this.gate.inputs[0].value(true);
-        this.gate.inputs[1].value(true);
+        this.place(this.output);
 
-        // // Wire
-        // this.wire = new Wire(this.ctx);
-        // this.wire.connect(this.input1.circle.x, this.input1.circle.y, this.gate.inputs[0].circle.x, this.gate.inputs[0].circle.y);
+        // Gate
+        this.gate = new Gate(this.ctx, OR);
+        this.place(this.gate);
+
+        this.wiring = {};
+
+        for (let i = 0; i <= 10; i++) {
+            this.layerGameObjects[i].forEach((gameObject) => {
+                gameObject.start();
+            });
+        }
     }
 
     place(gameObject, layer = 1) {
         this.layerGameObjects[layer].push(gameObject);
+        this.addToGameObjectMap(gameObject);
     }
 
     remove(gameObject, layer = 1) {
         this.layerGameObjects[layer] = this.layerGameObjects[layer].filter((obj) => obj !== gameObject);
+        this.removeFromGameObjectMap(gameObject);
+    }
+
+    addToGameObjectMap(gameObject) {
+        this.gameObjectsMap.set(this.gameObjectId, gameObject);
+        this.gameObjectId++;
+    }
+
+    removeFromGameObjectMap(gameObject) {
+        this.gameObjectsMap.revDelete(gameObject);
+    }
+
+    getGameObjectById(id) {
+        return this.gameObjectsMap.get(id);
+    }
+
+    getIdByGameObject(gameObject) {
+        return this.gameObjectsMap.revGet(gameObject);
     }
 
     update(deltaTime) {
         for (let i = 0; i <= 10; i++) {
             this.layerGameObjects[i].forEach((gameObject) => {
-                // gameObject.update();
+                gameObject.update(deltaTime);
             });
         }
     }
 
     draw() {
-        // this.clearCanvas();
-        // this.drawToolBox();
-        // this.drawBindingBox();
-
-        // this.gameObjects.forEach((gameObject) => {
-        //     gameObject.draw();
-        // });
+        this.ctx.strokeStyle = "#000";
         for (let i = 0; i <= 10; i++) {
             this.layerGameObjects[i].forEach((gameObject) => {
                 gameObject.draw();
             });
         }
-
-        this.drawInputs();
-        this.drawOutput();
-        this.drawGate();
-        // // this.drawWire();
-    }
-
-    drawInputs() {
-        this.input1.circle.draw();
-        this.input2.circle.draw();
-    }
-
-    drawOutput() {
-        this.output.circle.draw();
-    }
-
-    drawGate() {
-        this.gate.compute();
-        this.gate.draw();
-    }
-
-    drawWire() {
-        this.wire.draw();
     }
 
     setupCanvas() {
@@ -147,26 +148,17 @@ class Scene {
         Settings.CANVAS_HEIGHT = this.canvas.height;
     }
 
-    // clearCanvas() {
-    //     const rect = new Rect(this.ctx).at(0, 0).size(this.canvas.width, this.canvas.height).color(Settings.CANVAS_BACKGROUND_COLOR).draw();
-    // }
+    addWiring(io1, io2) {
+        const io1Id = this.getIdByGameObject(io1);
+        const io2Id = this.getIdByGameObject(io2);
 
-    // drawToolBox() {
-    //     const height = 60;
-    //     const rect = new Rect(this.ctx)
-    //         .at(0, this.canvas.height - height)
-    //         .size(this.canvas.width, height)
-    //         .color("#0C0C0C")
-    //         .draw();
-    // }
+        const wire = new Wire(this.ctx).color(Settings.WIRE_COLOR);
+        wire.connect(io1.circle.x, io1.circle.y, io2.circle.x, io2.circle.y);
 
-    // drawBindingBox() {
-    //     const rect = new Rect(this.ctx)
-    //         .at(50, 80)
-    //         .size(this.canvas.width - 100, this.canvas.height - 170)
-    //         .color("#3D3D3D")
-    //         .draw();
-    // }
+        this.place(wire);
+
+        this.wiring[`${io1Id}_${io2Id}`] = wire;
+    }
 }
 
 export default Scene;

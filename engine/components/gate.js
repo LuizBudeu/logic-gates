@@ -2,9 +2,12 @@ import Rect from "../ui/rect.js";
 import Settings from "../settings.js";
 import Input from "./input.js";
 import Output from "./output.js";
+import baseScript from "../baseScript.js";
 
-class Gate {
-    constructor(ctx, logic, scene) {
+class Gate extends baseScript {
+    constructor(ctx, logic) {
+        super(ctx);
+
         this.ctx = ctx;
         this.logic = logic;
 
@@ -22,7 +25,7 @@ class Gate {
 
         // Position the inputs and output
         const rectPos = this.rect.at();
-        this.inputs = [new Input(this.ctx, scene), new Input(this.ctx, scene)]; // TODO add possibility of multiple inputs
+        this.inputs = [new Input(this.ctx), new Input(this.ctx)]; // TODO add possibility of multiple inputs
         this.inputs[0].circle
             .at(rectPos.x, rectPos.y + this.rect.width / 3)
             .radius(Settings.COMPONENT_IO_CIRCLE_RADIUS)
@@ -47,6 +50,10 @@ class Gate {
         document.addEventListener("mousedown", this.handleMouseDown.bind(this));
         document.addEventListener("mousemove", this.handleMouseMove.bind(this));
         document.addEventListener("mouseup", this.handleMouseUp.bind(this));
+    }
+
+    update(deltaTime) {
+        this.compute();
     }
 
     draw() {

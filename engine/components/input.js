@@ -6,18 +6,20 @@ import Mouse from "../input/mouse.js";
 import IO from "./io.js";
 
 class Input extends IO {
-    constructor(ctx) {
+    constructor(ctx, interactive = false) {
         super(ctx);
-        this.isSelected = false;
 
-        // Event listener for turning input on and off
-        Mouse.addLeftClickEvent(this.handleLeftClick.bind(this));
+        if (interactive) {
+            // Event listener for turning input on and off
+            Mouse.addLeftClickEvent(this.handleLeftClick.bind(this));
+        }
     }
 
     handleLeftClick({ x, y, button }) {
         // Check if the left-click is within the circle
         const distance = Math.sqrt((x - this.circle.x) ** 2 + (y - this.circle.y) ** 2);
         if (distance <= this.circle.radius()) {
+            // Toggle the value and propagate it
             this.value(!this.value());
         }
     }

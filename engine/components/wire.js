@@ -1,5 +1,9 @@
-class Wire {
+import gameObject from "../baseScript.js";
+
+class Wire extends gameObject {
     constructor(ctx) {
+        super(ctx);
+
         this.ctx = ctx;
         this.startX = 0;
         this.startY = 0;

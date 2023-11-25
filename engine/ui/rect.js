@@ -1,7 +1,9 @@
 import Text from "./text.js";
+import gameObject from "../baseScript.js";
 
-class Rect {
+class Rect extends gameObject {
     constructor(ctx) {
+        super(ctx);
         /** @type {CanvasRenderingContext2D} */
         this.ctx = ctx;
         this.x = 0;
@@ -10,8 +12,8 @@ class Rect {
         this.height = 100;
         this.rectColor = "#000"; // Default color is black
         this.lineWidth = 1; // Default line width is 1
+        this.lineColor = "#000"; // Default line color is black
         this.debugging = false;
-        // eu amo a momoooo
 
         this.innerText = new Text(this.ctx);
         this.isDragging = false;
@@ -42,8 +44,9 @@ class Rect {
         return this;
     }
 
-    color(color = null) {
-        if (color) this.rectColor = color;
+    color(rectColor = null, lineColor = null) {
+        if (rectColor) this.rectColor = rectColor;
+        if (lineColor) this.lineColor = lineColor;
         return this;
     }
 
