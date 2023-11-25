@@ -3,17 +3,17 @@ class Signal {
         Signal.sceneInstance = sceneInstance;
     }
 
-    static addObjectToScene(object) {
+    static addObjectToScene(object, layer = 0) {
         if (Signal.sceneInstance) {
-            Signal.sceneInstance.place(object);
+            Signal.sceneInstance.place(object, layer);
         } else {
             console.error("Scene instance not set. Please set it before using Signal.addObjectToScene.");
         }
     }
 
-    static removeObjectFromScene(object) {
+    static removeObjectFromScene(object, layer = 0) {
         if (Signal.sceneInstance) {
-            Signal.sceneInstance.remove(object);
+            Signal.sceneInstance.remove(object, layer);
         } else {
             console.error("Scene instance not set. Please set it before using Signal.removeObjectFromScene.");
         }
