@@ -47,6 +47,10 @@ class Gate {
 
     update(deltaTime) {
         this.compute();
+        this.inputs.forEach((input) => {
+            input.update(deltaTime);
+        });
+        this.output.update(deltaTime);
     }
 
     draw() {

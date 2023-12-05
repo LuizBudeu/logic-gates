@@ -1,7 +1,6 @@
 import TwoWayMap from "../utils/twoWayMap.js";
 
 class Mouse {
-    // TODO fix removing events
     static canvas = null;
     static position = { x: 0, y: 0 };
     static leftButtonPressed = false;
@@ -45,7 +44,7 @@ class Mouse {
             }
         } else if (event.button === 2) {
             Mouse.rightButtonPressed = true;
-            Mouse.handleRightClickUp(event);
+            Mouse.handleRightClickDown(event);
 
             if (!Mouse.rightClickDragging) {
                 Mouse.rightClickDragStart = { ...Mouse.position };

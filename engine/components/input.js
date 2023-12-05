@@ -1,6 +1,5 @@
 import Circle from "../ui/circle.js";
 import Settings from "../settings.js";
-import Scene from "../scene.js";
 import Signal from "../signal.js";
 import Mouse from "../input/mouse.js";
 import IO from "./io.js";
@@ -19,7 +18,7 @@ class Input extends IO {
         // Check if the left-click is within the circle
         const distance = Math.sqrt((x - this.circle.x) ** 2 + (y - this.circle.y) ** 2);
         if (distance <= this.circle.radius()) {
-            // Toggle the value and propagate it
+            // Toggle the value
             this.value(!this.value());
         }
     }

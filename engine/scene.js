@@ -65,6 +65,7 @@ class Scene {
 
         this.wiring = {};
 
+        // Start all game objects
         for (let i = 0; i <= 10; i++) {
             this.layerGameObjects[i].forEach((gameObject) => {
                 gameObject.start();

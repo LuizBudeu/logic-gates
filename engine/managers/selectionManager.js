@@ -25,6 +25,7 @@ class SelectionManager {
 
     static deselectIO(io) {
         io.isSelected = false;
+        SelectionManager.selectedIOs = SelectionManager.selectedIOs.filter((selectedIO) => selectedIO !== io);
         Signal.sceneInstance.remove(io.selectionCircle, 0);
     }
 
