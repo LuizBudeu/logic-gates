@@ -9,3 +9,6 @@ TODO:
 -   move wires when moving gate
 -   fix window resizing issues
 -   fix not perfect alignment of IOs (using Settings.CANVAS_WIDTH/HEIGTH)
+-   save current circuit to gate
+-   name circuit
+-   populate toolbox with saved gates
