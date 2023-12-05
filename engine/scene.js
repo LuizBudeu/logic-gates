@@ -9,6 +9,7 @@ import OR from "./components/logic/OR.js";
 import Text from "./ui/text.js";
 import Signal from "./signal.js";
 import TwoWayMap from "./utils/twoWayMap.js";
+import Mouse from "./input/mouse.js";
 
 class Scene {
     constructor(canvas, ctx) {

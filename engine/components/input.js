@@ -11,7 +11,7 @@ class Input extends IO {
 
         if (interactive) {
             // Event listener for turning input on and off
-            Mouse.addLeftClickEvent(this.handleLeftClick.bind(this));
+            Mouse.addLeftClickDownEvent(this.handleLeftClick.bind(this));
         }
     }
 

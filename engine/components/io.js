@@ -21,7 +21,7 @@ class IO extends gameObject {
         this.selectionCircle = new Circle(this.ctx).color("#00F");
 
         // Event listener for selecting the IO
-        Mouse.addRightClickEvent(this.handleRightClick.bind(this));
+        Mouse.addRightClickDownEvent(this.handleRightClick.bind(this));
     }
 
     start() {}
