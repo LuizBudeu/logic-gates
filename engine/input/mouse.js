@@ -6,8 +6,10 @@ class Mouse {
     static position = { x: 0, y: 0 };
     static leftButtonPressed = false;
     static rightButtonPressed = false;
-    static dragStart = { x: 0, y: 0 };
-    static dragging = false;
+    static leftClickDragStart = { x: 0, y: 0 };
+    static leftClickDragging = false;
+    static rightClickDragStart = { x: 0, y: 0 };
+    static rightClickDragging = false;
 
     static initialize(canvas) {
         if (Mouse.canvas) {
@@ -28,6 +30,7 @@ class Mouse {
         Mouse.leftClickUpEvents = [];
         Mouse.mouseMoveEvents = [];
         Mouse.leftClickDraggingEvents = [];
+        Mouse.rightClickDraggingEvents = [];
     }
 
     static handleMouseDown(event) {
@@ -37,12 +40,17 @@ class Mouse {
             Mouse.handleLeftClickDown(event);
 
             if (!Mouse.leftClickDragging) {
-                Mouse.dragStart = { ...Mouse.position };
+                Mouse.leftClickDragStart = { ...Mouse.position };
                 Mouse.leftClickDragging = true;
             }
         } else if (event.button === 2) {
             Mouse.rightButtonPressed = true;
             Mouse.handleRightClickUp(event);
+
+            if (!Mouse.rightClickDragging) {
+                Mouse.rightClickDragStart = { ...Mouse.position };
+                Mouse.rightClickDragging = true;
+            }
         }
     }
 
@@ -55,6 +63,7 @@ class Mouse {
         } else if (event.button === 2) {
             Mouse.rightButtonPressed = false;
             Mouse.handleRightClickUp(event);
+            Mouse.rightClickDragging = false;
         }
     }
 
@@ -114,15 +123,23 @@ class Mouse {
         Mouse.leftClickDraggingEvents.push({ callback, targetGameObject });
     }
 
-    static removeDraggingEvent(callback) {
+    static removeLeftDraggingEvent(callback) {
         Mouse.leftClickDraggingEvents = Mouse.leftClickDraggingEvents.filter((cb) => cb !== callback);
+    }
+
+    static addRightClickDraggingEvent(callback, targetGameObject = null) {
+        Mouse.rightClickDraggingEvents.push({ callback, targetGameObject });
+    }
+
+    static removeRightDraggingEvent(callback) {
+        Mouse.rightClickDraggingEvents = Mouse.rightClickDraggingEvents.filter((cb) => cb !== callback);
     }
 
     static handleRightClickDown(event) {
         const { x, y } = Mouse.getPosition();
 
         Mouse.rightClickDownEvents.forEach(({ callback, targetGameObject }) => {
-            if (targetGameObject && !Mouse.isMouseOver(targetGameObject)) return;
+            if (targetGameObject && !Mouse.isOver(targetGameObject)) return;
 
             callback({
                 x,
@@ -136,7 +153,7 @@ class Mouse {
         const { x, y } = Mouse.getPosition();
 
         Mouse.rightClickUpEvents.forEach(({ callback, targetGameObject }) => {
-            if (targetGameObject && !Mouse.isMouseOver(targetGameObject)) return;
+            if (targetGameObject && !Mouse.isOver(targetGameObject)) return;
 
             callback({
                 x,
@@ -150,7 +167,7 @@ class Mouse {
         const { x, y } = Mouse.getPosition();
 
         Mouse.leftClickDownEvents.forEach(({ callback, targetGameObject }) => {
-            if (targetGameObject && !Mouse.isMouseOver(targetGameObject)) return;
+            if (targetGameObject && !Mouse.isOver(targetGameObject)) return;
 
             callback({
                 x,
@@ -164,7 +181,7 @@ class Mouse {
         const { x, y } = Mouse.getPosition();
 
         Mouse.leftClickUpEvents.forEach(({ callback, targetGameObject }) => {
-            if (targetGameObject && !Mouse.isMouseOver(targetGameObject)) return;
+            if (targetGameObject && !Mouse.isOver(targetGameObject)) return;
 
             callback({
                 x,
@@ -179,6 +196,7 @@ class Mouse {
         const { x, y } = Mouse.getPosition();
 
         if (Mouse.leftButtonPressed) Mouse.handleLeftClickDragging(event);
+        if (Mouse.rightButtonPressed) Mouse.handleRightClickDragging(event);
 
         Mouse.mouseMoveEvents.forEach((callback) => {
             callback({
@@ -192,21 +210,43 @@ class Mouse {
         const { x, y } = Mouse.getPosition();
 
         Mouse.leftClickDraggingEvents.forEach(({ callback, targetGameObject }) => {
-            if (targetGameObject && !Mouse.isMouseOver(targetGameObject)) return;
+            if (targetGameObject && !Mouse.isOver(targetGameObject)) return;
 
-            const deltaX = x - Mouse.dragStart.x;
-            const deltaY = y - Mouse.dragStart.y;
+            const deltaX = x - Mouse.leftClickDragStart.x;
+            const deltaY = y - Mouse.leftClickDragStart.y;
 
             callback({
                 x,
                 y,
-                dragStartX: Mouse.dragStart.x,
-                dragStartY: Mouse.dragStart.y,
+                dragStartX: Mouse.leftClickDragStart.x,
+                dragStartY: Mouse.leftClickDragStart.y,
                 deltaX,
                 deltaY,
             });
 
-            Mouse.dragStart = { ...Mouse.position };
+            Mouse.leftClickDragStart = { ...Mouse.position };
+        });
+    }
+
+    static handleRightClickDragging(event) {
+        const { x, y } = Mouse.getPosition();
+
+        Mouse.rightClickDraggingEvents.forEach(({ callback, targetGameObject }) => {
+            if (targetGameObject && !Mouse.isOver(targetGameObject)) return;
+
+            const deltaX = x - Mouse.rightClickDragStart.x;
+            const deltaY = y - Mouse.rightClickDragStart.y;
+
+            callback({
+                x,
+                y,
+                dragStartX: Mouse.rightClickDragStart.x,
+                dragStartY: Mouse.rightClickDragStart.y,
+                deltaX,
+                deltaY,
+            });
+
+            Mouse.rightClickDragStart = { ...Mouse.position };
         });
     }
 
@@ -218,7 +258,7 @@ class Mouse {
         return Mouse.rightButtonPressed;
     }
 
-    static isMouseOver(gameObject) {
+    static isOver(gameObject) {
         const { x, y } = Mouse.position;
         return x >= gameObject.x && x <= gameObject.x + gameObject.width && y >= gameObject.y && y <= gameObject.y + gameObject.height;
     }

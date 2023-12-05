@@ -9,12 +9,6 @@ class Gate {
     constructor(ctx, logic) {
         this.ctx = ctx;
         this.logic = logic;
-
-        // Dragging properties
-        this.isDragging = false;
-        this.XDx = 0;
-        this.XDy = 0;
-        this.dragStart = { x: 0, y: 0 };
     }
 
     start() {
@@ -66,37 +60,6 @@ class Gate {
     compute() {
         const result = this.logic(this.inputs[0].value(), this.inputs[1].value());
         this.output.value(result);
-    }
-
-    handleLeftClick({ x, y, button }) {
-        // Check if the mouse is inside the gate
-        if (x >= this.rect.x && x <= this.rect.x + this.rect.width && y >= this.rect.y && y <= this.rect.y + this.rect.height) {
-            this.isDragging = true;
-            this.dragStartX = x - this.rect.x;
-            this.dragStartY = y - this.rect.y;
-        }
-    }
-
-    handleLeftRelease() {
-        this.isDragging = false;
-    }
-
-    handleMouseMove({ x, y }) {
-        if (this.isDragging) {
-            // Move the gate
-            this.rect.at(x - this.dragStartX, y - this.dragStartY);
-
-            // Move the inner text
-            const textWidth = this.ctx.measureText(this.rect.innerText.textContent).width;
-            const textHeight = this.rect.innerText.fontSize;
-            this.rect.innerText.at(this.rect.x + this.rect.width / 2 - textWidth / 2, this.rect.y + this.rect.height / 2 + textHeight / 2);
-
-            // Move the inputs and output
-            const rectPos = this.rect.at();
-            this.inputs[0].circle.at(rectPos.x, rectPos.y + this.rect.width / 3);
-            this.inputs[1].circle.at(rectPos.x, rectPos.y + (this.rect.width * 2) / 3);
-            this.output.circle.at(rectPos.x + this.rect.width, rectPos.y + this.rect.height / 2);
-        }
     }
 
     handleDragging({ deltaX, deltaY }) {
