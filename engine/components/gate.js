@@ -4,6 +4,8 @@ import Input from "./input.js";
 import Output from "./output.js";
 import Mouse from "../input/mouse.js";
 import Vector from "../utils/vector.js";
+import WiringManager from "../managers/wiringManager.js";
+import Signal from "../signal.js";
 
 class Gate {
     constructor(ctx, logic) {
@@ -20,9 +22,9 @@ class Gate {
         this.rect.innerText.style("Arial", 20, "#fff").content(this.logic.name);
 
         // Center the inner text
-        const textWidth = this.ctx.measureText(this.rect.innerText.textContent).width;
-        const textHeight = this.rect.innerText.fontSize;
-        this.rect.innerText.at(this.rect.x + this.rect.width / 2 - textWidth / 2, this.rect.y + this.rect.height / 2 + textHeight / 2);
+        this.centerInnerText();
+        const innerTextPos = this.rect.innerText.at();
+        this.rect.innerText.at(innerTextPos.x - 10, innerTextPos.y);
 
         // Position the inputs and output
         const rectPos = this.rect.at();
@@ -42,15 +44,16 @@ class Gate {
             .radius(Settings.COMPONENT_IO_CIRCLE_RADIUS)
             .color(Settings.COMPONENT_IO_OFF_COLOR);
 
+        // Place the inputs and output in the scene
+        Signal.sceneInstance.place(this.inputs[0]);
+        Signal.sceneInstance.place(this.inputs[1]);
+        Signal.sceneInstance.place(this.output);
+
         Mouse.addLeftClickDraggingEvent(this.handleDragging.bind(this), this.rect);
     }
 
     update(deltaTime) {
         this.compute();
-        this.inputs.forEach((input) => {
-            input.update(deltaTime);
-        });
-        this.output.update(deltaTime);
     }
 
     draw() {
@@ -72,15 +75,24 @@ class Gate {
         this.rect.y += deltaY;
 
         // Move the inner text
-        const textWidth = this.ctx.measureText(this.rect.innerText.textContent).width;
-        const textHeight = this.rect.innerText.fontSize;
-        this.rect.innerText.at(this.rect.x + this.rect.width / 2 - textWidth / 2, this.rect.y + this.rect.height / 2 + textHeight / 2);
+        this.centerInnerText();
 
         // Move the inputs and output
         const rectPos = this.rect.at();
         this.inputs[0].circle.at(rectPos.x, rectPos.y + this.rect.width / 3);
         this.inputs[1].circle.at(rectPos.x, rectPos.y + (this.rect.width * 2) / 3);
         this.output.circle.at(rectPos.x + this.rect.width, rectPos.y + this.rect.height / 2);
+
+        // Move the wires
+        WiringManager.moveWiring(this.inputs[0]);
+        WiringManager.moveWiring(this.inputs[1]);
+        WiringManager.moveWiring(this.output);
+    }
+
+    centerInnerText() {
+        const textWidth = this.ctx.measureText(this.rect.innerText.textContent).width;
+        const textHeight = this.rect.innerText.fontSize;
+        this.rect.innerText.at(this.rect.x + this.rect.width / 2 - textWidth / 2, this.rect.y + this.rect.height / 2 + textHeight / 2);
     }
 }
 

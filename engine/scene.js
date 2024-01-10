@@ -1,15 +1,12 @@
 import Settings from "./settings.js";
 import Rect from "./ui/rect.js";
-import Circle from "./ui/circle.js";
 import Input from "./components/input.js";
 import Output from "./components/output.js";
 import Gate from "./components/gate.js";
-import Wire from "./components/wire.js";
-import OR from "./components/logic/OR.js";
+import NAND from "./components/logic/NAND.js";
 import Text from "./ui/text.js";
 import Signal from "./signal.js";
 import TwoWayMap from "./utils/twoWayMap.js";
-import Mouse from "./input/mouse.js";
 
 class Scene {
     constructor(canvas, ctx) {
@@ -60,10 +57,8 @@ class Scene {
         this.place(this.output);
 
         // Gate
-        this.gate = new Gate(this.ctx, OR);
+        this.gate = new Gate(this.ctx, NAND);
         this.place(this.gate);
-
-        this.wiring = {};
 
         // Start all game objects
         for (let i = 0; i <= 10; i++) {
@@ -148,18 +143,6 @@ class Scene {
         this.canvas.height = window.innerHeight;
         Settings.CANVAS_WIDTH = this.canvas.width;
         Settings.CANVAS_HEIGHT = this.canvas.height;
-    }
-
-    addWiring(io1, io2) {
-        const io1Id = this.getIdByGameObject(io1);
-        const io2Id = this.getIdByGameObject(io2);
-
-        const wire = new Wire(this.ctx).color(Settings.WIRE_COLOR);
-        wire.connect(io1.circle.x, io1.circle.y, io2.circle.x, io2.circle.y);
-
-        this.place(wire);
-
-        this.wiring[`${io1Id}_${io2Id}`] = wire;
     }
 }
 
