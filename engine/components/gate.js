@@ -23,8 +23,10 @@ class Gate {
         this.rect.innerText.centerInRect(this.rect);
 
         // Position the inputs and output
+        const debugName = `${this.logic.name}_Gate`;
+
         const rectPos = this.rect.at();
-        this.inputs = [new Input(this.ctx), new Input(this.ctx)]; // TODO add possibility of multiple inputs
+        this.inputs = [new Input(this.ctx, false, debugName + "_1"), new Input(this.ctx, false, debugName + "_2")]; // TODO add possibility of multiple inputs
         this.inputs[0].circle
             .at(rectPos.x, rectPos.y + this.rect.width / 3)
             .radius(Settings.COMPONENT_IO_CIRCLE_RADIUS)
@@ -34,7 +36,7 @@ class Gate {
             .radius(Settings.COMPONENT_IO_CIRCLE_RADIUS)
             .color(Settings.COMPONENT_IO_OFF_COLOR);
 
-        this.output = new Output(this.ctx);
+        this.output = new Output(this.ctx, debugName + "_1");
         this.output.circle
             .at(rectPos.x + this.rect.width, rectPos.y + this.rect.height / 2)
             .radius(Settings.COMPONENT_IO_CIRCLE_RADIUS)
@@ -63,6 +65,7 @@ class Gate {
     compute() {
         const result = this.logic(this.inputs[0].value(), this.inputs[1].value());
         this.output.value(result);
+        this.output.propagate();
     }
 
     handleDragging({ deltaX, deltaY }) {

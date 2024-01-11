@@ -3,8 +3,9 @@ import Settings from "../settings.js";
 import IO from "./io.js";
 
 class Output extends IO {
-    constructor(ctx) {
-        super(ctx);
+    constructor(ctx, debugName = "") {
+        debugName += "_Output";
+        super(ctx, debugName);
     }
 }
 

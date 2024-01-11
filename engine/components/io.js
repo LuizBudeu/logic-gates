@@ -4,10 +4,13 @@ import Mouse from "../input/mouse.js";
 import Signal from "../signal.js";
 import SelectionManager from "../managers/selectionManager.js";
 import gameObject from "../baseScript.js";
+import Connection from "./connection.js";
 
 class IO extends gameObject {
-    constructor(ctx) {
+    constructor(ctx, debugName = "") {
         super(ctx);
+
+        this.debugName = debugName;
 
         /** @type {CanvasRenderingContext2D} */
         this.ctx = ctx;
@@ -45,18 +48,23 @@ class IO extends gameObject {
     }
 
     connect(io) {
-        this.IOConnections.push(io);
-        io.IOConnections.push(this);
+        const connection = new Connection(this, io);
+        this.IOConnections.push(connection);
+        io.IOConnections.push(connection);
     }
 
     disconnect(io) {
-        this.IOConnections.splice(this.IOConnections.indexOf(io), 1);
-        io.IOConnections.splice(io.IOConnections.indexOf(this), 1);
+        this.IOConnections = this.IOConnections.filter((connection) => connection.io1 !== io && connection.io2 !== io);
+        io.IOConnections = io.IOConnections.filter((connection) => connection.io1 !== this && connection.io2 !== this);
     }
 
     propagate() {
-        this.IOConnections.forEach((io) => {
-            io.value(this.value());
+        this.IOConnections.forEach((connection) => {
+            if (connection.io1 === this) {
+                connection.io2.value(this.value());
+            } else {
+                connection.io1.value(this.value());
+            }
         });
     }
 

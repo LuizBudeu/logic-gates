@@ -14,14 +14,6 @@ class SelectionManager {
             this.selectedIOs.pop();
         }
 
-        // // Handle selection of IO that is already wired: remove the wiring and select the other IO
-        // if (WiringManager.existsWiring(io)) {
-        //     const otherIO = io.IOConnections[0];
-        //     WiringManager.removeWiring(io, otherIO);
-        //     this.selectIO(otherIO);
-        //     return;
-        // }
-
         this.selectedIOs.push(io);
         io.isSelected = true;
         io.selectionCircle.at(io.circle.x, io.circle.y).radius(io.circle.radius() + 5);
