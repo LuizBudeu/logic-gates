@@ -8,8 +8,8 @@ TODO:
 -- can connect multiple wires to IOs and should propagate to all of them (next step)
 -- move wires when moving gate
 -- populate toolbox with saved gates
+-- fix: when connecting wire to output, propagate immediatelly
 
--   fix: when connecting wire to output, propagate immediatelly
 -   save current circuit to gate
 -   name circuit
 -   add possibility of removing gates, wiring, etc.
