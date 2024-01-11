@@ -3,12 +3,12 @@ import Settings from "../settings.js";
 import Input from "./input.js";
 import Output from "./output.js";
 import Mouse from "../input/mouse.js";
-import Vector from "../utils/vector.js";
 import WiringManager from "../managers/wiringManager.js";
 import Signal from "../signal.js";
 
 class Gate {
     constructor(ctx, logic) {
+        /** @type {CanvasRenderingContext2D} */
         this.ctx = ctx;
         this.logic = logic;
     }
@@ -20,11 +20,7 @@ class Gate {
             .color("#7a130d");
 
         this.rect.innerText.style("Arial", 20, "#fff").content(this.logic.name);
-
-        // Center the inner text
-        this.centerInnerText();
-        const innerTextPos = this.rect.innerText.at();
-        this.rect.innerText.at(innerTextPos.x - 10, innerTextPos.y);
+        this.rect.innerText.centerInRect(this.rect);
 
         // Position the inputs and output
         const rectPos = this.rect.at();
