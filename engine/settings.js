@@ -1,6 +1,6 @@
 const Settings = {
     CANVAS_BACKGROUND_COLOR: "#282828",
-    BINDING_BOX_COLOR: "#3D3D3D",
+    MAIN_CONTAINER_COLOR: "#3D3D3D",
     TOOLBOX_COLOR: "#0C0C0C",
     SAVED_GATE_COLOR: "#262626",
     IO_CIRCLE_RADIUS: 20,
@@ -10,6 +10,7 @@ const Settings = {
     WIRE_COLOR: "#00F",
     WIRE_WIDTH: 3,
     WIRE_DOT_RADIUS: 3,
+    MAIN_CONTAINER_MARGIN: 30,
 };
 
 export default Settings;

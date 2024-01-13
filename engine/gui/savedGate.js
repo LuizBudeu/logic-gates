@@ -1,11 +1,11 @@
-import Rect from "../ui/rect.js";
 import Settings from "../settings.js";
-import Mouse from "../input/mouse.js";
 import Signal from "../signal.js";
 import Gate from "../components/gate.js";
+import Button from "../ui/button.js";
 
-class SavedGate {
+class SavedGate extends Button {
     constructor(ctx, toolbox, name, path) {
+        super(ctx);
         this.ctx = ctx;
         this.toolbox = toolbox;
         this.name = name;
@@ -13,11 +13,8 @@ class SavedGate {
     }
 
     start() {
-        this.rect = new Rect(this.ctx).color(Settings.SAVED_GATE_COLOR);
+        this.rect.color(Settings.SAVED_GATE_COLOR);
         this.rect.innerText.style("Arial", 15, "#fff").content(this.name);
-
-        // Event listener for spawning the gate
-        Mouse.addLeftClickDownEvent(this.handleLeftClick.bind(this), this.rect);
     }
 
     update() {}
@@ -28,7 +25,7 @@ class SavedGate {
         this.rect.draw();
     }
 
-    handleLeftClick({ x, y, button }) {
+    onLeftClick({ x, y, button }) {
         this.getLogicFunctionFromPath()
             .then((logic) => {
                 if (logic) {

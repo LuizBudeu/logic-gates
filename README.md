@@ -9,10 +9,11 @@ TODO:
 -- move wires when moving gate
 -- populate toolbox with saved gates
 -- fix: when connecting wire to output, propagate immediatelly
+-- fix not perfect alignment of IOs (using Settings.CANVAS_WIDTH/HEIGTH)
 
+-   add possibility of removing gates, wiring, etc.
 -   save current circuit to gate
 -   name circuit
--   add possibility of removing gates, wiring, etc.
 -   make many wiring attachments possible
 -   fix window resizing issues
--   fix not perfect alignment of IOs (using Settings.CANVAS_WIDTH/HEIGTH)
+-   updat Rect, Circle classes to use new Mouse

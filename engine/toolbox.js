@@ -3,25 +3,6 @@ import Signal from "./signal.js";
 import Settings from "./settings.js";
 import SavedGate from "./gui/savedGate.js";
 
-function centerTextInRect(ctx, rect, text, fontSize) {
-    // Calculate the center of the rectangle
-    const centerX = rect.x + rect.width / 2;
-    const centerY = rect.y + rect.height / 2;
-
-    ctx.font = `${fontSize}px Arial`; // Set the font for measurement
-
-    // Measure the text width and height
-    const textWidth = ctx.measureText(text).width;
-    const textHeight = fontSize; // Assuming constant height for simplicity
-
-    // Calculate the position for the text to be centered
-    const textX = centerX - textWidth / 2;
-    const textY = centerY + textHeight / 4; // Adjust for vertical centering
-
-    // Return the calculated position
-    return { x: textX, y: textY };
-}
-
 class Toolbox {
     constructor(canvas, ctx) {
         /** @type {CanvasRenderingContext2D} */

@@ -2,12 +2,11 @@ import Settings from "./settings.js";
 import Rect from "./ui/rect.js";
 import Input from "./components/input.js";
 import Output from "./components/output.js";
-import Gate from "./components/gate.js";
-import NAND from "./components/logic/NAND.js";
-import Text from "./ui/text.js";
 import Signal from "./signal.js";
 import TwoWayMap from "./utils/twoWayMap.js";
 import Toolbox from "./toolbox.js";
+import Trash from "./gui/trash.js";
+import Save from "./gui/save.js";
 
 class Scene {
     constructor(canvas, ctx) {
@@ -38,6 +37,7 @@ class Scene {
 
     start() {
         this.setupBackground();
+        this.setupToolbox();
         this.setupInitialComponents();
 
         // Start all game objects
@@ -65,9 +65,10 @@ class Scene {
         }
     }
 
-    place(gameObject, layer = 1) {
+    place(gameObject, layer = 1, start = false) {
         this.layerGameObjects[layer].push(gameObject);
         this.addToGameObjectMap(gameObject);
+        if (start) gameObject.start();
     }
 
     remove(gameObject, layer = 1) {
@@ -102,35 +103,50 @@ class Scene {
         const canvasRect = new Rect(this.ctx).at(0, 0).size(this.canvas.width, this.canvas.height).color(Settings.CANVAS_BACKGROUND_COLOR);
         this.place(canvasRect, 0);
 
-        // Toolbox
-        this.toolbox = new Toolbox(this.canvas, this.ctx);
-        this.place(this.toolbox, 0);
-
-        // Binding box
-        const bindingBoxRect = new Rect(this.ctx)
-            .at(50, 80)
-            .size(this.canvas.width - 100, this.canvas.height - 170)
-            .color(Settings.BINDING_BOX_COLOR);
-        this.place(bindingBoxRect, 0);
+        // Main container
+        const mainContainerHeight = this.canvas.height - (Settings.MAIN_CONTAINER_MARGIN + 90);
+        const mainContainer = new Rect(this.ctx)
+            .at(Settings.MAIN_CONTAINER_MARGIN, Settings.MAIN_CONTAINER_MARGIN)
+            .size(this.canvas.width - Settings.MAIN_CONTAINER_MARGIN * 2, mainContainerHeight)
+            .color(Settings.MAIN_CONTAINER_COLOR);
+        this.place(mainContainer, 0);
     }
 
     setupInitialComponents() {
+        const mainContainerHeight = this.canvas.height - (Settings.MAIN_CONTAINER_MARGIN + 90);
+
         // Inputs
         this.input1 = new Input(this.ctx, true);
-        this.input1.circle.at(50, 313).radius(Settings.IO_CIRCLE_RADIUS).color(Settings.COMPONENT_IO_OFF_COLOR);
+        this.input1.circle
+            .at(Settings.MAIN_CONTAINER_MARGIN, mainContainerHeight / 3 + Settings.MAIN_CONTAINER_MARGIN - Settings.IO_CIRCLE_RADIUS)
+            .radius(Settings.IO_CIRCLE_RADIUS)
+            .color(Settings.COMPONENT_IO_OFF_COLOR);
         this.place(this.input1);
 
         this.input2 = new Input(this.ctx, true);
-        this.input2.circle.at(50, 576).radius(Settings.IO_CIRCLE_RADIUS).color(Settings.COMPONENT_IO_OFF_COLOR);
+        this.input2.circle
+            .at(Settings.MAIN_CONTAINER_MARGIN, (mainContainerHeight * 2) / 3 + Settings.MAIN_CONTAINER_MARGIN + Settings.IO_CIRCLE_RADIUS)
+            .radius(Settings.IO_CIRCLE_RADIUS)
+            .color(Settings.COMPONENT_IO_OFF_COLOR);
         this.place(this.input2);
 
         // Output
         this.output = new Output(this.ctx);
         this.output.circle
-            .at(this.canvas.width - 50, this.canvas.height / 2 - Settings.IO_CIRCLE_RADIUS)
+            .at(this.canvas.width - Settings.MAIN_CONTAINER_MARGIN, mainContainerHeight / 2 + Settings.MAIN_CONTAINER_MARGIN - Settings.IO_CIRCLE_RADIUS)
             .radius(Settings.IO_CIRCLE_RADIUS)
             .color(Settings.COMPONENT_IO_OFF_COLOR);
         this.place(this.output);
+    }
+
+    setupToolbox() {
+        // Toolbox
+        this.toolbox = new Toolbox(this.canvas, this.ctx);
+        this.place(this.toolbox, 0);
+
+        // Trash and save buttons
+        this.place(new Trash(this.ctx), 0);
+        this.place(new Save(this.ctx), 0);
     }
 
     resizeCanvas() {
