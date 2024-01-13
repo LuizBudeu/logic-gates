@@ -1,4 +1,6 @@
 const Settings = {
+    CANVAS_WIDTH: 800, // This is the default value, it will be changed in core.js
+    CANVAS_HEIGHT: 600, // This is the default value, it will be changed in core.js
     CANVAS_BACKGROUND_COLOR: "#282828",
     MAIN_CONTAINER_COLOR: "#3D3D3D",
     TOOLBOX_COLOR: "#0C0C0C",
