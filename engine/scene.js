@@ -15,9 +15,6 @@ class Scene {
         /** @type {CanvasRenderingContext2D} */
         this.ctx = ctx;
 
-        // todo: move this to a better place
-        canvas.style.cursor = "url(./assets/images/trash24px.png), auto";
-
         this.layerGameObjects = {
             0: [], // Background
             1: [],
@@ -136,7 +133,7 @@ class Scene {
         // Output
         this.output = new Output(this.ctx);
         this.output.circle
-            .at(this.canvas.width - Settings.MAIN_CONTAINER_MARGIN, mainContainerHeight / 2 + Settings.MAIN_CONTAINER_MARGIN - Settings.IO_CIRCLE_RADIUS)
+            .at(this.canvas.width - Settings.MAIN_CONTAINER_MARGIN, mainContainerHeight / 2 + Settings.MAIN_CONTAINER_MARGIN)
             .radius(Settings.IO_CIRCLE_RADIUS)
             .color(Settings.COMPONENT_IO_OFF_COLOR);
         this.place(this.output);

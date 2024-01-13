@@ -9,6 +9,7 @@ class Mouse {
     static leftClickDragging = false;
     static rightClickDragStart = { x: 0, y: 0 };
     static rightClickDragging = false;
+    static cursorStyle = "default";
 
     static initialize(canvas) {
         if (Mouse.canvas) {
@@ -260,6 +261,11 @@ class Mouse {
     static isOver(gameObject) {
         const { x, y } = Mouse.position;
         return x >= gameObject.x && x <= gameObject.x + gameObject.width && y >= gameObject.y && y <= gameObject.y + gameObject.height;
+    }
+
+    static setCursorStyle(style) {
+        Mouse.cursorStyle = style;
+        Mouse.canvas.style.cursor = style;
     }
 }
 

@@ -30,8 +30,7 @@ class SavedGate extends Button {
             .then((logic) => {
                 if (logic) {
                     const gate = new Gate(this.ctx, logic);
-                    gate.start();
-                    Bridge.sceneInstance.place(gate);
+                    Bridge.sceneInstance.place(gate, 1, true);
                 } else {
                     console.error(`Error loading logic function from file: ${this.path}`);
                 }

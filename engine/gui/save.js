@@ -25,6 +25,16 @@ class Save extends Button {
         this.rect.draw();
         this.image.draw();
     }
+
+    onLeftClick() {
+        if (this.isSelected) {
+            this.rect.color(Settings.TOOLBOX_BUTTON_COLOR);
+            this.isSelected = false;
+        } else {
+            this.rect.color(Settings.TOOLBOX_BUTTON_SELECTED_COLOR);
+            this.isSelected = true;
+        }
+    }
 }
 
 export default Save;
