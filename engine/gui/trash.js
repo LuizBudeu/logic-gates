@@ -11,7 +11,7 @@ class Trash extends Button {
         this.image.size(imageSize, imageSize);
 
         this.rect.size(imageSize + 10, imageSize + 10);
-        this.rect.color(Settings.MAIN_CONTAINER_COLOR);
+        this.rect.color(Settings.TOOLBOX_BUTTON_SELECTED_COLOR);
         this.rect.at(Settings.CANVAS_WIDTH - 55, Settings.CANVAS_HEIGHT - 55);
 
         this.image.centerInRect(this.rect);

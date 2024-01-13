@@ -1,5 +1,5 @@
 import Settings from "../settings.js";
-import Signal from "../signal.js";
+import Bridge from "../bridge.js";
 import Gate from "../components/gate.js";
 import Button from "../ui/button.js";
 
@@ -31,7 +31,7 @@ class SavedGate extends Button {
                 if (logic) {
                     const gate = new Gate(this.ctx, logic);
                     gate.start();
-                    Signal.sceneInstance.place(gate);
+                    Bridge.sceneInstance.place(gate);
                 } else {
                     console.error(`Error loading logic function from file: ${this.path}`);
                 }

@@ -1,4 +1,4 @@
-import Signal from "../signal.js";
+import Bridge from "../bridge.js";
 import Wire from "../components/wire.js";
 import WiringManager from "./wiringManager.js";
 
@@ -10,14 +10,14 @@ class SelectionManager {
         if (this.selectedIOs.length >= 2) {
             // Deselect the most recent one
             this.selectedIOs[1].isSelected = false;
-            Signal.sceneInstance.remove(this.selectedIOs[1].selectionCircle, 0);
+            Bridge.sceneInstance.remove(this.selectedIOs[1].selectionCircle, 0);
             this.selectedIOs.pop();
         }
 
         this.selectedIOs.push(io);
         io.isSelected = true;
         io.selectionCircle.at(io.circle.x, io.circle.y).radius(io.circle.radius() + 5);
-        Signal.sceneInstance.place(io.selectionCircle, 0);
+        Bridge.sceneInstance.place(io.selectionCircle, 0);
 
         if (this.selectedIOs.length === 2) {
             this.connectIOs();
@@ -27,13 +27,13 @@ class SelectionManager {
     static deselectIO(io) {
         io.isSelected = false;
         SelectionManager.selectedIOs = SelectionManager.selectedIOs.filter((selectedIO) => selectedIO !== io);
-        Signal.sceneInstance.remove(io.selectionCircle, 0);
+        Bridge.sceneInstance.remove(io.selectionCircle, 0);
     }
 
     static deselectAll() {
         this.selectedIOs.forEach((io) => {
             io.isSelected = false;
-            Signal.sceneInstance.remove(io.selectionCircle, 0);
+            Bridge.sceneInstance.remove(io.selectionCircle, 0);
         });
         this.selectedIOs = [];
     }

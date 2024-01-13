@@ -4,7 +4,7 @@ import Input from "./input.js";
 import Output from "./output.js";
 import Mouse from "../input/mouse.js";
 import WiringManager from "../managers/wiringManager.js";
-import Signal from "../signal.js";
+import Bridge from "../bridge.js";
 
 class Gate {
     constructor(ctx, logic) {
@@ -43,9 +43,9 @@ class Gate {
             .color(Settings.COMPONENT_IO_OFF_COLOR);
 
         // Place the inputs and output in the scene
-        Signal.sceneInstance.place(this.inputs[0]);
-        Signal.sceneInstance.place(this.inputs[1]);
-        Signal.sceneInstance.place(this.output);
+        Bridge.sceneInstance.place(this.inputs[0]);
+        Bridge.sceneInstance.place(this.inputs[1]);
+        Bridge.sceneInstance.place(this.output);
 
         Mouse.addLeftClickDraggingEvent(this.handleDragging.bind(this), this.rect);
     }

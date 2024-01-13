@@ -1,4 +1,4 @@
-import Signal from "../signal.js";
+import Bridge from "../bridge.js";
 import Wire from "../components/wire.js";
 import Settings from "../settings.js";
 
@@ -24,13 +24,13 @@ class WiringManager {
     static wiring = {};
 
     static addWiring(io1, io2) {
-        const wire = new Wire(Signal.sceneInstance.ctx).color(Settings.WIRE_COLOR);
+        const wire = new Wire(Bridge.sceneInstance.ctx).color(Settings.WIRE_COLOR);
         wire.connect(io1.circle.x, io1.circle.y, io2.circle.x, io2.circle.y);
 
-        Signal.sceneInstance.place(wire);
+        Bridge.sceneInstance.place(wire);
 
-        const io1Id = Signal.sceneInstance.getIdByGameObject(io1);
-        const io2Id = Signal.sceneInstance.getIdByGameObject(io2);
+        const io1Id = Bridge.sceneInstance.getIdByGameObject(io1);
+        const io2Id = Bridge.sceneInstance.getIdByGameObject(io2);
 
         const wiringKey = new WiringKey(io1Id, io2Id);
 
@@ -38,17 +38,17 @@ class WiringManager {
     }
 
     static removeWiring(io1, io2) {
-        const io1Id = Signal.sceneInstance.getIdByGameObject(io1);
-        const io2Id = Signal.sceneInstance.getIdByGameObject(io2);
+        const io1Id = Bridge.sceneInstance.getIdByGameObject(io1);
+        const io2Id = Bridge.sceneInstance.getIdByGameObject(io2);
 
         const wiringKey = new WiringKey(io1Id, io2Id);
 
-        Signal.sceneInstance.remove(WiringManager.wiring[wiringKey.toString()]);
+        Bridge.sceneInstance.remove(WiringManager.wiring[wiringKey.toString()]);
         delete WiringManager.wiring[wiringKey.toString()];
     }
 
     static moveWiring(io) {
-        const ioId = Signal.sceneInstance.getIdByGameObject(io);
+        const ioId = Bridge.sceneInstance.getIdByGameObject(io);
 
         if (!ioId) {
             throw new Error("IO not found");
@@ -70,7 +70,7 @@ class WiringManager {
     static existsWiring(io1, io2 = null) {
         // if io2 is null, check if io1 is wired to anything
         if (io2 === null) {
-            const io1Id = Signal.sceneInstance.getIdByGameObject(io1);
+            const io1Id = Bridge.sceneInstance.getIdByGameObject(io1);
 
             Object.keys(WiringManager.wiring).forEach((key) => {
                 const wiringKey = WiringKey.fromString(key);
@@ -82,8 +82,8 @@ class WiringManager {
             return false;
         }
 
-        const io1Id = Signal.sceneInstance.getIdByGameObject(io1);
-        const io2Id = Signal.sceneInstance.getIdByGameObject(io2);
+        const io1Id = Bridge.sceneInstance.getIdByGameObject(io1);
+        const io2Id = Bridge.sceneInstance.getIdByGameObject(io2);
 
         const wiringKey1 = new WiringKey(io1Id, io2Id);
         const wiringKey2 = new WiringKey(io2Id, io1Id);

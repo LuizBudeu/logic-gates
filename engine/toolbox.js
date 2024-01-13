@@ -1,5 +1,5 @@
 import Rect from "./ui/rect.js";
-import Signal from "./signal.js";
+import Bridge from "./bridge.js";
 import Settings from "./settings.js";
 import SavedGate from "./gui/savedGate.js";
 
@@ -55,7 +55,7 @@ class Toolbox {
 
                     this.savedGates.push(savedGate);
 
-                    Signal.sceneInstance.place(savedGate, 0);
+                    Bridge.sceneInstance.place(savedGate, 0);
                 });
             });
     }

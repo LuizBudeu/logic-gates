@@ -12,6 +12,8 @@ TODO:
 -- fix not perfect alignment of IOs (using Settings.CANVAS_WIDTH/HEIGTH)
 
 -   add possibility of removing gates, wiring, etc.
+    -- buttons visuals
+    -   change cursor to trash when deleting
 -   save current circuit to gate
 -   name circuit
 -   make many wiring attachments possible

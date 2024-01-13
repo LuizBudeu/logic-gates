@@ -13,6 +13,8 @@ const Settings = {
     WIRE_WIDTH: 3,
     WIRE_DOT_RADIUS: 3,
     MAIN_CONTAINER_MARGIN: 30,
+    TOOLBOX_BUTTON_COLOR: "#3D3D3D",
+    TOOLBOX_BUTTON_SELECTED_COLOR: "#262626",
 };
 
 export default Settings;

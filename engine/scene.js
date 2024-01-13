@@ -2,7 +2,7 @@ import Settings from "./settings.js";
 import Rect from "./ui/rect.js";
 import Input from "./components/input.js";
 import Output from "./components/output.js";
-import Signal from "./signal.js";
+import Bridge from "./bridge.js";
 import TwoWayMap from "./utils/twoWayMap.js";
 import Toolbox from "./toolbox.js";
 import Trash from "./gui/trash.js";
@@ -14,6 +14,9 @@ class Scene {
         this.canvas = canvas;
         /** @type {CanvasRenderingContext2D} */
         this.ctx = ctx;
+
+        // todo: move this to a better place
+        canvas.style.cursor = "url(./assets/images/trash24px.png), auto";
 
         this.layerGameObjects = {
             0: [], // Background
@@ -32,7 +35,7 @@ class Scene {
         this.gameObjectId = 0;
         this.gameObjectsMap = new TwoWayMap();
 
-        Signal.setSceneInstance(this);
+        Bridge.setSceneInstance(this);
     }
 
     start() {

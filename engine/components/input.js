@@ -1,6 +1,6 @@
 import Circle from "../ui/circle.js";
 import Settings from "../settings.js";
-import Signal from "../signal.js";
+import Bridge from "../bridge.js";
 import Mouse from "../input/mouse.js";
 import IO from "./io.js";
 
