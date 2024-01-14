@@ -9,6 +9,8 @@ class Button {
         this.rect = new Rect(this.ctx);
         this.innerText = this.rect.innerText;
 
+        this.debugName = "Button";
+
         Mouse.addLeftClickDownEvent(this.onLeftClick.bind(this), this.rect);
         Mouse.addRightClickDownEvent(this.onRightClick.bind(this), this.rect);
     }

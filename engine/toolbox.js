@@ -10,6 +10,8 @@ class Toolbox {
         /** @type {HTMLCanvasElement} */
         this.ctx = ctx;
 
+        this.debugName = "Toolbox";
+
         this.savedGatesFromFile = [];
         this.savedGates = [];
     }

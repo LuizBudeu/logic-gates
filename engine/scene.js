@@ -7,6 +7,8 @@ import TwoWayMap from "./utils/twoWayMap.js";
 import Toolbox from "./toolbox.js";
 import Trash from "./gui/trash.js";
 import Save from "./gui/save.js";
+import Mouse from "./input/mouse.js";
+import Text from "./ui/text.js";
 
 class Scene {
     constructor(canvas, ctx) {
@@ -63,6 +65,7 @@ class Scene {
                 gameObject.draw();
             });
         }
+        // this.debug();
     }
 
     place(gameObject, layer = 1, start = false) {
@@ -91,6 +94,10 @@ class Scene {
 
     getIdByGameObject(gameObject) {
         return this.gameObjectsMap.revGet(gameObject);
+    }
+
+    setSceneMode(mode) {
+        Settings.SCENE_MODE = mode;
     }
 
     setupCanvas() {
@@ -154,6 +161,14 @@ class Scene {
         this.canvas.height = window.innerHeight;
         Settings.CANVAS_WIDTH = this.canvas.width;
         Settings.CANVAS_HEIGHT = this.canvas.height;
+    }
+
+    debug() {
+        // Show mouse coordinates
+        const mousePos = Mouse.getPosition();
+        mousePos.y -= 10;
+        const mousePosText = new Text(this.ctx).content(`(${mousePos.x}, ${mousePos.y})`).center(mousePos.x, mousePos.y);
+        mousePosText.draw();
     }
 }
 

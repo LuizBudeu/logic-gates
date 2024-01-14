@@ -15,6 +15,8 @@ class Rect extends gameObject {
         this.lineColor = "#000"; // Default line color is black
         this.debugging = false;
 
+        this.debugName = "Rect";
+
         this.innerText = new Text(this.ctx);
         this.isDragging = false;
         this.isResizing = false;
@@ -35,6 +37,12 @@ class Rect extends gameObject {
         if (x) this.x = x - this.width / 2;
         if (y) this.y = y - this.height / 2;
         return this;
+    }
+
+    centerInnerText() {
+        const textWidth = this.ctx.measureText(this.innerText.textContent).width;
+        const textHeight = this.innerText.fontSize;
+        this.innerText.at(this.x + this.width / 2 - textWidth / 2, this.y + this.height / 2 + textHeight / 2);
     }
 
     size(width = null, height = null, lineWidth = null) {

@@ -15,6 +15,11 @@ const Settings = {
     MAIN_CONTAINER_MARGIN: 30,
     TOOLBOX_BUTTON_COLOR: "#3D3D3D",
     TOOLBOX_BUTTON_SELECTED_COLOR: "#858585",
+    SCENE_MODE: 0,
+    SCENE_MODE_OPTIONS: {
+        DEFAULT: 0,
+        DELETE: 1,
+    },
 };
 
 export default Settings;

@@ -6,6 +6,8 @@ class Save extends Button {
     constructor(ctx) {
         super(ctx);
 
+        this.debugName = "Save";
+
         const imageSize = 40;
         this.image = new Sprite(this.ctx, "./assets/images/save.png");
         this.image.size(imageSize, imageSize);

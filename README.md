@@ -10,12 +10,13 @@ TODO:
 -- populate toolbox with saved gates
 -- fix: when connecting wire to output, propagate immediatelly
 -- fix not perfect alignment of IOs (using Settings.CANVAS_WIDTH/HEIGTH)
+-- add possibility of removing gates, wiring, etc.
+-- buttons visuals
+-- change cursor to trash when deleting
 
--   add possibility of removing gates, wiring, etc.
-    -- buttons visuals
-    -   change cursor to trash when deleting
 -   save current circuit to gate
 -   name circuit
 -   make many wiring attachments possible
+-   fix bug: when connecting wire from gate Input to Global Input, gate Input overrides Global Input
 -   fix window resizing issues
 -   updat Rect, Circle classes to use new Mouse

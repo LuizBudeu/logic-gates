@@ -7,6 +7,8 @@ class Trash extends Button {
     constructor(ctx) {
         super(ctx);
 
+        this.debugName = "Trash";
+
         const imageSize = 40;
         this.image = new Sprite(this.ctx, "./assets/images/trash.png");
         this.image.size(imageSize, imageSize);
@@ -35,11 +37,15 @@ class Trash extends Button {
             this.isSelected = false;
 
             Mouse.setCursorStyle("default");
+
+            Settings.SCENE_MODE = Settings.SCENE_MODE_OPTIONS.DEFAULT;
         } else {
             this.rect.color(Settings.TOOLBOX_BUTTON_SELECTED_COLOR);
             this.isSelected = true;
 
             Mouse.setCursorStyle("url(./assets/images/trash24px.png), auto");
+
+            Settings.SCENE_MODE = Settings.SCENE_MODE_OPTIONS.DELETE;
         }
     }
 }

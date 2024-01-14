@@ -4,6 +4,7 @@ import Input from "./input.js";
 import Output from "./output.js";
 import Mouse from "../input/mouse.js";
 import WiringManager from "../managers/wiringManager.js";
+import DeleteManager from "../managers/deleteManager.js";
 import Bridge from "../bridge.js";
 
 class Gate {
@@ -11,6 +12,11 @@ class Gate {
         /** @type {CanvasRenderingContext2D} */
         this.ctx = ctx;
         this.logic = logic;
+
+        this.debugName = `${this.logic.name}_Gate`;
+
+        // Handle deletion
+        Mouse.addLeftClickDownEvent(this.handleLeftClickDown.bind(this));
     }
 
     start() {
@@ -74,7 +80,7 @@ class Gate {
         this.rect.y += deltaY;
 
         // Move the inner text
-        this.centerInnerText();
+        this.rect.centerInnerText();
 
         // Move the inputs and output
         const rectPos = this.rect.at();
@@ -88,10 +94,21 @@ class Gate {
         WiringManager.moveWiring(this.output);
     }
 
-    centerInnerText() {
-        const textWidth = this.ctx.measureText(this.rect.innerText.textContent).width;
-        const textHeight = this.rect.innerText.fontSize;
-        this.rect.innerText.at(this.rect.x + this.rect.width / 2 - textWidth / 2, this.rect.y + this.rect.height / 2 + textHeight / 2);
+    handleLeftClickDown() {
+        this.ctx.rect(this.rect.x, this.rect.y, this.rect.width, this.rect.height);
+        this.ctx.closePath();
+
+        const deleteMode = Settings.SCENE_MODE === Settings.SCENE_MODE_OPTIONS.DELETE;
+        if (deleteMode) {
+            const mousePos = Mouse.getPosition();
+            if (this.ctx.isPointInPath(mousePos.x, mousePos.y)) {
+                DeleteManager.deleteGameObject(this);
+                this.inputs.forEach((input) => {
+                    DeleteManager.deleteGameObject(input);
+                });
+                DeleteManager.deleteGameObject(this.output);
+            }
+        }
     }
 }
 

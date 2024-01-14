@@ -33,6 +33,16 @@ class Text {
         return this;
     }
 
+    center(x = null, y = null) {
+        if (x === null && y === null) return { x: this.x, y: this.y }; // Return the current position if no arguments are passed
+        const textWidth = this.ctx.measureText(this.textContent).width;
+        const textHeight = this.fontSize;
+
+        if (x) this.x = x - textWidth / 2;
+        if (y) this.y = y + textHeight / 3;
+        return this;
+    }
+
     /**
      * Center text horizontally and vertically inside rect.
      * @param {Rect} [rect] - The rect.

@@ -17,6 +17,8 @@ class Sprite {
         this.y = 100;
         this.width = 50;
         this.height = 50;
+
+        this.debugName = "Sprite";
     }
 
     /**

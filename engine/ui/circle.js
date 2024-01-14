@@ -12,6 +12,8 @@ class Circle extends gameObject {
         this.circleColor = "#000"; // Default color is black
         this.lineWidth = 1; // Default line width is 1
 
+        this.debugName = "Circle";
+
         this.isDragging = false;
         this.dragStartX = 0;
         this.dragStartY = 0;

@@ -1,10 +1,11 @@
-import gameObject from "../baseScript.js";
 import Settings from "../settings.js";
+import Mouse from "../input/mouse.js";
+import Bridge from "../bridge.js";
+import DeleteManager from "../managers/deleteManager.js";
 
-class Wire extends gameObject {
+class Wire {
     constructor(ctx) {
-        super(ctx);
-
+        /** @type {CanvasRenderingContext2D} */
         this.ctx = ctx;
         this.startX = 0;
         this.startY = 0;
@@ -13,7 +14,16 @@ class Wire extends gameObject {
         this.lineColor = "#000"; // Default color is black
         this.lineWidth = Settings.WIRE_WIDTH; // Default line width is 2
         this.dotRadius = Settings.WIRE_DOT_RADIUS; // Default dot radius is 3
+
+        this.debugName = "Wire";
+
+        // Handle deletion
+        Mouse.addLeftClickDownEvent(this.handleLeftClickDown.bind(this));
     }
+
+    start() {}
+
+    update(deltaTime) {}
 
     connect(startX, startY, endX, endY) {
         this.startX = startX;
@@ -50,6 +60,26 @@ class Wire extends gameObject {
         this.ctx.beginPath();
         this.ctx.arc(x, y, this.dotRadius, 0, 2 * Math.PI);
         this.ctx.fill();
+    }
+
+    handleLeftClickDown() {
+        // Hitbox is slightly larger than the wire
+        const hitBoxLineWidth = 20;
+
+        this.ctx.beginPath();
+        this.ctx.moveTo(this.startX, this.startY + hitBoxLineWidth);
+        this.ctx.lineTo(this.startX, this.startY - hitBoxLineWidth);
+        this.ctx.lineTo(this.endX, this.endY - hitBoxLineWidth);
+        this.ctx.lineTo(this.endX, this.endY + hitBoxLineWidth);
+        this.ctx.closePath();
+
+        const deleteMode = Settings.SCENE_MODE === Settings.SCENE_MODE_OPTIONS.DELETE;
+        if (deleteMode) {
+            const mousePos = Mouse.getPosition();
+            if (this.ctx.isPointInPath(mousePos.x, mousePos.y)) {
+                DeleteManager.deleteGameObject(this);
+            }
+        }
     }
 }
 

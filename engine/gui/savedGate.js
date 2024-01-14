@@ -10,6 +10,8 @@ class SavedGate extends Button {
         this.toolbox = toolbox;
         this.name = name;
         this.path = path;
+
+        this.debugName = name + "_SavedGate";
     }
 
     start() {
