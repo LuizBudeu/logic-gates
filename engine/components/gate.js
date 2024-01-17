@@ -6,14 +6,22 @@ import Mouse from "../input/mouse.js";
 import WiringManager from "../managers/wiringManager.js";
 import DeleteManager from "../managers/deleteManager.js";
 import Bridge from "../bridge.js";
+import Component from "./component.js";
 
-class Gate {
-    constructor(ctx, logic) {
+class Gate extends Component {
+    constructor(
+        ctx,
+        logic,
+        ios = {
+            inputs: 2,
+            outputs: 1,
+        }
+    ) {
+        super(`${logic.name}_Gate`);
+
         /** @type {CanvasRenderingContext2D} */
         this.ctx = ctx;
         this.logic = logic;
-
-        this.debugName = `${this.logic.name}_Gate`;
 
         // Handle deletion
         Mouse.addLeftClickDownEvent(this.handleLeftClickDown.bind(this));

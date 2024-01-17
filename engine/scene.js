@@ -109,6 +109,7 @@ class Scene {
         // Canvas
         const canvasRect = new Rect(this.ctx).at(0, 0).size(this.canvas.width, this.canvas.height).color(Settings.CANVAS_BACKGROUND_COLOR);
         this.place(canvasRect, 0);
+        canvasRect.debugName = "Canvas";
 
         // Main container
         const mainContainerHeight = this.canvas.height - (Settings.MAIN_CONTAINER_MARGIN + 90);
@@ -117,20 +118,21 @@ class Scene {
             .size(this.canvas.width - Settings.MAIN_CONTAINER_MARGIN * 2, mainContainerHeight)
             .color(Settings.MAIN_CONTAINER_COLOR);
         this.place(mainContainer, 0);
+        mainContainer.debugName = "MainContainer";
     }
 
     setupInitialComponents() {
         const mainContainerHeight = this.canvas.height - (Settings.MAIN_CONTAINER_MARGIN + 90);
 
         // Inputs
-        this.input1 = new Input(this.ctx, true);
+        this.input1 = new Input(this.ctx, true, "Global");
         this.input1.circle
             .at(Settings.MAIN_CONTAINER_MARGIN, mainContainerHeight / 3 + Settings.MAIN_CONTAINER_MARGIN - Settings.IO_CIRCLE_RADIUS)
             .radius(Settings.IO_CIRCLE_RADIUS)
             .color(Settings.COMPONENT_IO_OFF_COLOR);
         this.place(this.input1);
 
-        this.input2 = new Input(this.ctx, true);
+        this.input2 = new Input(this.ctx, true, "Global");
         this.input2.circle
             .at(Settings.MAIN_CONTAINER_MARGIN, (mainContainerHeight * 2) / 3 + Settings.MAIN_CONTAINER_MARGIN + Settings.IO_CIRCLE_RADIUS)
             .radius(Settings.IO_CIRCLE_RADIUS)
@@ -138,7 +140,7 @@ class Scene {
         this.place(this.input2);
 
         // Output
-        this.output = new Output(this.ctx);
+        this.output = new Output(this.ctx, "Global");
         this.output.circle
             .at(this.canvas.width - Settings.MAIN_CONTAINER_MARGIN, mainContainerHeight / 2 + Settings.MAIN_CONTAINER_MARGIN)
             .radius(Settings.IO_CIRCLE_RADIUS)

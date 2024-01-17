@@ -3,14 +3,12 @@ import Settings from "../settings.js";
 import Mouse from "../input/mouse.js";
 import Bridge from "../bridge.js";
 import SelectionManager from "../managers/selectionManager.js";
-import gameObject from "../baseScript.js";
 import Connection from "./connection.js";
+import Component from "./component.js";
 
-class IO extends gameObject {
+class IO extends Component {
     constructor(ctx, debugName = "") {
-        super(ctx);
-
-        this.debugName = debugName;
+        super(debugName);
 
         /** @type {CanvasRenderingContext2D} */
         this.ctx = ctx;
@@ -21,7 +19,7 @@ class IO extends gameObject {
         this.IOConnections = [];
 
         // Selection circle
-        this.selectionCircle = new Circle(this.ctx).color("#00F");
+        this.selectionCircle = new Circle(this.ctx).color(Settings.SELECTION_COLOR);
 
         // Event listener for selecting the IO
         Mouse.addRightClickDownEvent(this.handleRightClick.bind(this));
