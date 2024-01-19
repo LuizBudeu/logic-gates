@@ -23,8 +23,12 @@ class WiringKey {
 class WiringManager {
     static wiring = {};
 
-    static addWiring(io1, io2) {
-        const wire = new Wire(Bridge.sceneInstance.ctx).color(Settings.WIRE_COLOR);
+    static addWiring(connection) {
+        const wire = new Wire(Bridge.sceneInstance.ctx, connection).color(Settings.WIRE_COLOR);
+
+        const io1 = connection.upstream;
+        const io2 = connection.downstream;
+
         wire.connect(io1.circle.x, io1.circle.y, io2.circle.x, io2.circle.y);
 
         Bridge.sceneInstance.place(wire);
@@ -37,7 +41,10 @@ class WiringManager {
         WiringManager.wiring[wiringKey.toString()] = wire;
     }
 
-    static removeWiring(io1, io2) {
+    static removeWiring(connection) {
+        const io1 = connection.upstream;
+        const io2 = connection.downstream;
+
         const io1Id = Bridge.sceneInstance.getIdByGameObject(io1);
         const io2Id = Bridge.sceneInstance.getIdByGameObject(io2);
 

@@ -2,11 +2,15 @@ import Settings from "../settings.js";
 import Mouse from "../input/mouse.js";
 import Bridge from "../bridge.js";
 import DeleteManager from "../managers/deleteManager.js";
+import WiringManager from "../managers/wiringManager.js";
+import CircuitManager from "../managers/circuitManager.js";
 
 class Wire {
-    constructor(ctx) {
+    constructor(ctx, connection) {
         /** @type {CanvasRenderingContext2D} */
         this.ctx = ctx;
+        this.connection = connection;
+
         this.startX = 0;
         this.startY = 0;
         this.endX = 0;
@@ -77,6 +81,8 @@ class Wire {
         if (deleteMode) {
             const mousePos = Mouse.getPosition();
             if (this.ctx.isPointInPath(mousePos.x, mousePos.y)) {
+                CircuitManager.removeConnection(this.connection);
+                WiringManager.removeWiring(this.connection);
                 DeleteManager.deleteGameObject(this);
             }
         }

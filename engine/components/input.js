@@ -5,9 +5,9 @@ import Mouse from "../input/mouse.js";
 import IO from "./io.js";
 
 class Input extends IO {
-    constructor(ctx, interactive = false, debugName = "") {
+    constructor(ctx, interactive = false, debugName = "", gate = null) {
         debugName += "_Input";
-        super(ctx, debugName);
+        super(ctx, debugName, gate);
 
         if (interactive) {
             // Event listener for turning input on and off

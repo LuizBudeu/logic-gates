@@ -7,6 +7,7 @@ import WiringManager from "../managers/wiringManager.js";
 import DeleteManager from "../managers/deleteManager.js";
 import Bridge from "../bridge.js";
 import Component from "./component.js";
+import CircuitManager from "../managers/circuitManager.js";
 
 class Gate extends Component {
     constructor(
@@ -40,7 +41,7 @@ class Gate extends Component {
         const debugName = `${this.logic.name}_Gate`;
 
         const rectPos = this.rect.at();
-        this.inputs = [new Input(this.ctx, false, debugName + "_1"), new Input(this.ctx, false, debugName + "_2")]; // TODO add possibility of multiple inputs
+        this.inputs = [new Input(this.ctx, false, debugName + "_1", this), new Input(this.ctx, false, debugName + "_2", this)]; // TODO add possibility of multiple inputs
         this.inputs[0].circle
             .at(rectPos.x, rectPos.y + this.rect.width / 3)
             .radius(Settings.COMPONENT_IO_CIRCLE_RADIUS)
@@ -50,7 +51,7 @@ class Gate extends Component {
             .radius(Settings.COMPONENT_IO_CIRCLE_RADIUS)
             .color(Settings.COMPONENT_IO_OFF_COLOR);
 
-        this.output = new Output(this.ctx, debugName + "_1");
+        this.output = new Output(this.ctx, debugName + "_1", this);
         this.output.circle
             .at(rectPos.x + this.rect.width, rectPos.y + this.rect.height / 2)
             .radius(Settings.COMPONENT_IO_CIRCLE_RADIUS)
@@ -70,10 +71,6 @@ class Gate extends Component {
 
     draw() {
         this.rect.draw();
-        this.inputs.forEach((input) => {
-            input.circle.draw();
-        });
-        this.output.circle.draw();
     }
 
     compute() {
@@ -110,11 +107,19 @@ class Gate extends Component {
         if (deleteMode) {
             const mousePos = Mouse.getPosition();
             if (this.ctx.isPointInPath(mousePos.x, mousePos.y)) {
-                DeleteManager.deleteGameObject(this);
                 this.inputs.forEach((input) => {
+                    input.IOConnections.forEach((connection) => {
+                        CircuitManager.removeConnection(connection);
+                    });
                     DeleteManager.deleteGameObject(input);
                 });
+
+                this.output.IOConnections.forEach((connection) => {
+                    CircuitManager.removeConnection(connection);
+                });
                 DeleteManager.deleteGameObject(this.output);
+
+                DeleteManager.deleteGameObject(this);
             }
         }
     }
