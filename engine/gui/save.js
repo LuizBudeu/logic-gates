@@ -1,6 +1,7 @@
 import Button from "../ui/button.js";
 import Sprite from "../ui/sprite.js";
 import Settings from "../settings.js";
+import SaveManager from "../managers/saveManager.js";
 
 class Save extends Button {
     constructor(ctx) {
@@ -35,6 +36,26 @@ class Save extends Button {
         } else {
             this.rect.color(Settings.TOOLBOX_BUTTON_SELECTED_COLOR);
             this.isSelected = true;
+
+            // Prompt user for gate name
+            const gateName = prompt("Enter gate name:");
+
+            // Check if user cancelled
+            if (gateName === null) {
+                this.rect.color(Settings.TOOLBOX_BUTTON_COLOR);
+                this.isSelected = false;
+                return;
+            }
+
+            // Check if gate name is empty
+            if (gateName === "") {
+                this.rect.color(Settings.TOOLBOX_BUTTON_COLOR);
+                this.isSelected = false;
+                throw new Error("Saved gate name cannot be empty");
+            }
+
+            // Save circuit to gate
+            SaveManager.saveCircuitToGate(gateName);
         }
     }
 }

@@ -1,0 +1,9 @@
+{
+    "component": GlobalInput,
+    "io": GlobalInput,
+    "downstream": [{
+        "component": ANDGate,
+        "io": Input1,
+        "downstream": null
+    }]
+}

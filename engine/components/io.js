@@ -3,17 +3,19 @@ import Settings from "../settings.js";
 import Mouse from "../input/mouse.js";
 import Bridge from "../bridge.js";
 import SelectionManager from "../managers/selectionManager.js";
-import gameObject from "../baseScript.js";
+import CircuitManager from "../managers/circuitManager.js";
 import Connection from "./connection.js";
+import Component from "./component.js";
+import Text from "../ui/text.js";
 
-class IO extends gameObject {
-    constructor(ctx, debugName = "") {
-        super(ctx);
-
-        this.debugName = debugName;
+class IO extends Component {
+    constructor(ctx, debugName = "", gate = null) {
+        super(debugName);
 
         /** @type {CanvasRenderingContext2D} */
         this.ctx = ctx;
+        this.gate = gate;
+
         this.circle = new Circle(this.ctx);
         this._value = false;
         this.isSelected = false;
@@ -21,7 +23,7 @@ class IO extends gameObject {
         this.IOConnections = [];
 
         // Selection circle
-        this.selectionCircle = new Circle(this.ctx).color("#00F");
+        this.selectionCircle = new Circle(this.ctx).color(Settings.SELECTION_COLOR);
 
         // Event listener for selecting the IO
         Mouse.addRightClickDownEvent(this.handleRightClick.bind(this));
@@ -30,7 +32,18 @@ class IO extends gameObject {
     start() {}
 
     update(deltaTime) {
-        this.propagate();
+        // Every frame, IO tries to go to natural state
+        // if (this instanceof Input) {
+        //     this.value(0);
+        // }
+
+        // If IO is upstream, propagate
+        this.IOConnections.forEach((connection) => {
+            const dir = this.IOConnections[0]?.upstream === this ? "upstream" : "downstream";
+            if (dir === "upstream") {
+                this.propagate(connection.downstream);
+            }
+        });
     }
 
     draw() {
@@ -47,25 +60,8 @@ class IO extends gameObject {
         }
     }
 
-    connect(io) {
-        const connection = new Connection(this, io);
-        this.IOConnections.push(connection);
-        io.IOConnections.push(connection);
-    }
-
-    disconnect(io) {
-        this.IOConnections = this.IOConnections.filter((connection) => connection.io1 !== io && connection.io2 !== io);
-        io.IOConnections = io.IOConnections.filter((connection) => connection.io1 !== this && connection.io2 !== this);
-    }
-
-    propagate() {
-        this.IOConnections.forEach((connection) => {
-            if (connection.io1 === this) {
-                connection.io2.value(this.value());
-            } else {
-                connection.io1.value(this.value());
-            }
-        });
+    propagate(io) {
+        io?.value(this.value());
     }
 
     handleRightClick({ x, y, button }) {

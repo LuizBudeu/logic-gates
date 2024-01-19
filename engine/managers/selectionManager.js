@@ -1,6 +1,7 @@
 import Bridge from "../bridge.js";
 import Wire from "../components/wire.js";
 import WiringManager from "./wiringManager.js";
+import CircuitManager from "./circuitManager.js";
 
 class SelectionManager {
     static selectedIOs = [];
@@ -39,9 +40,10 @@ class SelectionManager {
     }
 
     static connectIOs() {
-        this.selectedIOs[0].connect(this.selectedIOs[1]);
+        // this.selectedIOs[0].connect(this.selectedIOs[1]);
+        const connection = CircuitManager.addConnection(...this.selectedIOs);
 
-        WiringManager.addWiring(this.selectedIOs[0], this.selectedIOs[1]);
+        WiringManager.addWiring(connection);
 
         this.deselectAll();
     }
