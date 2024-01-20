@@ -29,6 +29,14 @@ class CircuitManager {
         });
     }
 
+    static addComponent(component) {
+        CircuitManager.circuit.components.push(component);
+    }
+
+    static removeComponent(component) {
+        CircuitManager.circuit.components = CircuitManager.circuit.components.filter((comp) => comp !== component);
+    }
+
     static addConnection(io1, io2) {
         const connection = this.getNewConnection(io1, io2);
         io1.IOConnections.push(connection);

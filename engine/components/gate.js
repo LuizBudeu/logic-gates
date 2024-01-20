@@ -24,12 +24,16 @@ class Gate extends Component {
         /** @type {CanvasRenderingContext2D} */
         this.ctx = ctx;
         this.logic = logic;
+        this.ios = ios;
+
+        this.inputs = [];
+        this.outputs = [];
 
         // Handle deletion
         Mouse.addLeftClickDownEvent(this.handleLeftClickDown.bind(this));
 
         // Add to the circuit
-        CircuitManager.circuit.components.push(this);
+        CircuitManager.addComponent(this);
     }
 
     start() {
@@ -43,6 +47,26 @@ class Gate extends Component {
 
         // Position the inputs and output
         const debugName = `${this.logic.name}_Gate`;
+
+        // for (let i = 0; i < this.ios.inputs; i++) {
+        //     const rectPos = this.calculateIOPosition(i, "input");
+
+        //     const input = new Input(this.ctx, false, debugName + `_${i}`, this);
+        //     input.circle.at(rectPos.x, rectPos.y).radius(Settings.COMPONENT_IO_CIRCLE_RADIUS).color(Settings.COMPONENT_IO_OFF_COLOR);
+
+        //     this.inputs.push(input);
+        //     Bridge.sceneInstance.place(input);
+        // }
+
+        // for (let i = 0; i < this.ios.outputs; i++) {
+        //     const rectPos = this.calculateIOPosition(i, "output");
+
+        //     const output = new Output(this.ctx, debugName + `_${i}`, this);
+        //     output.circle.at(rectPos.x, rectPos.y).radius(Settings.COMPONENT_IO_CIRCLE_RADIUS).color(Settings.COMPONENT_IO_OFF_COLOR);
+
+        //     this.outputs.push(output);
+        //     Bridge.sceneInstance.place(output);
+        // }
 
         const rectPos = this.rect.at();
         this.inputs = [new Input(this.ctx, false, debugName + "_1", this), new Input(this.ctx, false, debugName + "_2", this)]; // TODO add possibility of multiple inputs
@@ -80,6 +104,21 @@ class Gate extends Component {
         this.output.value(result);
     }
 
+    calculateIOPosition(index, IOtype) {
+        const rectPos = this.rect.at();
+        if (IOtype === "input") {
+            return {
+                x: rectPos.x,
+                y: rectPos.y + (this.rect.width * (index + 1)) / (this.ios.inputs + 1),
+            };
+        } else {
+            return {
+                x: rectPos.x + this.rect.width,
+                y: rectPos.y + this.rect.height / (this.ios.outputs + 1),
+            };
+        }
+    }
+
     handleDragging({ deltaX, deltaY }) {
         // Move the gate
         this.rect.x += deltaX;
@@ -108,12 +147,15 @@ class Gate extends Component {
         if (deleteMode) {
             const mousePos = Mouse.getPosition();
             if (this.ctx.isPointInPath(mousePos.x, mousePos.y)) {
+                SelectionManager.selectedIOs = [];
+
                 // Delete inputs, output, and connections
                 this.inputs.forEach((input) => {
                     input.IOConnections.forEach((connection) => {
                         CircuitManager.removeConnection(connection);
                     });
                     Bridge.sceneInstance.remove(input.selectionCircle, 0);
+                    CircuitManager.removeComponent(input);
                     DeleteManager.deleteGameObject(input);
                 });
 
@@ -121,10 +163,12 @@ class Gate extends Component {
                     CircuitManager.removeConnection(connection);
                 });
                 Bridge.sceneInstance.remove(this.output.selectionCircle, 0);
+                CircuitManager.removeComponent(this.output);
                 DeleteManager.deleteGameObject(this.output);
 
                 // Delete the gate
                 DeleteManager.deleteGameObject(this);
+                CircuitManager.removeComponent(this);
             }
         }
     }

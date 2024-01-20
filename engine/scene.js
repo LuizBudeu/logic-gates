@@ -10,6 +10,9 @@ import Save from "./gui/save.js";
 import Mouse from "./input/mouse.js";
 import Text from "./ui/text.js";
 import CircuitManager from "./managers/circuitManager.js";
+import PlusIO from "./gui/plusIO.js";
+import MinusIO from "./gui/minusIO.js";
+import WiringManager from "./managers/wiringManager.js";
 
 class Scene {
     constructor(canvas, ctx) {
@@ -39,8 +42,15 @@ class Scene {
     }
 
     start() {
+        this.globalIOs = {
+            inputs: [],
+            outputs: [],
+        };
+
         this.setupBackground();
         this.setupToolbox();
+        this.setupIOButtons();
+
         this.setupInitialComponents();
 
         // Start all game objects
@@ -125,30 +135,10 @@ class Scene {
     }
 
     setupInitialComponents() {
-        const mainContainerHeight = this.canvas.height - (Settings.MAIN_CONTAINER_MARGIN + 90);
+        this.addGlobalIO("input");
+        this.addGlobalIO("input");
 
-        // Inputs
-        this.input1 = new Input(this.ctx, true, "Global");
-        this.input1.circle
-            .at(Settings.MAIN_CONTAINER_MARGIN, mainContainerHeight / 3 + Settings.MAIN_CONTAINER_MARGIN - Settings.IO_CIRCLE_RADIUS)
-            .radius(Settings.IO_CIRCLE_RADIUS)
-            .color(Settings.COMPONENT_IO_OFF_COLOR);
-        this.place(this.input1);
-
-        this.input2 = new Input(this.ctx, true, "Global");
-        this.input2.circle
-            .at(Settings.MAIN_CONTAINER_MARGIN, (mainContainerHeight * 2) / 3 + Settings.MAIN_CONTAINER_MARGIN + Settings.IO_CIRCLE_RADIUS)
-            .radius(Settings.IO_CIRCLE_RADIUS)
-            .color(Settings.COMPONENT_IO_OFF_COLOR);
-        this.place(this.input2);
-
-        // Output
-        this.output = new Output(this.ctx, "Global");
-        this.output.circle
-            .at(this.canvas.width - Settings.MAIN_CONTAINER_MARGIN, mainContainerHeight / 2 + Settings.MAIN_CONTAINER_MARGIN)
-            .radius(Settings.IO_CIRCLE_RADIUS)
-            .color(Settings.COMPONENT_IO_OFF_COLOR);
-        this.place(this.output);
+        this.addGlobalIO("output");
     }
 
     setupToolbox() {
@@ -159,6 +149,103 @@ class Scene {
         // Trash and save buttons
         this.place(new Trash(this.ctx), 0);
         this.place(new Save(this.ctx), 0);
+    }
+
+    setupIOButtons() {
+        this.plusInput = new PlusIO(this.ctx, "input");
+        this.place(this.plusInput, 0);
+
+        this.plusOutput = new PlusIO(this.ctx, "output");
+        this.place(this.plusOutput, 0);
+
+        this.minusInput = new MinusIO(this.ctx, "input");
+        this.place(this.minusInput, 0);
+
+        this.minusOutput = new MinusIO(this.ctx, "output");
+        this.place(this.minusOutput, 0);
+    }
+
+    addGlobalIO(IOtype) {
+        if (IOtype === "input") {
+            const input = new Input(this.ctx, true, "Global");
+            input.circle.radius(Settings.IO_CIRCLE_RADIUS).color(Settings.COMPONENT_IO_OFF_COLOR);
+
+            this.globalIOs.inputs.push(input);
+            input.debugName += "_" + (this.globalIOs.inputs.length - 1);
+            this.place(input);
+        } else {
+            const output = new Output(this.ctx, "Global");
+            output.circle.radius(Settings.IO_CIRCLE_RADIUS).color(Settings.COMPONENT_IO_OFF_COLOR);
+
+            this.globalIOs.outputs.push(output);
+            output.debugName += "_" + (this.globalIOs.outputs.length - 1);
+            this.place(output);
+        }
+        this.repositionGlobalIOs(IOtype);
+    }
+
+    removeGlobalIO(IOtype) {
+        if (IOtype === "input") {
+            if (this.globalIOs.inputs.length === 1) {
+                alert("Cannot remove the last global input");
+                return;
+            }
+
+            const input = this.globalIOs.inputs.pop();
+            input.IOConnections.forEach((connection) => {
+                CircuitManager.removeConnection(connection);
+            });
+            Bridge.sceneInstance.remove(input.selectionCircle, 0);
+            CircuitManager.removeComponent(input);
+            this.remove(input);
+        } else {
+            if (this.globalIOs.outputs.length === 1) {
+                alert("Cannot remove the last global output");
+                return;
+            }
+
+            const output = this.globalIOs.outputs.pop();
+            output.IOConnections.forEach((connection) => {
+                CircuitManager.removeConnection(connection);
+            });
+            Bridge.sceneInstance.remove(output.selectionCircle, 0);
+            CircuitManager.removeComponent(output);
+            this.remove(output);
+        }
+        this.repositionGlobalIOs(IOtype);
+    }
+
+    repositionGlobalIOs(IOtype) {
+        if (IOtype === "input") {
+            this.globalIOs.inputs.forEach((input, index) => {
+                const IOPos = this.calculateIOPosition(index, "input");
+                input.circle.at(IOPos.x, IOPos.y);
+                WiringManager.moveWiring(input);
+            });
+        } else {
+            this.globalIOs.outputs.forEach((output, index) => {
+                const IOPos = this.calculateIOPosition(index, "output");
+                output.circle.at(IOPos.x, IOPos.y);
+                WiringManager.moveWiring(output);
+            });
+        }
+    }
+
+    calculateIOPosition(index, IOtype) {
+        const IOcount = IOtype === "input" ? this.globalIOs.inputs.length : this.globalIOs.outputs.length;
+
+        const mainContainerHeight = this.canvas.height - (Settings.MAIN_CONTAINER_MARGIN + 90);
+        if (IOtype === "input") {
+            return {
+                x: Settings.MAIN_CONTAINER_MARGIN,
+                y: ((mainContainerHeight + Settings.MAIN_CONTAINER_MARGIN) * (index + 1)) / (IOcount + 1),
+            };
+        } else {
+            return {
+                x: Settings.CANVAS_WIDTH - Settings.MAIN_CONTAINER_MARGIN,
+                y: ((mainContainerHeight + Settings.MAIN_CONTAINER_MARGIN) * (index + 1)) / (IOcount + 1),
+            };
+        }
     }
 
     resizeCanvas() {

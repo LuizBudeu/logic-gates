@@ -2,6 +2,7 @@ import Bridge from "../bridge.js";
 import Wire from "../components/wire.js";
 import WiringManager from "./wiringManager.js";
 import CircuitManager from "./circuitManager.js";
+import Input from "../components/input.js";
 
 class SelectionManager {
     static selectedIOs = [];
@@ -13,6 +14,10 @@ class SelectionManager {
             this.selectedIOs[1].isSelected = false;
             Bridge.sceneInstance.remove(this.selectedIOs[1].selectionCircle, 0);
             this.selectedIOs.pop();
+        }
+
+        if (this.selectedIOs.length === 1 && this.selectedIOs[0] === io) {
+            return;
         }
 
         this.selectedIOs.push(io);
@@ -40,8 +45,16 @@ class SelectionManager {
     }
 
     static connectIOs() {
-        // this.selectedIOs[0].connect(this.selectedIOs[1]);
-        const connection = CircuitManager.addConnection(...this.selectedIOs);
+        const io1 = this.selectedIOs[0];
+        const io2 = this.selectedIOs[1];
+
+        if (io1.isGlobal() && io2.isGlobal() && ((io1 instanceof Input && io2 instanceof Input) || (io1.debugName.includes("Output") && io2.debugName.includes("Output")))) {
+            alert("Cannot connect two global inputs or outputs");
+            this.deselectAll();
+            return;
+        }
+
+        const connection = CircuitManager.addConnection(io1, io2);
 
         WiringManager.addWiring(connection);
 

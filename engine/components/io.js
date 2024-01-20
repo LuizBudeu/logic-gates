@@ -29,7 +29,7 @@ class IO extends Component {
         Mouse.addRightClickDownEvent(this.handleRightClick.bind(this));
 
         // Add to the circuit
-        CircuitManager.circuit.components.push(this);
+        CircuitManager.addComponent(this);
     }
 
     start() {}
