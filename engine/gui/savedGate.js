@@ -2,6 +2,7 @@ import Settings from "../settings.js";
 import Bridge from "../bridge.js";
 import Gate from "../components/gate.js";
 import Button from "../ui/button.js";
+import Mouse from "../input/mouse.js";
 
 class SavedGate extends Button {
     constructor(ctx, toolbox, name, path) {
@@ -12,6 +13,9 @@ class SavedGate extends Button {
         this.path = path;
 
         this.debugName = name + "_SavedGate";
+        this.canCreate = true;
+
+        Mouse.addRightClickUpEvent(this.handleRightClickUp.bind(this));
     }
 
     start() {
@@ -27,7 +31,9 @@ class SavedGate extends Button {
         this.rect.draw();
     }
 
-    onLeftClick({ x, y, button }) {
+    onLeftClickDown({ x, y, button }) {
+        if (!this.canCreate) return;
+
         this.getLogicFunctionFromPath()
             .then((logic) => {
                 if (logic) {
@@ -40,6 +46,12 @@ class SavedGate extends Button {
             .catch((error) => {
                 console.error(`Error loading logic function from file: ${this.path}`, error);
             });
+
+        this.canCreate = false;
+    }
+
+    handleRightClickUp({ x, y, button }) {
+        this.canCreate = true;
     }
 
     getLogicFunctionFromPath() {

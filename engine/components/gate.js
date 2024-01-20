@@ -5,6 +5,7 @@ import Output from "./output.js";
 import Mouse from "../input/mouse.js";
 import WiringManager from "../managers/wiringManager.js";
 import DeleteManager from "../managers/deleteManager.js";
+import SelectionManager from "../managers/selectionManager.js";
 import Bridge from "../bridge.js";
 import Component from "./component.js";
 import CircuitManager from "../managers/circuitManager.js";
@@ -26,6 +27,9 @@ class Gate extends Component {
 
         // Handle deletion
         Mouse.addLeftClickDownEvent(this.handleLeftClickDown.bind(this));
+
+        // Add to the circuit
+        CircuitManager.circuit.components.push(this);
     }
 
     start() {
@@ -65,9 +69,7 @@ class Gate extends Component {
         Mouse.addLeftClickDraggingEvent(this.handleDragging.bind(this), this.rect);
     }
 
-    update(deltaTime) {
-        this.compute();
-    }
+    update(deltaTime) {}
 
     draw() {
         this.rect.draw();
@@ -76,7 +78,6 @@ class Gate extends Component {
     compute() {
         const result = this.logic(this.inputs[0].value(), this.inputs[1].value());
         this.output.value(result);
-        this.output.propagate();
     }
 
     handleDragging({ deltaX, deltaY }) {
@@ -107,18 +108,22 @@ class Gate extends Component {
         if (deleteMode) {
             const mousePos = Mouse.getPosition();
             if (this.ctx.isPointInPath(mousePos.x, mousePos.y)) {
+                // Delete inputs, output, and connections
                 this.inputs.forEach((input) => {
                     input.IOConnections.forEach((connection) => {
                         CircuitManager.removeConnection(connection);
                     });
+                    Bridge.sceneInstance.remove(input.selectionCircle, 0);
                     DeleteManager.deleteGameObject(input);
                 });
 
                 this.output.IOConnections.forEach((connection) => {
                     CircuitManager.removeConnection(connection);
                 });
+                Bridge.sceneInstance.remove(this.output.selectionCircle, 0);
                 DeleteManager.deleteGameObject(this.output);
 
+                // Delete the gate
                 DeleteManager.deleteGameObject(this);
             }
         }

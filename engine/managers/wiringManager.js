@@ -58,7 +58,7 @@ class WiringManager {
         const ioId = Bridge.sceneInstance.getIdByGameObject(io);
 
         if (!ioId) {
-            throw new Error("IO not found");
+            return;
         }
 
         Object.keys(WiringManager.wiring).forEach((key) => {

@@ -31,7 +31,7 @@ class Trash extends Button {
         this.image.draw();
     }
 
-    onLeftClick() {
+    onLeftClickDown() {
         if (this.isSelected) {
             this.rect.color(Settings.TOOLBOX_BUTTON_COLOR);
             this.isSelected = false;

@@ -1,10 +1,34 @@
 import Settings from "../settings.js";
 import Bridge from "../bridge.js";
+import WiringManager from "./wiringManager.js";
+import Input from "../components/input.js";
+// import Output from "../components/output.js";
 import IO from "../components/io.js";
 import Connection from "../components/connection.js";
-import Input from "../components/input.js";
 
 class CircuitManager {
+    static circuit = {
+        components: [],
+        // connections: [],
+    };
+
+    static solveCircuit() {
+        CircuitManager.circuit.components.forEach((component) => {
+            // If component is an upstream IO, propagate
+            if (component instanceof IO) {
+                component.IOConnections.forEach((connection) => {
+                    if (component.isUpstream(connection)) {
+                        component.propagate(connection.downstream);
+                    }
+                });
+            }
+            // Component is a gate, compute
+            else {
+                component.compute();
+            }
+        });
+    }
+
     static addConnection(io1, io2) {
         const connection = this.getNewConnection(io1, io2);
         io1.IOConnections.push(connection);
@@ -18,6 +42,28 @@ class CircuitManager {
 
         io1.IOConnections = io1.IOConnections.filter((conn) => conn !== connection);
         io2.IOConnections = io2.IOConnections.filter((conn) => conn !== connection);
+
+        WiringManager.removeWiring(connection);
+
+        // Reset the value of the IOs to natural state
+        if (io1 instanceof Input && !io1.isGlobal()) {
+            io1.value(false);
+        }
+        if (io2 instanceof Input && !io2.isGlobal()) {
+            io2.value(false);
+        }
+        if (io1.debugName.includes("_Output") && io1.isGlobal()) {
+            io1.value(false);
+        }
+        if (io2.debugName.includes("_Output") && io2.isGlobal()) {
+            io2.value(false);
+        }
+        if (io1.debugName.includes("_Output") && !io1.isGlobal()) {
+            io2.value(false);
+        }
+        if (io2.debugName.includes("_Output") && !io2.isGlobal()) {
+            io1.value(false);
+        }
     }
 
     static getNewConnection(io1, io2) {
@@ -28,11 +74,10 @@ class CircuitManager {
     static getConnection(io1, io2) {}
 
     static getIOsDirection(io1, io2) {
-        let upstream;
-        let downstream;
+        let upstream, downstream;
 
         if (io1 instanceof Input) {
-            if (io1.gate === null) {
+            if (io1.isGlobal()) {
                 upstream = io1;
                 downstream = io2;
             } else {
@@ -40,7 +85,7 @@ class CircuitManager {
                 upstream = io2;
             }
         } else {
-            if (io1.gate === null) {
+            if (io1.isGlobal()) {
                 downstream = io1;
                 upstream = io2;
             } else {

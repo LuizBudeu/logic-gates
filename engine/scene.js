@@ -9,6 +9,7 @@ import Trash from "./gui/trash.js";
 import Save from "./gui/save.js";
 import Mouse from "./input/mouse.js";
 import Text from "./ui/text.js";
+import CircuitManager from "./managers/circuitManager.js";
 
 class Scene {
     constructor(canvas, ctx) {
@@ -56,6 +57,8 @@ class Scene {
                 gameObject.update(deltaTime);
             });
         }
+
+        CircuitManager.solveCircuit();
     }
 
     draw() {

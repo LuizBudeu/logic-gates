@@ -11,8 +11,10 @@ class Button {
 
         this.debugName = "Button";
 
-        Mouse.addLeftClickDownEvent(this.onLeftClick.bind(this), this.rect);
-        Mouse.addRightClickDownEvent(this.onRightClick.bind(this), this.rect);
+        Mouse.addLeftClickDownEvent(this.onLeftClickDown.bind(this), this.rect);
+        Mouse.addLeftClickUpEvent(this.onLeftClickUp.bind(this), this.rect);
+        Mouse.addRightClickDownEvent(this.onRightClickDown.bind(this), this.rect);
+        Mouse.addRightClickUpEvent(this.onRightClickUp.bind(this), this.rect);
     }
 
     at(x = null, y = null) {
@@ -41,13 +43,13 @@ class Button {
         this.rect.draw();
     }
 
-    onLeftClick({ x, y, button }) {
-        console.error("Button.onLeftClick() not implemented.");
-    }
+    onLeftClickDown({ x, y, button }) {}
 
-    onRightClick({ x, y, button }) {
-        console.error("Button.onRightClick() not implemented.");
-    }
+    onLeftClickUp({ x, y, button }) {}
+
+    onRightClickDown({ x, y, button }) {}
+
+    onRightClickUp({ x, y, button }) {}
 }
 
 export default Button;

@@ -27,24 +27,14 @@ class IO extends Component {
 
         // Event listener for selecting the IO
         Mouse.addRightClickDownEvent(this.handleRightClick.bind(this));
+
+        // Add to the circuit
+        CircuitManager.circuit.components.push(this);
     }
 
     start() {}
 
-    update(deltaTime) {
-        // Every frame, IO tries to go to natural state
-        // if (this instanceof Input) {
-        //     this.value(0);
-        // }
-
-        // If IO is upstream, propagate
-        this.IOConnections.forEach((connection) => {
-            const dir = this.IOConnections[0]?.upstream === this ? "upstream" : "downstream";
-            if (dir === "upstream") {
-                this.propagate(connection.downstream);
-            }
-        });
-    }
+    update(deltaTime) {}
 
     draw() {
         this.circle.draw();
@@ -76,6 +66,14 @@ class IO extends Component {
                 SelectionManager.deselectIO(this);
             }
         }
+    }
+
+    isGlobal() {
+        return this.gate === null;
+    }
+
+    isUpstream(connection) {
+        return connection.upstream === this;
     }
 }
 

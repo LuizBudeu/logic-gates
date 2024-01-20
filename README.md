@@ -15,8 +15,8 @@ TODO:
 -- change cursor to trash when deleting
 -- rework IO connections to be upstream and downstream
 -- fix bug: when connecting wire from gate Input to Global Input, gate Input overrides Global Input
+-- fix bug: when deleting wire from connection, present IO state persists
 
--   fix bug: when deleting wire from connection, present IO state persists
 -   save current circuit to gate
 -   name circuit
 -   make many wiring attachments possible
