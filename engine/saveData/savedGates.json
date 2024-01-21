@@ -2,11 +2,5 @@
     {
         "name": "NAND",
         "path": "components/logic/NAND.js"
-    },
-    {
-        "name": "OR",
-        "path": "components/logic/OR.js"
     }
 ]
-
-

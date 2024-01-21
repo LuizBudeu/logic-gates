@@ -14,6 +14,7 @@ class Gate extends Component {
     constructor(
         ctx,
         logic,
+        name,
         ios = {
             inputs: 2,
             outputs: 1,
@@ -25,6 +26,7 @@ class Gate extends Component {
         this.ctx = ctx;
         this.logic = logic;
         this.ios = ios;
+        this.name = name;
 
         this.inputs = [];
         this.outputs = [];
@@ -42,11 +44,11 @@ class Gate extends Component {
             .size(100, 100)
             .color("#7a130d");
 
-        this.rect.innerText.style("Arial", 20, "#fff").content(this.logic.name);
+        this.rect.innerText.style("Arial", 20, "#fff").content(this.name);
         this.rect.innerText.centerInRect(this.rect);
 
         // Position the inputs and output
-        const debugName = `${this.logic.name}_Gate`;
+        const debugName = `${this.name}_Gate`;
 
         // for (let i = 0; i < this.ios.inputs; i++) {
         //     const rectPos = this.calculateIOPosition(i, "input");
@@ -149,28 +151,32 @@ class Gate extends Component {
             if (this.ctx.isPointInPath(mousePos.x, mousePos.y)) {
                 SelectionManager.selectedIOs = [];
 
-                // Delete inputs, output, and connections
-                this.inputs.forEach((input) => {
-                    input.IOConnections.forEach((connection) => {
-                        CircuitManager.removeConnection(connection);
-                    });
-                    Bridge.sceneInstance.remove(input.selectionCircle, 0);
-                    CircuitManager.removeComponent(input);
-                    DeleteManager.deleteGameObject(input);
-                });
-
-                this.output.IOConnections.forEach((connection) => {
-                    CircuitManager.removeConnection(connection);
-                });
-                Bridge.sceneInstance.remove(this.output.selectionCircle, 0);
-                CircuitManager.removeComponent(this.output);
-                DeleteManager.deleteGameObject(this.output);
-
-                // Delete the gate
-                DeleteManager.deleteGameObject(this);
-                CircuitManager.removeComponent(this);
+                this.delete();
             }
         }
+    }
+
+    delete() {
+        // Delete inputs, output, and connections
+        this.inputs.forEach((input) => {
+            input.IOConnections.forEach((connection) => {
+                CircuitManager.removeConnection(connection);
+            });
+            Bridge.sceneInstance.remove(input.selectionCircle, 0);
+            CircuitManager.removeComponent(input);
+            DeleteManager.deleteGameObject(input);
+        });
+
+        this.output.IOConnections.forEach((connection) => {
+            CircuitManager.removeConnection(connection);
+        });
+        Bridge.sceneInstance.remove(this.output.selectionCircle, 0);
+        CircuitManager.removeComponent(this.output);
+        DeleteManager.deleteGameObject(this.output);
+
+        // Delete the gate
+        DeleteManager.deleteGameObject(this);
+        CircuitManager.removeComponent(this);
     }
 }
 

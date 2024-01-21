@@ -29,6 +29,13 @@ class CircuitManager {
         });
     }
 
+    static clearCircuit() {
+        const gates = CircuitManager.getGates();
+        gates.forEach((gate) => {
+            gate.delete();
+        });
+    }
+
     static addComponent(component) {
         CircuitManager.circuit.components.push(component);
     }
@@ -106,6 +113,10 @@ class CircuitManager {
             upstream,
             downstream,
         };
+    }
+
+    static getGates() {
+        return CircuitManager.circuit.components.filter((component) => component.debugName.includes("_Gate"));
     }
 }
 

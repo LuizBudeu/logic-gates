@@ -2,6 +2,8 @@ import Button from "../ui/button.js";
 import Sprite from "../ui/sprite.js";
 import Settings from "../settings.js";
 import SaveManager from "../managers/saveManager.js";
+import CircuitManager from "../managers/circuitManager.js";
+import Bridge from "../bridge.js";
 
 class Save extends Button {
     constructor(ctx) {
@@ -43,6 +45,12 @@ class Save extends Button {
             this.isSelected = false;
         }
 
+        const gates = CircuitManager.getGates();
+        if (gates.length === 0) {
+            alert("There are no saved gates");
+            return;
+        }
+
         // Prompt user for gate name
         const gateName = prompt("Enter gate name:");
 
@@ -60,8 +68,24 @@ class Save extends Button {
             throw new Error("Saved gate name cannot be empty");
         }
 
+        // Check if gate name already exists
+        const savedGates = SaveManager.getSavedGatesFromLocalStorage();
+        const gateNameExists = savedGates.some((savedGate) => savedGate.name === gateName.toUpperCase());
+        if (gateNameExists) {
+            this.rect.color(Settings.TOOLBOX_BUTTON_COLOR);
+            this.isSelected = false;
+            alert(`Gate name "${gateName}" already exists`);
+            return;
+        }
+
         // Save circuit to gate
-        SaveManager.saveCircuitToGate(gateName);
+        SaveManager.saveCircuitToGate(gateName.toUpperCase());
+
+        // Reload toolbox
+        Bridge.sceneInstance.toolbox.getAndSaveSavedGates();
+
+        // Clear circuit
+        CircuitManager.clearCircuit();
     }
 }
 

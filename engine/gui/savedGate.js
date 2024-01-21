@@ -5,17 +5,18 @@ import Button from "../ui/button.js";
 import Mouse from "../input/mouse.js";
 
 class SavedGate extends Button {
-    constructor(ctx, toolbox, name, path) {
+    constructor(ctx, toolbox, name, logicFunction) {
         super(ctx);
         this.ctx = ctx;
         this.toolbox = toolbox;
         this.name = name;
-        this.path = path;
+        this.logicFunction = logicFunction;
+        // this.path = path;
 
         this.debugName = name + "_SavedGate";
         this.canCreate = true;
 
-        Mouse.addRightClickUpEvent(this.handleRightClickUp.bind(this));
+        Mouse.addRightClickUpEvent(this.onLeftClickUp.bind(this));
     }
 
     start() {
@@ -34,43 +35,48 @@ class SavedGate extends Button {
     onLeftClickDown({ x, y, button }) {
         if (!this.canCreate) return;
 
-        this.getLogicFunctionFromPath()
-            .then((logic) => {
-                if (logic) {
-                    const gate = new Gate(this.ctx, logic);
-                    Bridge.sceneInstance.place(gate, 1, true);
-                } else {
-                    console.error(`Error loading logic function from file: ${this.path}`);
-                }
-            })
-            .catch((error) => {
-                console.error(`Error loading logic function from file: ${this.path}`, error);
-            });
+        const gate = new Gate(this.ctx, this.logicFunction, this.name);
+        Bridge.sceneInstance.place(gate, 1, true);
+
+        // this.getLogicFunctionFromPath()
+        //     .then((logic) => {
+        //         if (logic) {
+        //             const gate = new Gate(this.ctx, logic);
+        //             Bridge.sceneInstance.place(gate, 1, true);
+
+        //             this.logicFunction = logic;
+        //         } else {
+        //             console.error(`Error loading logic function from file: ${this.path}`);
+        //         }
+        //     })
+        //     .catch((error) => {
+        //         console.error(`Error loading logic function from file: ${this.path}`, error);
+        //     });
 
         this.canCreate = false;
     }
 
-    handleRightClickUp({ x, y, button }) {
+    onLeftClickUp({ x, y, button }) {
         this.canCreate = true;
     }
 
-    getLogicFunctionFromPath() {
-        return import(`../${this.path}`)
-            .then((module) => {
-                const logicFunction = module.default;
+    // getLogicFunctionFromPath() {
+    //     return import(`../${this.path}`)
+    //         .then((module) => {
+    //             const logicFunction = module.default;
 
-                if (typeof logicFunction === "function") {
-                    return logicFunction;
-                } else {
-                    console.error(`Error: ${this.path} does not export a valid logic function.`);
-                    return null;
-                }
-            })
-            .catch((error) => {
-                console.error(`Error loading logic function from file: ${this.path}`, error);
-                return null;
-            });
-    }
+    //             if (typeof logicFunction === "function") {
+    //                 return logicFunction;
+    //             } else {
+    //                 console.error(`Error: ${this.path} does not export a valid logic function.`);
+    //                 return null;
+    //             }
+    //         })
+    //         .catch((error) => {
+    //             console.error(`Error loading logic function from file: ${this.path}`, error);
+    //             return null;
+    //         });
+    // }
 }
 
 export default SavedGate;

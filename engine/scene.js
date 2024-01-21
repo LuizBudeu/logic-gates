@@ -4,7 +4,7 @@ import Input from "./components/input.js";
 import Output from "./components/output.js";
 import Bridge from "./bridge.js";
 import TwoWayMap from "./utils/twoWayMap.js";
-import Toolbox from "./toolbox.js";
+import Toolbox from "./gui/toolbox.js";
 import Trash from "./gui/trash.js";
 import Save from "./gui/save.js";
 import Mouse from "./input/mouse.js";

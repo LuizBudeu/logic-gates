@@ -1,5 +1,5 @@
-function NAND(...args) {
-    return args.reduce((a, b) => !(a && b));
+function NAND(input1, input2) {
+    return !(input1 && input2);
 }
 
 export default NAND;
