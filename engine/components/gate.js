@@ -20,7 +20,7 @@ class Gate extends Component {
             outputs: 1,
         }
     ) {
-        super(`${logic.name}_Gate`);
+        super(`${name}_Gate`);
 
         /** @type {CanvasRenderingContext2D} */
         this.ctx = ctx;

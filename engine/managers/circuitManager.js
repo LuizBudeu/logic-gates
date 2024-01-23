@@ -4,6 +4,8 @@ import WiringManager from "./wiringManager.js";
 import Input from "../components/input.js";
 // import Output from "../components/output.js";
 import IO from "../components/io.js";
+// import Gate from "../components/gate.js";
+
 import Connection from "../components/connection.js";
 
 class CircuitManager {
@@ -116,7 +118,7 @@ class CircuitManager {
     }
 
     static getGates() {
-        return CircuitManager.circuit.components.filter((component) => component.debugName.includes("_Gate"));
+        return CircuitManager.circuit.components.filter((component) => component.debugName.includes("_Gate") && !(component instanceof IO));
     }
 }
 

@@ -4,6 +4,7 @@ import Settings from "../settings.js";
 import SaveManager from "../managers/saveManager.js";
 import CircuitManager from "../managers/circuitManager.js";
 import Bridge from "../bridge.js";
+import Core from "../core.js";
 
 class Save extends Button {
     constructor(ctx) {
@@ -69,7 +70,7 @@ class Save extends Button {
         }
 
         // Check if gate name already exists
-        const savedGates = SaveManager.getSavedGatesFromLocalStorage();
+        const savedGates = SaveManager.getSavedGates();
         const gateNameExists = savedGates.some((savedGate) => savedGate.name === gateName.toUpperCase());
         if (gateNameExists) {
             this.rect.color(Settings.TOOLBOX_BUTTON_COLOR);
@@ -81,11 +82,12 @@ class Save extends Button {
         // Save circuit to gate
         SaveManager.saveCircuitToGate(gateName.toUpperCase());
 
-        // Reload toolbox
-        Bridge.sceneInstance.toolbox.getAndSaveSavedGates();
+        // // Reload toolbox
+        // Bridge.sceneInstance.toolbox.loadSavedGates();
 
-        // Clear circuit
-        CircuitManager.clearCircuit();
+        // // Clear circuit
+        // CircuitManager.clearCircuit();
+        Core.reload();
     }
 }
 

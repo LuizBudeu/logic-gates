@@ -56,6 +56,10 @@ class Core {
         this.currentScene.setupCanvas();
         this.currentScene.start();
     }
+
+    static reload() {
+        window.location.reload();
+    }
 }
 
 export default Core;
