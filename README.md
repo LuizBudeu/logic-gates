@@ -23,10 +23,10 @@ TODO:
 -- fix cumulative code
 -- fix clearing circuit on succesfull save
 -- proof adder
+-- make button to completely clear localStorage
 
 -   add logic of multiple outputs/inputs to gates
 -   prohibit downstream IOs to have more than one connection
--   make button to completely clear localStorage
 -   add logic to delete savedGate from localStorage
 
 -   fix bug: spawn two gates in sequence, separate them, delete the first gate and the second will also get deleted incorrectly (for some reason if (this.ctx.isPointInPath(mousePos.x, mousePos.y)) is entering for second gate (todo: search better how this function works))

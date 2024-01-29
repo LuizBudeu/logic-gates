@@ -5,8 +5,9 @@ import Output from "./eletricalComponents/output.js";
 import Bridge from "./bridge.js";
 import TwoWayMap from "./utils/twoWayMap.js";
 import Toolbox from "./gui/toolbox.js";
-import Trash from "./gui/trash.js";
-import Save from "./gui/save.js";
+import Trash from "./gui/trashButton.js";
+import Save from "./gui/saveButton.js";
+import Reset from "./gui/resetButton.js";
 import Mouse from "./input/mouse.js";
 import Text from "./UIComponents/text.js";
 import CircuitManager from "./managers/circuitManager.js";
@@ -149,6 +150,7 @@ class Scene {
         // Trash and save buttons
         this.place(new Trash(this.ctx), 0);
         this.place(new Save(this.ctx), 0);
+        this.place(new Reset(this.ctx), 0);
     }
 
     setupIOButtons() {
