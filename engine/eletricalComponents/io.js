@@ -1,4 +1,4 @@
-import Circle from "../ui/circle.js";
+import Circle from "../UIComponents/circle.js";
 import Settings from "../settings.js";
 import Mouse from "../input/mouse.js";
 import Bridge from "../bridge.js";
@@ -6,7 +6,7 @@ import SelectionManager from "../managers/selectionManager.js";
 import CircuitManager from "../managers/circuitManager.js";
 import Connection from "./connection.js";
 import Component from "./component.js";
-import Text from "../ui/text.js";
+import Text from "../UIComponents/text.js";
 
 class IO extends Component {
     constructor(ctx, debugName = "", gate = null) {

@@ -1,12 +1,12 @@
 import Settings from "../settings.js";
 import Bridge from "../bridge.js";
 import WiringManager from "./wiringManager.js";
-import Input from "../components/input.js";
-// import Output from "../components/output.js";
-import IO from "../components/io.js";
-// import Gate from "../components/gate.js";
+import Input from "../eletricalComponents/input.js";
+// import Output from "../eletricalComponents/output.js";
+import IO from "../eletricalComponents/io.js";
+// import Gate from "../eletricalComponents/gate.js";
 
-import Connection from "../components/connection.js";
+import Connection from "../eletricalComponents/connection.js";
 
 class CircuitManager {
     static circuit = {

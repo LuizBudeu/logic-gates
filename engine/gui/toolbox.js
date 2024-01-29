@@ -1,4 +1,4 @@
-import Rect from "../ui/rect.js";
+import Rect from "../UIComponents/rect.js";
 import Bridge from "../bridge.js";
 import Settings from "../settings.js";
 import SavedGate from "./savedGate.js";

@@ -1,5 +1,5 @@
-import Button from "../ui/button.js";
-import Sprite from "../ui/sprite.js";
+import Button from "../UIComponents/button.js";
+import Sprite from "../UIComponents/sprite.js";
 import Settings from "../settings.js";
 import Mouse from "../input/mouse.js";
 

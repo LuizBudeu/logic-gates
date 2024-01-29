@@ -1,7 +1,7 @@
 import Settings from "../settings.js";
 import Bridge from "../bridge.js";
-import Gate from "../components/gate.js";
-import Button from "../ui/button.js";
+import Gate from "../eletricalComponents/gate.js";
+import Button from "../UIComponents/button.js";
 import Mouse from "../input/mouse.js";
 
 class SavedGate extends Button {

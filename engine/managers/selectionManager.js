@@ -1,8 +1,8 @@
 import Bridge from "../bridge.js";
-import Wire from "../components/wire.js";
+import Wire from "../eletricalComponents/wire.js";
 import WiringManager from "./wiringManager.js";
 import CircuitManager from "./circuitManager.js";
-import Input from "../components/input.js";
+import Input from "../eletricalComponents/input.js";
 
 class SelectionManager {
     static selectedIOs = [];

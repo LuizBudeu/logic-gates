@@ -1,9 +1,5 @@
-import gameObject from "../baseScript.js";
-
-class Circle extends gameObject {
+class Circle {
     constructor(ctx) {
-        super(ctx);
-
         /** @type {CanvasRenderingContext2D} */
         this.ctx = ctx;
         this.x = 100;
@@ -18,6 +14,10 @@ class Circle extends gameObject {
         this.dragStartX = 0;
         this.dragStartY = 0;
     }
+
+    start() {}
+
+    update() {}
 
     at(x = null, y = null) {
         if (x === null && y === null) return { x: this.x, y: this.y }; // Return the current position

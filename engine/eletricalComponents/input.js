@@ -1,4 +1,4 @@
-import Circle from "../ui/circle.js";
+import Circle from "../UIComponents/circle.js";
 import Settings from "../settings.js";
 import Bridge from "../bridge.js";
 import Mouse from "../input/mouse.js";

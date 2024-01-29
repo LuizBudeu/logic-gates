@@ -1,5 +1,5 @@
-import Button from "../ui/button.js";
-import Sprite from "../ui/sprite.js";
+import Button from "../UIComponents/button.js";
+import Sprite from "../UIComponents/sprite.js";
 import Settings from "../settings.js";
 import Bridge from "../bridge.js";
 import SelectionManager from "../managers/selectionManager.js";

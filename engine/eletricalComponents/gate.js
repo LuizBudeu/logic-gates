@@ -1,4 +1,4 @@
-import Rect from "../ui/rect.js";
+import Rect from "../UIComponents/rect.js";
 import Settings from "../settings.js";
 import Input from "./input.js";
 import Output from "./output.js";

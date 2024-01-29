@@ -1,5 +1,5 @@
 import Bridge from "../bridge.js";
-import Wire from "../components/wire.js";
+import Wire from "../eletricalComponents/wire.js";
 import Settings from "../settings.js";
 
 class WiringKey {

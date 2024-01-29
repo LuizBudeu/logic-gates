@@ -1,4 +1,4 @@
-import Circle from "../ui/circle.js";
+import Circle from "../UIComponents/circle.js";
 import Settings from "../settings.js";
 import IO from "./io.js";
 

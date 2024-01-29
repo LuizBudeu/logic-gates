@@ -1,9 +1,7 @@
 import Text from "./text.js";
-import gameObject from "../baseScript.js";
 
-class Rect extends gameObject {
+class Rect {
     constructor(ctx) {
-        super(ctx);
         /** @type {CanvasRenderingContext2D} */
         this.ctx = ctx;
         this.x = 0;
@@ -24,6 +22,10 @@ class Rect extends gameObject {
         this.dragStartY = 0;
         this.cornerHitBox = 10;
     }
+
+    start() {}
+
+    update() {}
 
     at(x = null, y = null) {
         if (x === null && y === null) return { x: this.x, y: this.y }; // Return the current position if no arguments are passed
