@@ -6,6 +6,7 @@ import Input from "../eletricalComponents/input.js";
 import Output from "../eletricalComponents/output.js";
 import CircuitManager from "./circuitManager.js";
 import { splitStringOnce } from "../utils/utils.js";
+import Save from "../gui/saveButton.js";
 
 class SaveManager {
     static funcStr = "";
@@ -13,13 +14,14 @@ class SaveManager {
     static savedGatesFromLocalStorage = [];
     static orderedSavedGates = [];
     static savedGatesCount = 1;
+    static savingGate = null;
 
     static loadSavedGatesFromLocalStorage() {
         SaveManager.savedGatesFromLocalStorage = [];
 
         // If there are no saved gates, save NAND gate
         if (window.localStorage.length === 0) {
-            localStorage.setItem("savedGate:NAND:0", "(input0, input1) => {return !(input0 && input1);};");
+            localStorage.setItem("savedGate:NAND:2_1:0", `(input0, input1) => {const output = {}; const result1 = !(input0 && input1); output["output0"] = result1; return output };`);
 
             SaveManager.savedGatesFromLocalStorage.push({
                 name: "NAND",
@@ -39,27 +41,39 @@ class SaveManager {
         const itemsKeys = Object.keys(items);
         for (let i = 0; i < itemsKeys.length; i++) {
             const key = itemsKeys[i];
-            const [_, gateName, gateOrder] = key.split(":");
-            orderedSavedGates.push({ name: `${_}:${gateName}`, order: gateOrder, code: items[key] });
+            const [_, gateName, ios, gateOrder] = key.split(":");
+            const iosSplit = ios.split("_").map(Number);
+            const iosInputs = iosSplit[0];
+            const iosOutputs = iosSplit[1];
+            orderedSavedGates.push({ name: `${_}:${gateName}`, order: gateOrder, code: items[key], ios: { inputs: iosInputs, outputs: iosOutputs } });
         }
         SaveManager.savedGatesCount = Math.max(...orderedSavedGates.map((gate) => gate.order)) + 1;
         orderedSavedGates.sort((a, b) => a.order - b.order);
         orderedSavedGates = orderedSavedGates.map((gate) => {
-            return { name: gate.name, code: gate.code };
+            const gateName = gate.name.replace("savedGate:", "");
+            return { name: gateName, code: gate.code, ios: gate.ios };
         });
 
-        let gates = [];
-        orderedSavedGates.forEach((gate) => {
-            gates[gate.name.replace("savedGate:", "")] = gate.code;
-        });
+        // let gates = [];
+        // orderedSavedGates.forEach((gate) => {
+        //     const gateName = gate.name.replace("savedGate:", "");
+        //     gates.push({
+        //         gateName: {
+        //             code: gate.code,
+        //             ios: gate.ios,
+        //         },
+        //     });
+        // });
 
         // Hydrate gates with previous definitions
-        const hydratedGates = SaveManager.hydrateGates(gates);
+        const hydratedGates = SaveManager.hydrateGates(orderedSavedGates);
         for (const gateName in hydratedGates) {
-            const logicFunction = eval(hydratedGates[gateName]);
+            const logicFunction = eval(hydratedGates[gateName].code);
+            const ios = hydratedGates[gateName].ios;
             SaveManager.savedGatesFromLocalStorage.push({
                 name: gateName,
                 logicFunction: logicFunction,
+                ios: ios,
             });
             if (!SaveManager.orderedSavedGates.includes(`savedGate:${gateName}`)) {
                 SaveManager.orderedSavedGates.push(`savedGate:${gateName}`);
@@ -74,18 +88,20 @@ class SaveManager {
     }
 
     static saveCircuitToGate(gateName) {
+        SaveManager.savingGate = gateName;
+        SaveManager.funcStr = `(`;
+        SaveManager.resultCount = 0;
+
         const globalOutputs = CircuitManager.circuit.components.filter((component) => component instanceof Output && component.isGlobal());
 
         const globalInputs = CircuitManager.circuit.components.filter((component) => component instanceof Input && component.isGlobal());
 
-        SaveManager.funcStr += `(`;
         globalInputs.forEach((input, index) => {
             SaveManager.funcStr += `input${index}`;
             if (index !== globalInputs.length - 1) SaveManager.funcStr += ", ";
         });
-        SaveManager.funcStr += ") => {";
 
-        SaveManager.resultCount = 0;
+        SaveManager.funcStr += ") => { const output = {};";
 
         // Get the result of each global output
         globalOutputs.forEach((output) => {
@@ -94,12 +110,24 @@ class SaveManager {
             const gate = upstreamIO.gate;
 
             SaveManager.checkAndWriteResultLine(gate);
+
+            const outputIndex = output.debugName.split("Global_Output_")[1];
+
+            SaveManager.funcStr += `output["output${outputIndex}"] = result${SaveManager.resultCount - 1}`;
+
+            if (SaveManager.savingGate === "NAND") {
+                SaveManager.funcStr += `;`;
+            } else {
+                SaveManager.funcStr += `["output${SaveManager.resultCount - 1}"];`;
+            }
         });
-        SaveManager.funcStr += `return result${SaveManager.resultCount};};`;
+        SaveManager.funcStr += `return output;};`;
 
         // Save logic function to local storage
-        localStorage.setItem(`savedGate:${gateName}:${SaveManager.savedGatesCount}`, SaveManager.funcStr);
+        localStorage.setItem(`savedGate:${gateName}:${globalInputs.length}_${globalOutputs.length}:${SaveManager.savedGatesCount}`, SaveManager.funcStr);
+
         SaveManager.savedGatesCount++;
+        SaveManager.savingGate = null;
     }
 
     static checkAndWriteResultLine(gate) {
@@ -110,6 +138,7 @@ class SaveManager {
 
         let gateStr = `${gate.name}(`;
 
+        // If there are inputs connected to the gate, then recursively write the result of the upstream gate
         if (inputsConnectedToGate.length !== 0) {
             inputsConnectedToGate.forEach((input) => {
                 if (input.IOConnections.length === 0) return;
@@ -120,6 +149,7 @@ class SaveManager {
             });
         }
 
+        // Write the result of the global inputs
         inputsConnectedToGlobalInputs.forEach((input) => {
             const connection = input.IOConnections[0];
             const upstreamIO = connection.upstream;
@@ -131,30 +161,63 @@ class SaveManager {
         gateStr = gateStr.slice(0, -1);
         gateStr += ");";
 
-        SaveManager.resultCount++;
         SaveManager.funcStr += `const result${SaveManager.resultCount} = ${gateStr}`;
+        SaveManager.resultCount++;
     }
 
-    static hydrateGates(gates) {
-        let keys = Object.keys(gates);
+    static hydrateGates(orderedGates) {
+        // const gates = SaveManager.extractCode(orderedGates);
+
+        // let keys = Object.keys(gates);
         let gatesHydrated = {};
         let paramCounts = {};
 
-        for (let i = 0; i < keys.length; i++) {
-            let currentKey = keys[i];
-            let currentDefinition = gates[currentKey];
-            let params = splitStringOnce(currentDefinition, " => {");
-            let paramCount = params[0].split(",").length;
+        // Get the number of parameters for each gate
+        // for (let i = 0; i < orderedGates.length; i++) {
+        //     let currentKey = keys[i];
+        //     let currentDefinition = gates[currentKey];
+        //     let params = splitStringOnce(currentDefinition, " => {");
+        //     let paramCount = params[0].split(",").length;
 
-            paramCounts[currentKey] = paramCount;
-        }
+        //     paramCounts[currentKey] = paramCount;
+        // }
 
-        for (let i = 0; i < keys.length; i++) {
-            let currentKey = keys[i];
-            let currentDefinition = gates[currentKey];
-            let previousDefinitions = keys
-                .slice(0, i)
-                .map((key) => `${key} = ${gates[key]}`)
+        // // Hydrate the gates with previous definitions
+        // for (let i = 0; i < keys.length; i++) {
+        //     let currentKey = keys[i];
+        //     let currentDefinition = gates[currentKey];
+        //     let previousDefinitions = keys
+        //         .slice(0, i)
+        //         .map((key) => `${key} = ${gates[key]}`)
+        //         .join("const ");
+
+        //     // Generate the function signature based on the number of parameters
+        //     let params = Array.from({ length: paramCounts[currentKey] }, (_, i) => `input${i}`).join(", ");
+
+        //     currentDefinition = currentDefinition.replace(`(${params})`, "");
+        //     if (previousDefinitions.length > 0) {
+        //         currentDefinition = currentDefinition.replace("=> {", "");
+        //     }
+
+        //     let constPreviousDefinition = previousDefinitions.length > 0 ? `const ${previousDefinitions};` : "";
+        //     let fullString = previousDefinitions.length > 0 ? `(${params}) => { ${constPreviousDefinition}; ${currentDefinition}` : `(${params})${currentDefinition}`;
+
+        //     gatesHydrated[currentKey] = {
+        //         code: fullString,
+        //         ios: orderedGates[currentKey].ios,
+        //     };
+        // }
+
+        orderedGates.forEach((gate) => {
+            paramCounts[gate.name] = gate.ios.inputs;
+        });
+
+        orderedGates.forEach((gate, index) => {
+            let currentKey = gate.name;
+            let currentDefinition = gate.code;
+            let previousDefinitions = orderedGates
+                .slice(0, index)
+                .map((gate) => `${gate.name} = ${gate.code}`)
                 .join("const ");
 
             // Generate the function signature based on the number of parameters
@@ -167,10 +230,24 @@ class SaveManager {
 
             let constPreviousDefinition = previousDefinitions.length > 0 ? `const ${previousDefinitions};` : "";
             let fullString = previousDefinitions.length > 0 ? `(${params}) => { ${constPreviousDefinition}; ${currentDefinition}` : `(${params})${currentDefinition}`;
-            gatesHydrated[currentKey] = fullString;
-        }
+
+            gatesHydrated[currentKey] = {
+                code: fullString,
+                ios: orderedGates[index].ios,
+            };
+        });
 
         return gatesHydrated;
+    }
+
+    static extractCode(gates) {
+        const newGates = {};
+        for (const key in gates) {
+            if (gates.hasOwnProperty(key) && gates[key].code) {
+                newGates[key] = gates[key].code;
+            }
+        }
+        return newGates;
     }
 }
 

@@ -183,6 +183,7 @@ class Scene {
             output.debugName += "_" + (this.globalIOs.outputs.length - 1);
             this.place(output);
         }
+
         this.repositionGlobalIOs(IOtype);
     }
 

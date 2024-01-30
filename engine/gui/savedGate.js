@@ -5,13 +5,13 @@ import Button from "../UIComponents/button.js";
 import Mouse from "../input/mouse.js";
 
 class SavedGate extends Button {
-    constructor(ctx, toolbox, name, logicFunction) {
+    constructor(ctx, toolbox, name, logicFunction, ios) {
         super(ctx);
         this.ctx = ctx;
         this.toolbox = toolbox;
         this.name = name;
         this.logicFunction = logicFunction;
-        // this.path = path;
+        this.ios = ios;
 
         this.debugName = name + "_SavedGate";
         this.canCreate = true;
@@ -35,7 +35,7 @@ class SavedGate extends Button {
     onLeftClickDown({ x, y, button }) {
         if (!this.canCreate) return;
 
-        const gate = new Gate(this.ctx, this.logicFunction, this.name);
+        const gate = new Gate(this.ctx, this.logicFunction, this.name, this.ios);
         Bridge.sceneInstance.place(gate, 1, true);
 
         this.canCreate = false;
