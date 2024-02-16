@@ -35,7 +35,7 @@ class Toolbox {
 
     setupSavedGates() {
         this.savedGatesData.forEach((gateObj, index) => {
-            const savedGate = new SavedGate(this.ctx, this, gateObj.name, gateObj.logicFunction);
+            const savedGate = new SavedGate(this.ctx, this, gateObj.name, gateObj.logicFunction, gateObj.ios);
             savedGate.start();
 
             // Set dimensions for the saved gate

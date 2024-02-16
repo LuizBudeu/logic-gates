@@ -30,5 +30,6 @@ TODO:
 -   add logic to delete savedGate from localStorage
 
 -   fix bug: spawn two gates in sequence, separate them, delete the first gate and the second will also get deleted incorrectly (for some reason if (this.ctx.isPointInPath(mousePos.x, mousePos.y)) is entering for second gate (todo: search better how this function works))
+-   fix bug: when reseting localStorage, first placed NAND won't compute properly, only on refresh does it work
 -   fix window resizing issues
 -   updat Rect, Circle classes to use new Mouse
