@@ -39,6 +39,28 @@ class SavedGate extends Button {
         Bridge.sceneInstance.place(gate, 1, true);
 
         this.canCreate = false;
+
+        // fetch("http://localhost:3000/status", {
+        //     method: "GET",
+        // }).then((response) => {
+        //     response.json().then((json) => {
+        //         console.log(json);
+        //     });
+        // });
+
+        fetch("http://localhost:3000/file", {
+            method: "POST",
+            body: JSON.stringify({
+                a: "newfile.txt",
+            }),
+            headers: {
+                "Content-Type": "application/json",
+            },
+        }).then((response) => {
+            response.json().then((json) => {
+                console.log(json);
+            });
+        });
     }
 
     onLeftClickUp({ x, y, button }) {
