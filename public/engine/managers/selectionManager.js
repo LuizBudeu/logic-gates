@@ -48,7 +48,7 @@ class SelectionManager {
         const io1 = this.selectedIOs[0];
         const io2 = this.selectedIOs[1];
 
-        if (io1.isGlobal() && io2.isGlobal() && ((io1 instanceof Input && io2 instanceof Input) || (io1.debugName.includes("Output") && io2.debugName.includes("Output")))) {
+        if (io1.isGlobal() && io2.isGlobal() && ((io1.type === "input" && io2.type === "input") || (io1.type === "output" && io2.type == "output"))) {
             alert("Cannot connect two global inputs or outputs");
             this.deselectAll();
             return;

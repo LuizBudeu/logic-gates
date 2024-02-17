@@ -19,6 +19,8 @@ class IO extends Component {
         this.circle = new Circle(this.ctx);
         this._value = false;
         this.isSelected = false;
+        this.type = null;
+        this.gateIOId = null;
 
         this.IOConnections = [];
 
@@ -74,6 +76,20 @@ class IO extends Component {
 
     isUpstream(connection) {
         return connection.upstream === this;
+    }
+
+    serialize() {
+        if (!this.isGlobal()) {
+            return {
+                id: `${this.gateIOId}`,
+            };
+        } else {
+            return {
+                type: this.type,
+                id: `${this.circuitId}`,
+                isGlobal: true,
+            };
+        }
     }
 }
 

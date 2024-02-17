@@ -8,6 +8,7 @@ class Input extends IO {
     constructor(ctx, interactive = false, debugName = "", gate = null) {
         debugName += "_Input";
         super(ctx, debugName, gate);
+        this.type = "input";
 
         if (interactive) {
             // Event listener for turning input on and off

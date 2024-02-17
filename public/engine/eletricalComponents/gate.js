@@ -59,6 +59,8 @@ class Gate extends Component {
 
             this.inputs.push(input);
             Bridge.sceneInstance.place(input);
+
+            input.gateIOId = i;
         }
 
         for (let i = 0; i < this.ios.outputs; i++) {
@@ -69,6 +71,8 @@ class Gate extends Component {
 
             this.outputs.push(output);
             Bridge.sceneInstance.place(output);
+
+            output.gateIOId = i;
         }
 
         Mouse.addLeftClickDraggingEvent(this.handleDragging.bind(this), this.rect);
@@ -170,6 +174,15 @@ class Gate extends Component {
         // Delete the gate
         DeleteManager.deleteGameObject(this);
         CircuitManager.removeComponent(this);
+    }
+
+    serialize() {
+        return {
+            type: "gate",
+            name: this.name,
+            inputs: this.inputs.map((input) => input.serialize()),
+            outputs: this.outputs.map((output) => output.serialize()),
+        };
     }
 }
 

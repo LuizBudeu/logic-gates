@@ -92,9 +92,9 @@ class SaveManager {
         SaveManager.funcStr = `(`;
         SaveManager.resultCount = 0;
 
-        const globalOutputs = CircuitManager.circuit.components.filter((component) => component instanceof Output && component.isGlobal());
+        const globalOutputs = CircuitManager.circuit.components.filter((component) => component.type === "output" && component.isGlobal());
 
-        const globalInputs = CircuitManager.circuit.components.filter((component) => component instanceof Input && component.isGlobal());
+        const globalInputs = CircuitManager.circuit.components.filter((component) => component.type === "input" && component.isGlobal());
 
         globalInputs.forEach((input, index) => {
             SaveManager.funcStr += `input${index}`;

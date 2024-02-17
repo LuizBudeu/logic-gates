@@ -6,6 +6,7 @@ class Output extends IO {
     constructor(ctx, debugName = "", gate = null) {
         debugName += "_Output";
         super(ctx, debugName, gate);
+        this.type = "output";
     }
 }
 

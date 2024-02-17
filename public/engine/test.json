@@ -1,0 +1,31 @@
+{
+    "components": [
+        {
+            "type": "Input",
+            "id": "1",
+            "isGlobal": true
+        },
+        {
+            "type": "Input",
+            "id": "2",
+            "isGlobal": true
+        },
+        {
+            "type": "Gate",
+            "id": "3",
+            "logic": "NAND",
+            "inputs": [{ "id": "0" }, { "id": "1" }],
+            "outputs": [{ "id": "0" }]
+        },
+        {
+            "type": "Output",
+            "id": "4",
+            "isGlobal": true
+        }
+    ],
+    "connections": [
+        { "upstream": "1", "downstream": "3_input0" },
+        { "upstream": "2", "downstream": "3_input1" },
+        { "upstream": "3_output0", "downstream": "4" }
+    ]
+}

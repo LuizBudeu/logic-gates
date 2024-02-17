@@ -2,17 +2,17 @@ import Settings from "../settings.js";
 import Bridge from "../bridge.js";
 import WiringManager from "./wiringManager.js";
 import Input from "../eletricalComponents/input.js";
-// import Output from "../eletricalComponents/output.js";
 import IO from "../eletricalComponents/io.js";
-// import Gate from "../eletricalComponents/gate.js";
 
 import Connection from "../eletricalComponents/connection.js";
 
 class CircuitManager {
     static circuit = {
         components: [],
-        // connections: [],
+        connections: [],
     };
+
+    static circuitId = 0;
 
     static solveCircuit() {
         CircuitManager.circuit.components.forEach((component) => {
@@ -40,6 +40,12 @@ class CircuitManager {
 
     static addComponent(component) {
         CircuitManager.circuit.components.push(component);
+
+        if (component instanceof IO && !component.isGlobal()) {
+            return;
+        }
+
+        component.circuitId = CircuitManager.circuitId++;
     }
 
     static removeComponent(component) {
@@ -50,6 +56,7 @@ class CircuitManager {
         const connection = this.getNewConnection(io1, io2);
         io1.IOConnections.push(connection);
         io2.IOConnections.push(connection);
+        CircuitManager.circuit.connections.push(connection);
         return connection;
     }
 
@@ -63,22 +70,22 @@ class CircuitManager {
         WiringManager.removeWiring(connection);
 
         // Reset the value of the IOs to natural state
-        if (io1 instanceof Input && !io1.isGlobal()) {
+        if (io1.type === "input" && !io1.isGlobal()) {
             io1.value(false);
         }
-        if (io2 instanceof Input && !io2.isGlobal()) {
+        if (io2.type === "input" && !io2.isGlobal()) {
             io2.value(false);
         }
-        if (io1.debugName.includes("_Output") && io1.isGlobal()) {
+        if (io1.type === "output" && io1.isGlobal()) {
             io1.value(false);
         }
-        if (io2.debugName.includes("_Output") && io2.isGlobal()) {
+        if (io2.type === "output" && io2.isGlobal()) {
             io2.value(false);
         }
-        if (io1.debugName.includes("_Output") && !io1.isGlobal()) {
+        if (io1.type === "output" && !io1.isGlobal()) {
             io2.value(false);
         }
-        if (io2.debugName.includes("_Output") && !io2.isGlobal()) {
+        if (io2.type === "output" && !io2.isGlobal()) {
             io1.value(false);
         }
     }
@@ -93,7 +100,7 @@ class CircuitManager {
     static getIOsDirection(io1, io2) {
         let upstream, downstream;
 
-        if (io1 instanceof Input) {
+        if (io1.type === "input") {
             if (io1.isGlobal()) {
                 upstream = io1;
                 downstream = io2;
@@ -119,6 +126,28 @@ class CircuitManager {
 
     static getGates() {
         return CircuitManager.circuit.components.filter((component) => component.debugName.includes("_Gate") && !(component instanceof IO));
+    }
+
+    static serialize() {
+        const serializedCircuit = {
+            components: [],
+            connections: [],
+        };
+
+        CircuitManager.circuit.components.forEach((component) => {
+            // Don't serialize non-global IOs because the gates will serialize them
+            if (component instanceof IO && !component.isGlobal()) {
+                return;
+            }
+
+            serializedCircuit.components.push(component.serialize());
+        });
+
+        CircuitManager.circuit.connections.forEach((connection) => {
+            serializedCircuit.connections.push(connection.serialize());
+        });
+
+        return JSON.stringify(serializedCircuit);
     }
 }
 
