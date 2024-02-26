@@ -1,0 +1,22 @@
+[
+    {
+        "name": "NAND",
+        "path": "logic/NAND.js",
+        "order": 0
+    },
+    {
+        "name": "NOT",
+        "path": "logic/NOT.js",
+        "order": 1
+    },
+    {
+        "name": "AND",
+        "path": "logic/AND.js",
+        "order": 2
+    },
+    {
+        "name": "TEST",
+        "path": "./logic/TEST.js",
+        "order": 3
+    }
+]

@@ -1,13 +1,24 @@
 {
     "components": [
-        { "type": "input", "id": "0", "isGlobal": true },
-        { "type": "input", "id": "1", "isGlobal": true },
-        { "type": "output", "id": "2", "isGlobal": true },
-        { "type": "gate", "name": "NAND", "inputs": [{ "id": "0" }, { "id": "1" }], "outputs": [{ "id": "0" }] }
+        { "type": "input", "circuitId": "0", "isGlobal": true, "IOId": "0" },
+        { "type": "input", "circuitId": "1", "isGlobal": true, "IOId": "1" },
+        { "type": "output", "circuitId": "2", "isGlobal": true, "IOId": "0" },
+        { "type": "gate", "name": "NOT", "circuitId": "3", "inputs": [{ "IOId": "0" }], "outputs": [{ "IOId": "0" }] },
+        { "type": "gate", "name": "NOT", "circuitId": "4", "inputs": [{ "IOId": "0" }], "outputs": [{ "IOId": "0" }] },
+        { "type": "gate", "name": "NAND", "circuitId": "5", "inputs": [{ "IOId": "0" }, { "IOId": "1" }], "outputs": [{ "IOId": "0" }] },
+        { "type": "gate", "name": "NAND", "circuitId": "6", "inputs": [{ "IOId": "0" }, { "IOId": "1" }], "outputs": [{ "IOId": "0" }] },
+        { "type": "gate", "name": "NOT", "circuitId": "7", "inputs": [{ "IOId": "0" }], "outputs": [{ "IOId": "0" }] },
+        { "type": "output", "circuitId": "8", "isGlobal": true, "IOId": "1" }
     ],
     "connections": [
-        { "upstream": "1", "downstream": "3_input1" },
-        { "upstream": "0", "downstream": "3_input0" },
-        { "upstream": "3_output0", "downstream": "2" }
+        { "upstream": "1", "downstream": "3_input0" },
+        { "upstream": "3_output0", "downstream": "4_input0" },
+        { "upstream": "4_output0", "downstream": "5_input1" },
+        { "upstream": "1", "downstream": "5_input0" },
+        { "upstream": "0", "downstream": "6_input0" },
+        { "upstream": "0", "downstream": "6_input1" },
+        { "upstream": "6_output0", "downstream": "7_input0" },
+        { "upstream": "7_output0", "downstream": "2" },
+        { "upstream": "5_output0", "downstream": "8" }
     ]
 }

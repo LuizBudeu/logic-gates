@@ -1,205 +1,112 @@
-function splitStringOnce(str, on) {
-    const [first, ...rest] = str.split(on);
-    return [first, rest.length > 0 ? rest.join(on) : null];
-}
-
-// let gates = {
-//     NAND: "(input0, input1) => {return !(input0 && input1);};",
-//     NOT: "(input0) => {const result1 = NAND(input0,input0);return result1;};",
-//     OR: "(input0, input1) => {const result1 = NOT(input0);const result2 = NOT(input1);const result3 = NAND(result1,result2);return result3;};",
-//     AND: "(input0, input1) => {const result1 = NAND(input0,input1);const result2 = NOT(result1);return result2;};",
-//     XOR: "(input0, input1) => {const result1 = OR(input0,input1);const result2 = NAND(input1,input0);const result3 = AND(result1,result2);return result3;};",
-//     ADDER: "(input0, input1, input2) => {const result1 = XOR(input0,input1);const result2 = XOR(result1,input2);const result3 = XOR(input0,input1);const result4 = AND(result3,input2);const result5 = AND(input1,input0);const result6 = OR(result4,result5);return result6;};",
-// };
-
-let gates = {
-    NAND: `(input0, input1) => {const output = {}; const result1 = !(input0 && input1); output["output0"] = result1; return output };`,
-    NOT: `(input0) => { const output = {};const result1 = NAND(input0,input0);output["output0"] = result1;return output;};`,
-    AND: `(input0, input1) => {const output = {};const result0 = NAND(input0, input1);const result1 = NOT(result0['output0']);output["output0"] = result1["output0"];return output;};`,
+const testCircuitJSON = {
+    components: [
+        { type: "input", circuitId: "0", isGlobal: true, IOId: "0" },
+        { type: "input", circuitId: "1", isGlobal: true, IOId: "1" },
+        { type: "output", circuitId: "2", isGlobal: true, IOId: "0" },
+        { type: "gate", name: "NOT", circuitId: "3", inputs: [{ IOId: "0" }], outputs: [{ IOId: "0" }] },
+        { type: "gate", name: "NOT", circuitId: "4", inputs: [{ IOId: "0" }], outputs: [{ IOId: "0" }] },
+        { type: "gate", name: "NAND", circuitId: "5", inputs: [{ IOId: "0" }, { IOId: "1" }], outputs: [{ IOId: "0" }] },
+        { type: "gate", name: "NAND", circuitId: "6", inputs: [{ IOId: "0" }, { IOId: "1" }], outputs: [{ IOId: "0" }] },
+        { type: "gate", name: "NOT", circuitId: "7", inputs: [{ IOId: "0" }], outputs: [{ IOId: "0" }] },
+        { type: "output", circuitId: "8", isGlobal: true, IOId: "1" },
+    ],
+    connections: [
+        { upstream: "1", downstream: "3_input0" },
+        { upstream: "3_output0", downstream: "4_input0" },
+        { upstream: "4_output0", downstream: "5_input1" },
+        { upstream: "1", downstream: "5_input0" },
+        { upstream: "0", downstream: "6_input0" },
+        { upstream: "0", downstream: "6_input1" },
+        { upstream: "6_output0", downstream: "7_input0" },
+        { upstream: "7_output0", downstream: "2" },
+        { upstream: "5_output0", downstream: "8" },
+    ],
 };
 
-let orderedGates = [
-    {
-        name: "NAND",
-        code: `(input0, input1) => {const output = {}; const result1 = !(input0 && input1); output["output0"] = result1; return output };`,
-        ios: {
-            inputs: 2,
-            outputs: 1,
-        },
-    },
-    {
-        name: "NOT",
-        code: `(input0) => { const output = {};const result1 = NAND(input0,input0);output["output0"] = result1;return output;};`,
-        ios: {
-            inputs: 1,
-            outputs: 1,
-        },
-    },
-    {
-        name: "AND",
-        code: `(input0, input1) => {const output = {};const result0 = NAND(input0, input1);const result1 = NOT(result0['output0']);output["output0"] = result1["output0"];return output;};`,
-        ios: {
-            inputs: 2,
-            outputs: 1,
-        },
-    },
-];
+function generateLogicFunction(circuitJSON, newGateName) {
+    const components = circuitJSON.components;
+    const connections = circuitJSON.connections;
 
-function hydrateGates(gates) {
-    let keys = Object.keys(gates);
-    let gatesHydrated = {};
-    let paramCounts = {};
+    const globalOutputs = components.filter((component) => component.type === "output" && component.isGlobal);
+    const globalInputs = components.filter((component) => component.type === "input" && component.isGlobal);
 
-    // Get the number of parameters for each gate
-    for (let i = 0; i < keys.length; i++) {
-        let currentKey = keys[i];
-        let currentDefinition = gates[currentKey];
-        let params = splitStringOnce(currentDefinition, " => {");
-        let paramCount = params[0].split(",").length;
+    const outputObj = {};
+    globalOutputs.forEach((globalOutput) => {
+        const outputName = `output${globalOutput.IOId}`;
+        outputObj[outputName] = "";
 
-        paramCounts[currentKey] = paramCount;
-    }
+        const upstreamConnection = connections.find((conn) => conn.downstream === globalOutput.circuitId);
+        const upstreamComponent = getUpstreamComponent(upstreamConnection);
 
-    // Hydrate the gates with previous definitions
-    for (let i = 0; i < keys.length; i++) {
-        let currentKey = keys[i];
-        let currentDefinition = gates[currentKey];
-        let previousDefinitions = keys
-            .slice(0, i)
-            .map((key) => `${key} = ${gates[key]}`)
-            .join("const ");
-
-        // Generate the function signature based on the number of parameters
-        let params = Array.from({ length: paramCounts[currentKey] }, (_, i) => `input${i}`).join(", ");
-
-        currentDefinition = currentDefinition.replace(`(${params})`, "");
-        if (previousDefinitions.length > 0) {
-            currentDefinition = currentDefinition.replace("=> {", "");
-        }
-
-        let constPreviousDefinition = previousDefinitions.length > 0 ? `const ${previousDefinitions};` : "";
-        let fullString = previousDefinitions.length > 0 ? `(${params}) => { ${constPreviousDefinition}; ${currentDefinition}` : `(${params})${currentDefinition}`;
-
-        gatesHydrated[currentKey] = fullString;
-    }
-
-    return gatesHydrated;
-}
-
-function hydratedGates2(orderedGates) {
-    let gatesHydrated = {};
-    let paramCounts = {};
-
-    orderedGates.forEach((gate) => {
-        paramCounts[gate.name] = gate.ios.inputs;
+        outputObj[outputName] += getUpstreamLogic(upstreamComponent, upstreamConnection.upstream.split("_")[1]);
     });
 
-    orderedGates.forEach((gate, index) => {
-        let currentKey = gate.name;
-        let currentDefinition = gate.code;
-        let previousDefinitions = orderedGates
-            .slice(0, index)
-            .map((gate) => `${gate.name} = ${gate.code}`)
-            .join("const ");
+    let logicFunctionString = `function ${newGateName} (`;
+    globalInputs.forEach((globalInput, index) => {
+        logicFunctionString += `input${globalInput.IOId}`;
+        if (index < globalInputs.length - 1) {
+            logicFunctionString += ", ";
+        }
+    });
+    logicFunctionString += ") {\n";
+    logicFunctionString += "return {\n";
+    Object.keys(outputObj).forEach((output, index) => {
+        logicFunctionString += `${output}: ${outputObj[output]}`;
+        if (index < Object.keys(outputObj).length - 1) {
+            logicFunctionString += ",\n";
+        }
+    });
+    logicFunctionString += "\n};\n}";
 
-        // Generate the function signature based on the number of parameters
-        let params = Array.from({ length: paramCounts[currentKey] }, (_, i) => `input${i}`).join(", ");
+    return logicFunctionString;
 
-        currentDefinition = currentDefinition.replace(`(${params})`, "");
-        if (previousDefinitions.length > 0) {
-            currentDefinition = currentDefinition.replace("=> {", "");
+    // Helper function to get upstreamCircuitId
+    function getUpstreamComponent(upstreamConnection) {
+        let upstreamCircuitId = upstreamConnection.upstream;
+        if (upstreamConnection.upstream.includes("_")) {
+            upstreamCircuitId = upstreamConnection.upstream.split("_")[0];
+        }
+        const upstreamComponent = components.find((component) => component.circuitId === upstreamCircuitId);
+        return upstreamComponent;
+    }
+
+    // Recursive function to get the logic string for a component
+    function getUpstreamLogic(upstreamComponent, outputIOId) {
+        let logicString = "";
+
+        if (upstreamComponent.type === "input" && upstreamComponent.isGlobal) {
+            logicString = `input${upstreamComponent.IOId}`;
+        } else if (upstreamComponent.type === "gate") {
+            logicString = `${upstreamComponent.name}(`;
+
+            const gateInputs = upstreamComponent.inputs;
+
+            gateInputs.forEach((input, index) => {
+                const upstreamConnection = connections.find((conn) => conn.downstream === `${upstreamComponent.circuitId}_input${input.IOId}`);
+
+                const upComponent = getUpstreamComponent(upstreamConnection);
+
+                if (upComponent.type === "input" && upComponent.isGlobal) {
+                    logicString += `input${upComponent.IOId}`;
+                } else if (upComponent.type === "gate") {
+                    logicString += getUpstreamLogic(upComponent, upstreamConnection.upstream.split("_")[1]);
+                } else {
+                    throw new Error("Invalid upstream component type");
+                }
+
+                if (index < gateInputs.length - 1) {
+                    logicString += ", ";
+                }
+            });
+
+            logicString += `).${outputIOId}`;
+        } else {
+            throw new Error("Invalid upstream component type");
         }
 
-        let constPreviousDefinition = previousDefinitions.length > 0 ? `const ${previousDefinitions};` : "";
-        let fullString = previousDefinitions.length > 0 ? `(${params}) => { ${constPreviousDefinition}; ${currentDefinition}` : `(${params})${currentDefinition}`;
-
-        gatesHydrated[currentKey] = {
-            code: fullString,
-            ios: orderedGates[index].ios,
-        };
-    });
-
-    return gatesHydrated;
+        return logicString;
+    }
 }
 
-let gatesHydrated = hydratedGates2(orderedGates);
-console.log(gatesHydrated);
-
-
-const nand = (input0, input1) => {
-    const output = {};
-    const result1 = !(input0 && input1);
-    output["output0"] = result1;
-    return output;
-};
-
-const not = (input0) => {
-    const NAND = (input0, input1) => {
-        const output = {};
-        const result1 = !(input0 && input1);
-        output["output0"] = result1;
-        return output;
-    };
-    const output = {};
-    const result1 = NAND(input0, input0);
-    output["output0"] = result1;
-    return output;
-};
-
-
-// let gatesHydrated = hydrateGates(gates);
-// console.log(gatesHydrated);
-
-// const and = (input0, input1) => {
-//     const NAND = (input0, input1) => {
-//         const output = {};
-//         const result0 = !(input0 && input1);
-//         output["output0"] = result0;
-//         return output;
-//     };
-//     const NOT = (input0) => {
-//         const output = {};
-//         const result0 = NAND(input0, input0);
-//         output["output0"] = result0["output0"];
-//         return output;
-//     };
-//     const output = {};
-//     const result0 = NAND(input0, input1);
-//     const result1 = NOT(...Object.values(result0));
-//     output["output0"] = result1["output1"];
-//     return output;
-// };
-
-// const and2 = (input0, input1) => {
-//     const output = {};
-//     const result0 = NAND(input0, input1);
-//     const result1 = NOT(result0["output0"]);
-//     output["output0"] = result1["output0"];
-//     return output;
-// };
-
-// const not = (input0) => {
-//     const NAND = (input0, input1) => {
-//         const output = {};
-//         const result1 = !(input0 && input1);
-//         output["output0"] = result1;
-//         return output;
-//     };
-//     const output = {};
-//     const result0 = NAND(input0, input0);
-//     output["output0"] = result0["output0"];
-//     return output;
-// };
-
-// const not2 = (input0) => {
-//     const NAND = (input0, input1) => {
-//         const output = {};
-//         const result1 = !(input0 && input1);
-//         output["output0"] = result1;
-//         return output;
-//     };
-//     const output = {};
-//     const result1 = NAND(input0, input0);
-//     output["output0"] = result1;
-//     return output;
-// };
+const logicFunctionString = generateLogicFunction(testCircuitJSON, "TEST");
+console.log(logicFunctionString);

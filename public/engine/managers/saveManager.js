@@ -9,12 +9,22 @@ import { splitStringOnce } from "../utils/utils.js";
 import Save from "../gui/saveButton.js";
 
 class SaveManager {
-    static funcStr = "";
-    static resultCount = 0;
-    static savedGatesFromLocalStorage = [];
-    static orderedSavedGates = [];
-    static savedGatesCount = 1;
-    static savingGate = null;
+    // static funcStr = "";
+    // static resultCount = 0;
+    // static savedGatesFromLocalStorage = [];
+    // static orderedSavedGates = [];
+    // static savedGatesCount = 1;
+    // static savingGate = null;
+
+    static savedGates = [];
+
+    static loadSavedGatesFromFile() {
+        fetch("/savedGates")
+            .then((response) => response.json())
+            .then((data) => {
+                SaveManager.savedGates = data; // TODO: corrigir formato de dados (em especial ios)
+            });
+    }
 
     static loadSavedGatesFromLocalStorage() {
         SaveManager.savedGatesFromLocalStorage = [];
@@ -84,171 +94,188 @@ class SaveManager {
     }
 
     static getSavedGates() {
-        return SaveManager.savedGatesFromLocalStorage;
+        return SaveManager.savedGates;
     }
 
     static saveCircuitToGate(gateName) {
-        SaveManager.savingGate = gateName;
-        SaveManager.funcStr = `(`;
-        SaveManager.resultCount = 0;
-
-        const globalOutputs = CircuitManager.circuit.components.filter((component) => component.type === "output" && component.isGlobal());
-
-        const globalInputs = CircuitManager.circuit.components.filter((component) => component.type === "input" && component.isGlobal());
-
-        globalInputs.forEach((input, index) => {
-            SaveManager.funcStr += `input${index}`;
-            if (index !== globalInputs.length - 1) SaveManager.funcStr += ", ";
-        });
-
-        SaveManager.funcStr += ") => { const output = {};";
-
-        // Get the result of each global output
-        globalOutputs.forEach((output) => {
-            const connection = output.IOConnections[0];
-            const upstreamIO = connection.upstream;
-            const gate = upstreamIO.gate;
-
-            SaveManager.checkAndWriteResultLine(gate);
-
-            const outputIndex = output.debugName.split("Global_Output_")[1];
-
-            SaveManager.funcStr += `output["output${outputIndex}"] = result${SaveManager.resultCount - 1}`;
-
-            if (SaveManager.savingGate === "NAND") {
-                SaveManager.funcStr += `;`;
-            } else {
-                SaveManager.funcStr += `["output${SaveManager.resultCount - 1}"];`;
-            }
-        });
-        SaveManager.funcStr += `return output;};`;
-
-        // Save logic function to local storage
-        localStorage.setItem(`savedGate:${gateName}:${globalInputs.length}_${globalOutputs.length}:${SaveManager.savedGatesCount}`, SaveManager.funcStr);
-
-        SaveManager.savedGatesCount++;
-        SaveManager.savingGate = null;
-    }
-
-    static checkAndWriteResultLine(gate) {
-        const inputs = gate.inputs;
-        const inputsConnectedToGate = inputs.filter((input) => !input.IOConnections[0]?.upstream.isGlobal());
-
-        const inputsConnectedToGlobalInputs = inputs.filter((input) => input.IOConnections[0]?.upstream.isGlobal());
-
-        let gateStr = `${gate.name}(`;
-
-        // If there are inputs connected to the gate, then recursively write the result of the upstream gate
-        if (inputsConnectedToGate.length !== 0) {
-            inputsConnectedToGate.forEach((input) => {
-                if (input.IOConnections.length === 0) return;
-                const connection = input.IOConnections[0];
-                const upstreamIO = connection.upstream;
-                SaveManager.checkAndWriteResultLine(upstreamIO.gate);
-                gateStr += `result${SaveManager.resultCount},`;
+        fetch("http://localhost:3000/circuitToGate", {
+            method: "POST",
+            body: JSON.stringify({
+                gateName,
+                circuit: CircuitManager.serialize(),
+            }),
+            headers: {
+                "Content-Type": "application/json",
+            },
+        })
+            .then((response) => response.json())
+            .then((json) => {
+                console.log(json);
             });
-        }
-
-        // Write the result of the global inputs
-        inputsConnectedToGlobalInputs.forEach((input) => {
-            const connection = input.IOConnections[0];
-            const upstreamIO = connection.upstream;
-
-            gateStr += `input${upstreamIO.debugName.split("Global_Input_")[1]},`;
-        });
-
-        // Remove the last comma
-        gateStr = gateStr.slice(0, -1);
-        gateStr += ");";
-
-        SaveManager.funcStr += `const result${SaveManager.resultCount} = ${gateStr}`;
-        SaveManager.resultCount++;
     }
 
-    static hydrateGates(orderedGates) {
-        // const gates = SaveManager.extractCode(orderedGates);
+    // static saveCircuitToGate(gateName) {
+    //     SaveManager.savingGate = gateName;
+    //     SaveManager.funcStr = `(`;
+    //     SaveManager.resultCount = 0;
 
-        // let keys = Object.keys(gates);
-        let gatesHydrated = {};
-        let paramCounts = {};
+    //     const globalOutputs = CircuitManager.circuit.components.filter((component) => component.type === "output" && component.isGlobal());
 
-        // Get the number of parameters for each gate
-        // for (let i = 0; i < orderedGates.length; i++) {
-        //     let currentKey = keys[i];
-        //     let currentDefinition = gates[currentKey];
-        //     let params = splitStringOnce(currentDefinition, " => {");
-        //     let paramCount = params[0].split(",").length;
+    //     const globalInputs = CircuitManager.circuit.components.filter((component) => component.type === "input" && component.isGlobal());
 
-        //     paramCounts[currentKey] = paramCount;
-        // }
+    //     globalInputs.forEach((input, index) => {
+    //         SaveManager.funcStr += `input${index}`;
+    //         if (index !== globalInputs.length - 1) SaveManager.funcStr += ", ";
+    //     });
 
-        // // Hydrate the gates with previous definitions
-        // for (let i = 0; i < keys.length; i++) {
-        //     let currentKey = keys[i];
-        //     let currentDefinition = gates[currentKey];
-        //     let previousDefinitions = keys
-        //         .slice(0, i)
-        //         .map((key) => `${key} = ${gates[key]}`)
-        //         .join("const ");
+    //     SaveManager.funcStr += ") => { const output = {};";
 
-        //     // Generate the function signature based on the number of parameters
-        //     let params = Array.from({ length: paramCounts[currentKey] }, (_, i) => `input${i}`).join(", ");
+    //     // Get the result of each global output
+    //     globalOutputs.forEach((output) => {
+    //         const connection = output.IOConnections[0];
+    //         const upstreamIO = connection.upstream;
+    //         const gate = upstreamIO.gate;
 
-        //     currentDefinition = currentDefinition.replace(`(${params})`, "");
-        //     if (previousDefinitions.length > 0) {
-        //         currentDefinition = currentDefinition.replace("=> {", "");
-        //     }
+    //         SaveManager.checkAndWriteResultLine(gate);
 
-        //     let constPreviousDefinition = previousDefinitions.length > 0 ? `const ${previousDefinitions};` : "";
-        //     let fullString = previousDefinitions.length > 0 ? `(${params}) => { ${constPreviousDefinition}; ${currentDefinition}` : `(${params})${currentDefinition}`;
+    //         const outputIndex = output.debugName.split("Global_Output_")[1];
 
-        //     gatesHydrated[currentKey] = {
-        //         code: fullString,
-        //         ios: orderedGates[currentKey].ios,
-        //     };
-        // }
+    //         SaveManager.funcStr += `output["output${outputIndex}"] = result${SaveManager.resultCount - 1}`;
 
-        orderedGates.forEach((gate) => {
-            paramCounts[gate.name] = gate.ios.inputs;
-        });
+    //         if (SaveManager.savingGate === "NAND") {
+    //             SaveManager.funcStr += `;`;
+    //         } else {
+    //             SaveManager.funcStr += `["output${SaveManager.resultCount - 1}"];`;
+    //         }
+    //     });
+    //     SaveManager.funcStr += `return output;};`;
 
-        orderedGates.forEach((gate, index) => {
-            let currentKey = gate.name;
-            let currentDefinition = gate.code;
-            let previousDefinitions = orderedGates
-                .slice(0, index)
-                .map((gate) => `${gate.name} = ${gate.code}`)
-                .join("const ");
+    //     // Save logic function to local storage
+    //     localStorage.setItem(`savedGate:${gateName}:${globalInputs.length}_${globalOutputs.length}:${SaveManager.savedGatesCount}`, SaveManager.funcStr);
 
-            // Generate the function signature based on the number of parameters
-            let params = Array.from({ length: paramCounts[currentKey] }, (_, i) => `input${i}`).join(", ");
+    //     SaveManager.savedGatesCount++;
+    //     SaveManager.savingGate = null;
+    // }
 
-            currentDefinition = currentDefinition.replace(`(${params})`, "");
-            if (previousDefinitions.length > 0) {
-                currentDefinition = currentDefinition.replace("=> {", "");
-            }
+    // static checkAndWriteResultLine(gate) {
+    //     const inputs = gate.inputs;
+    //     const inputsConnectedToGate = inputs.filter((input) => !input.IOConnections[0]?.upstream.isGlobal());
 
-            let constPreviousDefinition = previousDefinitions.length > 0 ? `const ${previousDefinitions};` : "";
-            let fullString = previousDefinitions.length > 0 ? `(${params}) => { ${constPreviousDefinition}; ${currentDefinition}` : `(${params})${currentDefinition}`;
+    //     const inputsConnectedToGlobalInputs = inputs.filter((input) => input.IOConnections[0]?.upstream.isGlobal());
 
-            gatesHydrated[currentKey] = {
-                code: fullString,
-                ios: orderedGates[index].ios,
-            };
-        });
+    //     let gateStr = `${gate.name}(`;
 
-        return gatesHydrated;
-    }
+    //     // If there are inputs connected to the gate, then recursively write the result of the upstream gate
+    //     if (inputsConnectedToGate.length !== 0) {
+    //         inputsConnectedToGate.forEach((input) => {
+    //             if (input.IOConnections.length === 0) return;
+    //             const connection = input.IOConnections[0];
+    //             const upstreamIO = connection.upstream;
+    //             SaveManager.checkAndWriteResultLine(upstreamIO.gate);
+    //             gateStr += `result${SaveManager.resultCount},`;
+    //         });
+    //     }
 
-    static extractCode(gates) {
-        const newGates = {};
-        for (const key in gates) {
-            if (gates.hasOwnProperty(key) && gates[key].code) {
-                newGates[key] = gates[key].code;
-            }
-        }
-        return newGates;
-    }
+    //     // Write the result of the global inputs
+    //     inputsConnectedToGlobalInputs.forEach((input) => {
+    //         const connection = input.IOConnections[0];
+    //         const upstreamIO = connection.upstream;
+
+    //         gateStr += `input${upstreamIO.debugName.split("Global_Input_")[1]},`;
+    //     });
+
+    //     // Remove the last comma
+    //     gateStr = gateStr.slice(0, -1);
+    //     gateStr += ");";
+
+    //     SaveManager.funcStr += `const result${SaveManager.resultCount} = ${gateStr}`;
+    //     SaveManager.resultCount++;
+    // }
+
+    // static hydrateGates(orderedGates) {
+    //     // const gates = SaveManager.extractCode(orderedGates);
+
+    //     // let keys = Object.keys(gates);
+    //     let gatesHydrated = {};
+    //     let paramCounts = {};
+
+    //     // Get the number of parameters for each gate
+    //     // for (let i = 0; i < orderedGates.length; i++) {
+    //     //     let currentKey = keys[i];
+    //     //     let currentDefinition = gates[currentKey];
+    //     //     let params = splitStringOnce(currentDefinition, " => {");
+    //     //     let paramCount = params[0].split(",").length;
+
+    //     //     paramCounts[currentKey] = paramCount;
+    //     // }
+
+    //     // // Hydrate the gates with previous definitions
+    //     // for (let i = 0; i < keys.length; i++) {
+    //     //     let currentKey = keys[i];
+    //     //     let currentDefinition = gates[currentKey];
+    //     //     let previousDefinitions = keys
+    //     //         .slice(0, i)
+    //     //         .map((key) => `${key} = ${gates[key]}`)
+    //     //         .join("const ");
+
+    //     //     // Generate the function signature based on the number of parameters
+    //     //     let params = Array.from({ length: paramCounts[currentKey] }, (_, i) => `input${i}`).join(", ");
+
+    //     //     currentDefinition = currentDefinition.replace(`(${params})`, "");
+    //     //     if (previousDefinitions.length > 0) {
+    //     //         currentDefinition = currentDefinition.replace("=> {", "");
+    //     //     }
+
+    //     //     let constPreviousDefinition = previousDefinitions.length > 0 ? `const ${previousDefinitions};` : "";
+    //     //     let fullString = previousDefinitions.length > 0 ? `(${params}) => { ${constPreviousDefinition}; ${currentDefinition}` : `(${params})${currentDefinition}`;
+
+    //     //     gatesHydrated[currentKey] = {
+    //     //         code: fullString,
+    //     //         ios: orderedGates[currentKey].ios,
+    //     //     };
+    //     // }
+
+    //     orderedGates.forEach((gate) => {
+    //         paramCounts[gate.name] = gate.ios.inputs;
+    //     });
+
+    //     orderedGates.forEach((gate, index) => {
+    //         let currentKey = gate.name;
+    //         let currentDefinition = gate.code;
+    //         let previousDefinitions = orderedGates
+    //             .slice(0, index)
+    //             .map((gate) => `${gate.name} = ${gate.code}`)
+    //             .join("const ");
+
+    //         // Generate the function signature based on the number of parameters
+    //         let params = Array.from({ length: paramCounts[currentKey] }, (_, i) => `input${i}`).join(", ");
+
+    //         currentDefinition = currentDefinition.replace(`(${params})`, "");
+    //         if (previousDefinitions.length > 0) {
+    //             currentDefinition = currentDefinition.replace("=> {", "");
+    //         }
+
+    //         let constPreviousDefinition = previousDefinitions.length > 0 ? `const ${previousDefinitions};` : "";
+    //         let fullString = previousDefinitions.length > 0 ? `(${params}) => { ${constPreviousDefinition}; ${currentDefinition}` : `(${params})${currentDefinition}`;
+
+    //         gatesHydrated[currentKey] = {
+    //             code: fullString,
+    //             ios: orderedGates[index].ios,
+    //         };
+    //     });
+
+    //     return gatesHydrated;
+    // }
+
+    // static extractCode(gates) {
+    //     const newGates = {};
+    //     for (const key in gates) {
+    //         if (gates.hasOwnProperty(key) && gates[key].code) {
+    //             newGates[key] = gates[key].code;
+    //         }
+    //     }
+    //     return newGates;
+    // }
 }
 
 export default SaveManager;

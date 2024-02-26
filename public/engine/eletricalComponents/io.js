@@ -20,7 +20,7 @@ class IO extends Component {
         this._value = false;
         this.isSelected = false;
         this.type = null;
-        this.gateIOId = null;
+        this.IOId = null;
 
         this.IOConnections = [];
 
@@ -81,13 +81,14 @@ class IO extends Component {
     serialize() {
         if (!this.isGlobal()) {
             return {
-                id: `${this.gateIOId}`,
+                IOId: `${this.IOId}`,
             };
         } else {
             return {
                 type: this.type,
-                id: `${this.circuitId}`,
+                circuitId: `${this.circuitId}`,
                 isGlobal: true,
+                IOId: `${this.IOId}`,
             };
         }
     }

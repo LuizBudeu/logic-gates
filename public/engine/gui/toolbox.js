@@ -28,7 +28,8 @@ class Toolbox {
     }
 
     loadSavedGates() {
-        SaveManager.loadSavedGatesFromLocalStorage();
+        // SaveManager.loadSavedGatesFromLocalStorage();
+        SaveManager.loadSavedGatesFromFile();
         this.savedGatesData = SaveManager.getSavedGates();
         this.setupSavedGates();
     }

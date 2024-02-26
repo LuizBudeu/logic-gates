@@ -174,6 +174,7 @@ class Scene {
 
             this.globalIOs.inputs.push(input);
             input.debugName += "_" + (this.globalIOs.inputs.length - 1);
+            input.IOId = this.globalIOs.inputs.length - 1;
             this.place(input);
         } else {
             const output = new Output(this.ctx, "Global");
@@ -181,6 +182,7 @@ class Scene {
 
             this.globalIOs.outputs.push(output);
             output.debugName += "_" + (this.globalIOs.outputs.length - 1);
+            output.IOId = this.globalIOs.outputs.length - 1;
             this.place(output);
         }
 
@@ -198,7 +200,7 @@ class Scene {
             input.IOConnections.forEach((connection) => {
                 CircuitManager.removeConnection(connection);
             });
-            Bridge.sceneInstance.remove(input.selectionCircle, 0);
+            this.remove(input.selectionCircle, 0);
             CircuitManager.removeComponent(input);
             this.remove(input);
         } else {
@@ -211,7 +213,7 @@ class Scene {
             output.IOConnections.forEach((connection) => {
                 CircuitManager.removeConnection(connection);
             });
-            Bridge.sceneInstance.remove(output.selectionCircle, 0);
+            this.remove(output.selectionCircle, 0);
             CircuitManager.removeComponent(output);
             this.remove(output);
         }
