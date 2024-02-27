@@ -4,7 +4,6 @@ import Settings from "../settings.js";
 import SaveManager from "../managers/saveManager.js";
 import CircuitManager from "../managers/circuitManager.js";
 import Bridge from "../bridge.js";
-import Core from "../core.js";
 
 class Save extends Button {
     constructor(ctx) {
@@ -81,13 +80,6 @@ class Save extends Button {
 
         // Save circuit to gate
         SaveManager.saveCircuitToGate(gateName.toUpperCase());
-
-        // // Reload toolbox
-        // Bridge.sceneInstance.toolbox.loadSavedGates();
-
-        // // Clear circuit
-        // CircuitManager.clearCircuit();
-        Core.reload();
     }
 }
 

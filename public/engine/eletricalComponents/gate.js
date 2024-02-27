@@ -9,7 +9,6 @@ import SelectionManager from "../managers/selectionManager.js";
 import Bridge from "../bridge.js";
 import Component from "./component.js";
 import CircuitManager from "../managers/circuitManager.js";
-import { getAllNumbersFromString } from "../utils/utils.js";
 
 class Gate extends Component {
     constructor(
@@ -88,8 +87,7 @@ class Gate extends Component {
         const result = this.logic(...this.inputs.map((input) => input.value()));
 
         this.outputs.forEach((output) => {
-            const outputIndex = getAllNumbersFromString(output.debugName);
-            output.value(result[`output${outputIndex}`]);
+            output.value(result[`output${output.IOId}`]);
         });
     }
 
@@ -103,7 +101,7 @@ class Gate extends Component {
         } else {
             return {
                 x: rectPos.x + this.rect.width,
-                y: rectPos.y + this.rect.height / (this.ios.outputs + 1),
+                y: rectPos.y + (this.rect.width * (index + 1)) / (this.ios.outputs + 1),
             };
         }
     }

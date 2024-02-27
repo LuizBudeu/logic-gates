@@ -28,14 +28,11 @@ class Toolbox {
     }
 
     loadSavedGates() {
-        // SaveManager.loadSavedGatesFromLocalStorage();
-        SaveManager.loadSavedGatesFromFile();
-        this.savedGatesData = SaveManager.getSavedGates();
-        this.setupSavedGates();
+        SaveManager.loadSavedGatesFromFile(this.setupSavedGates.bind(this));
     }
 
-    setupSavedGates() {
-        this.savedGatesData.forEach((gateObj, index) => {
+    setupSavedGates(savedGatesData) {
+        savedGatesData.forEach((gateObj, index) => {
             const savedGate = new SavedGate(this.ctx, this, gateObj.name, gateObj.logicFunction, gateObj.ios);
             savedGate.start();
 

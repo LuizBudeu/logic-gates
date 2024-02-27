@@ -51,15 +51,18 @@ app.get("/savedGatesAndLoadLogic", (request, response) => {
 
     let accumulatedCode = "";
     const logicFunctions = [];
+    let funcStr = "";
     savedGates.forEach((savedGate, index) => {
         const logicFunction = require(`./saveData/${savedGate.path}`);
 
         accumulatedCode += logicFunction.toString() + "\n";
+        funcStr = accumulatedCode + `${savedGate.name}`;
 
         logicFunctions.push({
             name: savedGate.name,
-            logic: accumulatedCode,
+            logic: funcStr,
             order: savedGate.order,
+            ios: savedGate.ios,
         });
     });
 
@@ -95,9 +98,9 @@ app.post("/circuitToGate", (request, response) => {
 
     const body = request.body;
     const gateName = body.gateName;
-    const circuit = body.circuit;
+    const circuit = typeof body.circuit == "object" ? body.circuit : JSON.parse(body.circuit);
 
-    function generateLogicFunction(circuitJSON, newGateName) {
+    function generateGate(circuitJSON, newGateName) {
         const components = circuitJSON.components;
         const connections = circuitJSON.connections;
 
@@ -132,7 +135,13 @@ app.post("/circuitToGate", (request, response) => {
         });
         logicFunctionString += "\n};\n}";
 
-        return logicFunctionString;
+        return {
+            logicFunctionString,
+            ios: {
+                inputs: globalInputs.length,
+                outputs: globalOutputs.length,
+            },
+        };
 
         // Helper function to get upstreamCircuitId
         function getUpstreamComponent(upstreamConnection) {
@@ -200,18 +209,19 @@ app.post("/circuitToGate", (request, response) => {
         logicFunctionString += `const ${savedGate.name} = require("./${savedGate.name}");\n`;
     });
 
-    const newGateLogicFunction = generateLogicFunction(circuit, gateName);
+    const newGate = generateGate(circuit, gateName);
 
-    logicFunctionString += newGateLogicFunction;
+    logicFunctionString += newGate.logicFunctionString;
     logicFunctionString += `\nmodule.exports = ${gateName};`;
 
     // Update savedGates file
-    const newGate = {
+    const newSavedGate = {
         name: gateName,
         path: `./logic/${gateName}.js`,
         order: savedGates.length,
+        ios: newGate.ios,
     };
-    savedGates.push(newGate);
+    savedGates.push(newSavedGate);
 
     fs.writeFileSync(path.join(__dirname, "/saveData/savedGates.json"), JSON.stringify(savedGates, null, 4));
 

@@ -1,7 +1,6 @@
 import Settings from "../settings.js";
 import Bridge from "../bridge.js";
 import WiringManager from "./wiringManager.js";
-import Input from "../eletricalComponents/input.js";
 import IO from "../eletricalComponents/io.js";
 
 import Connection from "../eletricalComponents/connection.js";

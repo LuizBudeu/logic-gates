@@ -2,21 +2,55 @@
     {
         "name": "NAND",
         "path": "logic/NAND.js",
-        "order": 0
+        "order": 0,
+        "ios": {
+            "inputs": 2,
+            "outputs": 1
+        }
     },
     {
         "name": "NOT",
         "path": "logic/NOT.js",
-        "order": 1
+        "order": 1,
+        "ios": {
+            "inputs": 1,
+            "outputs": 1
+        }
     },
     {
         "name": "AND",
         "path": "logic/AND.js",
-        "order": 2
+        "order": 2,
+        "ios": {
+            "inputs": 2,
+            "outputs": 1
+        }
     },
     {
-        "name": "TEST",
-        "path": "./logic/TEST.js",
-        "order": 3
+        "name": "OR",
+        "path": "./logic/OR.js",
+        "order": 3,
+        "ios": {
+            "inputs": 2,
+            "outputs": 1
+        }
+    },
+    {
+        "name": "XOR",
+        "path": "./logic/XOR.js",
+        "order": 4,
+        "ios": {
+            "inputs": 2,
+            "outputs": 1
+        }
+    },
+    {
+        "name": "ADDER",
+        "path": "./logic/ADDER.js",
+        "order": 5,
+        "ios": {
+            "inputs": 3,
+            "outputs": 2
+        }
     }
 ]
