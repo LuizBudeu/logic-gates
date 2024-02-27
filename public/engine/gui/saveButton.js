@@ -65,7 +65,16 @@ class Save extends Button {
         if (gateName === "") {
             this.rect.color(Settings.TOOLBOX_BUTTON_COLOR);
             this.isSelected = false;
-            throw new Error("Saved gate name cannot be empty");
+            alert("Saved gate name cannot be empty");
+            return;
+        }
+
+        // Check if gate name starts with a number
+        if (!isNaN(gateName.charAt(0))) {
+            this.rect.color(Settings.TOOLBOX_BUTTON_COLOR);
+            this.isSelected = false;
+            alert("Saved gate name cannot start with a number");
+            return;
         }
 
         // Check if gate name already exists
