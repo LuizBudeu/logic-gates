@@ -11,13 +11,13 @@ class Connection {
         if (this.upstream.isGlobal()) {
             upstreamId = `${this.upstream.circuitId}`;
         } else {
-            upstreamId = `${this.upstream.gate.circuitId}_${this.upstream.type}${this.upstream.gateIOId}`;
+            upstreamId = `${this.upstream.gate.circuitId}_${this.upstream.type}${this.upstream.IOId}`;
         }
 
         if (this.downstream.isGlobal()) {
             downstreamId = `${this.downstream.circuitId}`;
         } else {
-            downstreamId = `${this.downstream.gate.circuitId}_${this.downstream.type}${this.downstream.gateIOId}`;
+            downstreamId = `${this.downstream.gate.circuitId}_${this.downstream.type}${this.downstream.IOId}`;
         }
 
         return {
