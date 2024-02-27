@@ -39,9 +39,11 @@ class Gate extends Component {
     }
 
     start() {
+        const rectSize = this.calculateSize();
+
         this.rect = new Rect(this.ctx)
             .at(Settings.CANVAS_WIDTH / 2 - 50, Settings.CANVAS_HEIGHT / 2 - 50)
-            .size(100, 100)
+            .size(rectSize.width, rectSize.height)
             .color("#7a130d");
 
         this.rect.innerText.style("Arial", 20, "#fff").content(this.name);
@@ -96,12 +98,12 @@ class Gate extends Component {
         if (IOtype === "input") {
             return {
                 x: rectPos.x,
-                y: rectPos.y + (this.rect.width * (index + 1)) / (this.ios.inputs + 1),
+                y: rectPos.y + (this.rect.height * (index + 1)) / (this.ios.inputs + 1),
             };
         } else {
             return {
                 x: rectPos.x + this.rect.width,
-                y: rectPos.y + (this.rect.width * (index + 1)) / (this.ios.outputs + 1),
+                y: rectPos.y + (this.rect.height * (index + 1)) / (this.ios.outputs + 1),
             };
         }
     }
@@ -172,6 +174,19 @@ class Gate extends Component {
         // Delete the gate
         DeleteManager.deleteGameObject(this);
         CircuitManager.removeComponent(this);
+    }
+
+    calculateSize() {
+        const baseHeight = 50;
+        const baseWidth = 100;
+
+        const height = baseHeight + 50 * (Math.max(this.ios.inputs, this.ios.outputs) - 1);
+        const width = baseWidth; // TODO: This should be calculated based on the name
+
+        return {
+            height,
+            width,
+        };
     }
 
     serialize() {
