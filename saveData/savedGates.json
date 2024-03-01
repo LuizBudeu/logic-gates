@@ -45,30 +45,12 @@
         }
     },
     {
-        "name": "ADDER",
-        "path": "./logic/ADDER.js",
+        "name": "NOR",
+        "path": "./logic/NOR.js",
         "order": 5,
         "ios": {
-            "inputs": 3,
-            "outputs": 2
-        }
-    },
-    {
-        "name": "FOURBITADDER",
-        "path": "./logic/FOURBITADDER.js",
-        "order": 6,
-        "ios": {
-            "inputs": 9,
-            "outputs": 5
-        }
-    },
-    {
-        "name": "ALU",
-        "path": "./logic/ALU.js",
-        "order": 7,
-        "ios": {
-            "inputs": 9,
-            "outputs": 7
+            "inputs": 2,
+            "outputs": 1
         }
     }
 ]

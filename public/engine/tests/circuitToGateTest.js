@@ -1,27 +1,4 @@
-const testCircuitJSON = {
-    components: [
-        { type: "input", circuitId: "0", isGlobal: true, IOId: "0" },
-        { type: "input", circuitId: "1", isGlobal: true, IOId: "1" },
-        { type: "output", circuitId: "2", isGlobal: true, IOId: "0" },
-        { type: "gate", name: "NOT", circuitId: "3", inputs: [{ IOId: "0" }], outputs: [{ IOId: "0" }] },
-        { type: "gate", name: "NOT", circuitId: "4", inputs: [{ IOId: "0" }], outputs: [{ IOId: "0" }] },
-        { type: "gate", name: "NAND", circuitId: "5", inputs: [{ IOId: "0" }, { IOId: "1" }], outputs: [{ IOId: "0" }] },
-        { type: "gate", name: "NAND", circuitId: "6", inputs: [{ IOId: "0" }, { IOId: "1" }], outputs: [{ IOId: "0" }] },
-        { type: "gate", name: "NOT", circuitId: "7", inputs: [{ IOId: "0" }], outputs: [{ IOId: "0" }] },
-        { type: "output", circuitId: "8", isGlobal: true, IOId: "1" },
-    ],
-    connections: [
-        { upstream: "1", downstream: "3_input0" },
-        { upstream: "3_output0", downstream: "4_input0" },
-        { upstream: "4_output0", downstream: "5_input1" },
-        { upstream: "1", downstream: "5_input0" },
-        { upstream: "0", downstream: "6_input0" },
-        { upstream: "0", downstream: "6_input1" },
-        { upstream: "6_output0", downstream: "7_input0" },
-        { upstream: "7_output0", downstream: "2" },
-        { upstream: "5_output0", downstream: "8" },
-    ],
-};
+const testCircuitJSON = require("./circuitTest.json");
 
 function generateLogicFunction(circuitJSON, newGateName) {
     const components = circuitJSON.components;
@@ -70,8 +47,16 @@ function generateLogicFunction(circuitJSON, newGateName) {
         return upstreamComponent;
     }
 
-    // Recursive function to get the logic string for a component
-    function getUpstreamLogic(upstreamComponent, outputIOId) {
+    // Recursively get the logic string for a component with memoization
+    function getUpstreamLogic(upstreamComponent, outputIOId, memo = new Set()) {
+        const memoKey = `${upstreamComponent.circuitId}_${outputIOId}`;
+
+        if (memo.has(memoKey)) {
+            return "";
+        }
+
+        memo.add(memoKey);
+
         let logicString = "";
 
         if (upstreamComponent.type === "input" && upstreamComponent.isGlobal) {
@@ -89,7 +74,7 @@ function generateLogicFunction(circuitJSON, newGateName) {
                 if (upComponent.type === "input" && upComponent.isGlobal) {
                     logicString += `input${upComponent.IOId}`;
                 } else if (upComponent.type === "gate") {
-                    logicString += getUpstreamLogic(upComponent, upstreamConnection.upstream.split("_")[1]);
+                    logicString += getUpstreamLogic(upComponent, upstreamConnection.upstream.split("_")[1], memo);
                 } else {
                     throw new Error("Invalid upstream component type");
                 }
