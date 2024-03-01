@@ -20,8 +20,13 @@ class SavedGate extends Button {
     }
 
     start() {
-        this.rect.color(Settings.SAVED_GATE_COLOR);
-        this.rect.innerText.style("Arial", 15, "#fff").content(this.name);
+        const height = Settings.SAVED_GATE_BASE_HEIGHT;
+        const textWidth = this.ctx.measureText(this.name).width;
+        const padding = 20;
+        const width = Math.max(Settings.SAVED_GATE_BASE_WIDTH, textWidth + padding);
+
+        this.rect.color(Settings.SAVED_GATE_COLOR).size(width, height);
+        this.rect.innerText.style("Arial", Settings.SAVED_GATE_NAME_FONT_SIZE, "#fff").content(this.name);
     }
 
     update() {}

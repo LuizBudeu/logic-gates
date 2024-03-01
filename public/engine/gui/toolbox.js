@@ -12,13 +12,10 @@ class Toolbox {
         this.ctx = ctx;
 
         this.debugName = "Toolbox";
-
-        this.savedGatesData = [];
-        this.savedGates = [];
     }
 
     start() {
-        const height = 60;
+        const height = Settings.TOOLBOX_HEIGHT;
         this.rect = new Rect(this.ctx)
             .at(0, this.canvas.height - height)
             .size(this.canvas.width, height)
@@ -32,32 +29,20 @@ class Toolbox {
     }
 
     setupSavedGates(savedGatesData) {
+        const toolboxPos = this.rect.at();
+        let lastSavedGateX = 0;
+
         savedGatesData.forEach((gateObj, index) => {
             const savedGate = new SavedGate(this.ctx, this, gateObj.name, gateObj.logicFunction, gateObj.ios);
             savedGate.start();
 
-            // Set dimensions for the saved gate
-            const height = 40;
-            const width = 80;
-            savedGate.rect.size(width, height);
+            const gateX = toolboxPos.x + lastSavedGateX + Settings.SAVED_GATE_BASE_MARGIN.x;
+            const gateY = toolboxPos.y + Settings.SAVED_GATE_BASE_MARGIN.y;
 
-            // Set margin and spacing between saved gates
-            const margin = {
-                x: 10,
-                y: 10,
-            };
-            const spacing = width + margin.x;
-
-            // Calculate position for the saved gate
-            const toolboxPos = this.rect.at();
-            const gateX = toolboxPos.x + margin.x + index * spacing;
-            const gateY = toolboxPos.y + margin.y;
+            lastSavedGateX += savedGate.rect.width + Settings.SAVED_GATE_BASE_MARGIN.x;
 
             savedGate.rect.at(gateX, gateY);
             savedGate.rect.innerText.centerInRect(savedGate.rect);
-
-            this.savedGates.push(savedGate);
-
             Bridge.sceneInstance.place(savedGate, 0);
         });
     }

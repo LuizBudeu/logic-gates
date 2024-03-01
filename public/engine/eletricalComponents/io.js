@@ -4,11 +4,10 @@ import Mouse from "../input/mouse.js";
 import Bridge from "../bridge.js";
 import SelectionManager from "../managers/selectionManager.js";
 import CircuitManager from "../managers/circuitManager.js";
-import Connection from "./connection.js";
-import Component from "./component.js";
+import BaseComponent from "./baseComponent.js";
 import Text from "../UIComponents/text.js";
 
-class IO extends Component {
+class IO extends BaseComponent {
     constructor(ctx, debugName = "", gate = null) {
         super(debugName);
 

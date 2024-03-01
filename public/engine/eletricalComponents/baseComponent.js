@@ -1,8 +1,8 @@
-class Component {
+class BaseComponent {
     constructor(debugName = "") {
         this.debugName = debugName;
         this.circuitId = null;
     }
 }
 
-export default Component;
+export default BaseComponent;

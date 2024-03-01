@@ -7,10 +7,10 @@ import WiringManager from "../managers/wiringManager.js";
 import DeleteManager from "../managers/deleteManager.js";
 import SelectionManager from "../managers/selectionManager.js";
 import Bridge from "../bridge.js";
-import Component from "./component.js";
+import BaseComponent from "./baseComponent.js";
 import CircuitManager from "../managers/circuitManager.js";
 
-class Gate extends Component {
+class Gate extends BaseComponent {
     constructor(
         ctx,
         logic,
@@ -46,7 +46,7 @@ class Gate extends Component {
             .size(rectSize.width, rectSize.height)
             .color("#7a130d");
 
-        this.rect.innerText.style("Arial", 20, "#fff").content(this.name);
+        this.rect.innerText.style("Arial", Settings.GATE_NAME_FONT_SIZE, "#fff").content(this.name);
         this.rect.innerText.centerInRect(this.rect);
 
         // Position the inputs and output
@@ -177,11 +177,13 @@ class Gate extends Component {
     }
 
     calculateSize() {
-        const baseHeight = 50;
-        const baseWidth = 100;
+        const baseHeight = Settings.GATE_BASE_HEIGHT;
+        const baseWidth = Settings.GATE_BASE_WIDTH;
 
-        const height = baseHeight + 50 * (Math.max(this.ios.inputs, this.ios.outputs) - 1);
-        const width = baseWidth; // TODO: This should be calculated based on the name
+        const height = baseHeight + Settings.GATE_BASE_HEIGHT_MULTIPLIER * (Math.max(this.ios.inputs, this.ios.outputs) - 1);
+        const textWidth = this.ctx.measureText(this.name).width;
+        const padding = 30;
+        const width = Math.max(baseWidth, textWidth + padding);
 
         return {
             height,

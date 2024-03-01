@@ -28,10 +28,10 @@ class Scene {
             2: [],
             3: [],
             4: [],
-            5: [],
+            5: [], // Foreground
             6: [],
             7: [],
-            8: [],
+            8: [], // UI
             9: [],
             10: [],
         };
@@ -82,7 +82,7 @@ class Scene {
         // this.debug();
     }
 
-    place(gameObject, layer = 1, start = false) {
+    place(gameObject, layer = 5, start = false) {
         this.layerGameObjects[layer].push(gameObject);
         this.addToGameObjectMap(gameObject);
         if (start) gameObject.start();
