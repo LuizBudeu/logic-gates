@@ -88,7 +88,7 @@ class Scene {
         if (start) gameObject.start();
     }
 
-    remove(gameObject, layer = 1) {
+    remove(gameObject, layer = 5) {
         this.layerGameObjects[layer] = this.layerGameObjects[layer].filter((obj) => obj !== gameObject);
         this.removeFromGameObjectMap(gameObject);
     }
