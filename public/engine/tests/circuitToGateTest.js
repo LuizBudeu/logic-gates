@@ -7,6 +7,7 @@ function generateLogicFunction(circuitJSON, newGateName) {
     const globalOutputs = components.filter((component) => component.type === "output" && component.isGlobal);
     const globalInputs = components.filter((component) => component.type === "input" && component.isGlobal);
 
+    // Get return object
     const outputObj = {};
     globalOutputs.forEach((globalOutput) => {
         const outputName = `output${globalOutput.IOId}`;
@@ -18,6 +19,7 @@ function generateLogicFunction(circuitJSON, newGateName) {
         outputObj[outputName] += getUpstreamLogic(upstreamComponent, upstreamConnection.upstream.split("_")[1]);
     });
 
+    // Write function name and inputs
     let logicFunctionString = `function ${newGateName} (`;
     globalInputs.forEach((globalInput, index) => {
         logicFunctionString += `input${globalInput.IOId}`;
@@ -26,6 +28,8 @@ function generateLogicFunction(circuitJSON, newGateName) {
         }
     });
     logicFunctionString += ") {\n";
+
+    // Write return object
     logicFunctionString += "return {\n";
     Object.keys(outputObj).forEach((output, index) => {
         logicFunctionString += `${output}: ${outputObj[output]}`;

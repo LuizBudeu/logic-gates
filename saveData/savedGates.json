@@ -52,5 +52,14 @@
             "inputs": 2,
             "outputs": 1
         }
+    },
+    {
+        "name": "SRLATCH",
+        "path": "./logic/SRLATCH.js",
+        "order": 6,
+        "ios": {
+            "inputs": 2,
+            "outputs": 1
+        }
     }
 ]
