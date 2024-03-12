@@ -11,10 +11,9 @@ class SaveManager {
                 data.sort((a, b) => a.order - b.order);
 
                 data.forEach((gate) => {
-                    const logicFunction = eval(gate.logic);
                     SaveManager.savedGates.push({
                         name: gate.name,
-                        logicFunction: logicFunction,
+                        logicFunction: gate.logic,
                         ios: gate.ios,
                     });
                 });
@@ -40,7 +39,6 @@ class SaveManager {
         })
             .then((response) => response.json())
             .then((json) => {
-                console.log(json);
                 Core.reload();
             });
     }

@@ -1,11 +1,34 @@
 const testCircuitJSON = require("./circuitTest.json");
 
-function generateLogicFunction(circuitJSON, newGateName) {
+function generateGate(circuitJSON, newGateName) {
     const components = circuitJSON.components;
     const connections = circuitJSON.connections;
 
     const globalOutputs = components.filter((component) => component.type === "output" && component.isGlobal);
     const globalInputs = components.filter((component) => component.type === "input" && component.isGlobal);
+    const gates = components.filter((component) => component.type === "gate");
+
+    // Write function name
+    let logicFunctionString = `function ${newGateName} () {\n`;
+
+    // Write instantiation of lastOutput
+    logicFunctionString += "this.lastOutput = {};\n";
+
+    // Write compute function
+    logicFunctionString += `this.compute = function (`;
+    globalInputs.forEach((globalInput, index) => {
+        logicFunctionString += `input${globalInput.IOId}`;
+        if (index < globalInputs.length - 1) {
+            logicFunctionString += ", ";
+        }
+    });
+    logicFunctionString += ") {\n";
+
+    // Write function's instantiation of gates
+    gates.forEach((gate) => {
+        const gateObjName = `${gate.name}${gate.circuitId}`;
+        logicFunctionString += `if (this.${gateObjName} === undefined) {\nthis.${gateObjName} = new ${gate.name}();\n}\n`;
+    });
 
     // Get return object
     const outputObj = {};
@@ -19,27 +42,29 @@ function generateLogicFunction(circuitJSON, newGateName) {
         outputObj[outputName] += getUpstreamLogic(upstreamComponent, upstreamConnection.upstream.split("_")[1]);
     });
 
-    // Write function name and inputs
-    let logicFunctionString = `function ${newGateName} (`;
-    globalInputs.forEach((globalInput, index) => {
-        logicFunctionString += `input${globalInput.IOId}`;
-        if (index < globalInputs.length - 1) {
-            logicFunctionString += ", ";
-        }
-    });
-    logicFunctionString += ") {\n";
-
-    // Write return object
-    logicFunctionString += "return {\n";
+    // Write output object
+    logicFunctionString += "let output = {\n";
     Object.keys(outputObj).forEach((output, index) => {
         logicFunctionString += `${output}: ${outputObj[output]}`;
         if (index < Object.keys(outputObj).length - 1) {
             logicFunctionString += ",\n";
         }
     });
-    logicFunctionString += "\n};\n}";
+    logicFunctionString += "\n};";
 
-    return logicFunctionString;
+    // Write lastOutput
+    logicFunctionString += `\nthis.lastOutput = output;`;
+
+    // Write return statement
+    logicFunctionString += "\nreturn output;\n};\n}";
+
+    return {
+        logicFunctionString,
+        ios: {
+            inputs: globalInputs.length,
+            outputs: globalOutputs.length,
+        },
+    };
 
     // Helper function to get upstreamCircuitId
     function getUpstreamComponent(upstreamConnection) {
@@ -55,8 +80,9 @@ function generateLogicFunction(circuitJSON, newGateName) {
     function getUpstreamLogic(upstreamComponent, outputIOId, memo = new Set()) {
         const memoKey = `${upstreamComponent.circuitId}_${outputIOId}`;
 
+        // If the component has already been memoized, return the last output
         if (memo.has(memoKey)) {
-            return "";
+            return `this.${upstreamComponent.name}${upstreamComponent.circuitId}.lastOutput?.${outputIOId}`;
         }
 
         memo.add(memoKey);
@@ -66,7 +92,7 @@ function generateLogicFunction(circuitJSON, newGateName) {
         if (upstreamComponent.type === "input" && upstreamComponent.isGlobal) {
             logicString = `input${upstreamComponent.IOId}`;
         } else if (upstreamComponent.type === "gate") {
-            logicString = `${upstreamComponent.name}(`;
+            logicString = `this.${upstreamComponent.name}${upstreamComponent.circuitId}.compute(`;
 
             const gateInputs = upstreamComponent.inputs;
 
@@ -97,5 +123,5 @@ function generateLogicFunction(circuitJSON, newGateName) {
     }
 }
 
-const logicFunctionString = generateLogicFunction(testCircuitJSON, "TEST");
+const logicFunctionString = generateGate(testCircuitJSON, "TEST");
 console.log(logicFunctionString);

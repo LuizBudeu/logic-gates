@@ -24,7 +24,7 @@ app.get("/", (request, response) => {
 // Simple status route
 app.get("/status", (request, response) => {
     const status = {
-        Status: "Running",
+        status: "Running",
     };
 
     console.log("server status");
@@ -56,7 +56,7 @@ app.get("/savedGatesAndLoadLogic", (request, response) => {
         const logicFunction = require(`./saveData/${savedGate.path}`);
 
         accumulatedCode += logicFunction.toString() + "\n";
-        funcStr = accumulatedCode + `${savedGate.name}`;
+        funcStr = accumulatedCode + `new ${savedGate.name}()`;
 
         logicFunctions.push({
             name: savedGate.name,
@@ -106,7 +106,31 @@ app.post("/circuitToGate", (request, response) => {
 
         const globalOutputs = components.filter((component) => component.type === "output" && component.isGlobal);
         const globalInputs = components.filter((component) => component.type === "input" && component.isGlobal);
+        const gates = components.filter((component) => component.type === "gate");
 
+        // Write function name
+        let logicFunctionString = `function ${newGateName} () {\n`;
+
+        // Write instantiation of lastOutput
+        logicFunctionString += "this.lastOutput = {};\n";
+
+        // Write compute function
+        logicFunctionString += `this.compute = function (`;
+        globalInputs.forEach((globalInput, index) => {
+            logicFunctionString += `input${globalInput.IOId}`;
+            if (index < globalInputs.length - 1) {
+                logicFunctionString += ", ";
+            }
+        });
+        logicFunctionString += ") {\n";
+
+        // Write function's instantiation of gates
+        gates.forEach((gate) => {
+            const gateObjName = `${gate.name}${gate.circuitId}`;
+            logicFunctionString += `if (this.${gateObjName} === undefined) {\nthis.${gateObjName} = new ${gate.name}();\n}\n`;
+        });
+
+        // Get return object
         const outputObj = {};
         globalOutputs.forEach((globalOutput) => {
             const outputName = `output${globalOutput.IOId}`;
@@ -118,22 +142,21 @@ app.post("/circuitToGate", (request, response) => {
             outputObj[outputName] += getUpstreamLogic(upstreamComponent, upstreamConnection.upstream.split("_")[1]);
         });
 
-        let logicFunctionString = `function ${newGateName} (`;
-        globalInputs.forEach((globalInput, index) => {
-            logicFunctionString += `input${globalInput.IOId}`;
-            if (index < globalInputs.length - 1) {
-                logicFunctionString += ", ";
-            }
-        });
-        logicFunctionString += ") {\n";
-        logicFunctionString += "return {\n";
+        // Write output object
+        logicFunctionString += "let output = {\n";
         Object.keys(outputObj).forEach((output, index) => {
             logicFunctionString += `${output}: ${outputObj[output]}`;
             if (index < Object.keys(outputObj).length - 1) {
                 logicFunctionString += ",\n";
             }
         });
-        logicFunctionString += "\n};\n}";
+        logicFunctionString += "\n};";
+
+        // Write lastOutput
+        logicFunctionString += `\nthis.lastOutput = output;`;
+
+        // Write return statement
+        logicFunctionString += "\nreturn output;\n};\n}";
 
         return {
             logicFunctionString,
@@ -153,14 +176,23 @@ app.post("/circuitToGate", (request, response) => {
             return upstreamComponent;
         }
 
-        // Recursive function to get the logic string for a component
-        function getUpstreamLogic(upstreamComponent, outputIOId) {
+        // Recursively get the logic string for a component with memoization
+        function getUpstreamLogic(upstreamComponent, outputIOId, memo = new Set()) {
+            const memoKey = `${upstreamComponent.circuitId}_${outputIOId}`;
+
+            // If the component has already been memoized, return the last output
+            if (memo.has(memoKey)) {
+                return `this.${upstreamComponent.name}${upstreamComponent.circuitId}.lastOutput?.${outputIOId}`;
+            }
+
+            memo.add(memoKey);
+
             let logicString = "";
 
             if (upstreamComponent.type === "input" && upstreamComponent.isGlobal) {
                 logicString = `input${upstreamComponent.IOId}`;
             } else if (upstreamComponent.type === "gate") {
-                logicString = `${upstreamComponent.name}(`;
+                logicString = `this.${upstreamComponent.name}${upstreamComponent.circuitId}.compute(`;
 
                 const gateInputs = upstreamComponent.inputs;
 
@@ -172,7 +204,7 @@ app.post("/circuitToGate", (request, response) => {
                     if (upComponent.type === "input" && upComponent.isGlobal) {
                         logicString += `input${upComponent.IOId}`;
                     } else if (upComponent.type === "gate") {
-                        logicString += getUpstreamLogic(upComponent, upstreamConnection.upstream.split("_")[1]);
+                        logicString += getUpstreamLogic(upComponent, upstreamConnection.upstream.split("_")[1], memo);
                     } else {
                         throw new Error("Invalid upstream component type");
                     }
