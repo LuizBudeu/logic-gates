@@ -10,7 +10,7 @@
     },
     {
         "name": "NOT",
-        "path": "logic/NOT.js",
+        "path": "./logic/NOT.js",
         "order": 1,
         "ios": {
             "inputs": 1,
@@ -19,7 +19,7 @@
     },
     {
         "name": "AND",
-        "path": "logic/AND.js",
+        "path": "./logic/AND.js",
         "order": 2,
         "ios": {
             "inputs": 2,
@@ -36,8 +36,8 @@
         }
     },
     {
-        "name": "XOR",
-        "path": "./logic/XOR.js",
+        "name": "NOR",
+        "path": "./logic/NOR.js",
         "order": 4,
         "ios": {
             "inputs": 2,
@@ -45,30 +45,30 @@
         }
     },
     {
-        "name": "ADDER",
-        "path": "./logic/ADDER.js",
+        "name": "SRLATCH",
+        "path": "./logic/SRLATCH.js",
         "order": 5,
         "ios": {
-            "inputs": 3,
-            "outputs": 2
+            "inputs": 2,
+            "outputs": 1
         }
     },
     {
-        "name": "FOURBITADDER",
-        "path": "./logic/FOURBITADDER.js",
+        "name": "DLATCH",
+        "path": "./logic/DLATCH.js",
         "order": 6,
         "ios": {
-            "inputs": 9,
-            "outputs": 5
+            "inputs": 2,
+            "outputs": 1
         }
     },
     {
-        "name": "ALU",
-        "path": "./logic/ALU.js",
+        "name": "REGISTER",
+        "path": "./logic/REGISTER.js",
         "order": 7,
         "ios": {
-            "inputs": 9,
-            "outputs": 7
+            "inputs": 5,
+            "outputs": 4
         }
     }
 ]

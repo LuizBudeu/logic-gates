@@ -13,7 +13,7 @@ import CircuitManager from "../managers/circuitManager.js";
 class Gate extends BaseComponent {
     constructor(
         ctx,
-        logic,
+        logicFunctionStr,
         name,
         ios = {
             inputs: 2,
@@ -24,7 +24,7 @@ class Gate extends BaseComponent {
 
         /** @type {CanvasRenderingContext2D} */
         this.ctx = ctx;
-        this.logic = logic;
+        this.logicFunction = eval(logicFunctionStr);
         this.ios = ios;
         this.name = name;
 
@@ -86,7 +86,7 @@ class Gate extends BaseComponent {
     }
 
     compute() {
-        const result = this.logic(...this.inputs.map((input) => input.value()));
+        const result = this.logicFunction.compute(...this.inputs.map((input) => input.value()));
 
         this.outputs.forEach((output) => {
             output.value(result[`output${output.IOId}`]);

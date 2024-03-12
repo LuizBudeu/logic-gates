@@ -1,35 +1,36 @@
-const testCircuitJSON = {
-    components: [
-        { type: "input", circuitId: "0", isGlobal: true, IOId: "0" },
-        { type: "input", circuitId: "1", isGlobal: true, IOId: "1" },
-        { type: "output", circuitId: "2", isGlobal: true, IOId: "0" },
-        { type: "gate", name: "NOT", circuitId: "3", inputs: [{ IOId: "0" }], outputs: [{ IOId: "0" }] },
-        { type: "gate", name: "NOT", circuitId: "4", inputs: [{ IOId: "0" }], outputs: [{ IOId: "0" }] },
-        { type: "gate", name: "NAND", circuitId: "5", inputs: [{ IOId: "0" }, { IOId: "1" }], outputs: [{ IOId: "0" }] },
-        { type: "gate", name: "NAND", circuitId: "6", inputs: [{ IOId: "0" }, { IOId: "1" }], outputs: [{ IOId: "0" }] },
-        { type: "gate", name: "NOT", circuitId: "7", inputs: [{ IOId: "0" }], outputs: [{ IOId: "0" }] },
-        { type: "output", circuitId: "8", isGlobal: true, IOId: "1" },
-    ],
-    connections: [
-        { upstream: "1", downstream: "3_input0" },
-        { upstream: "3_output0", downstream: "4_input0" },
-        { upstream: "4_output0", downstream: "5_input1" },
-        { upstream: "1", downstream: "5_input0" },
-        { upstream: "0", downstream: "6_input0" },
-        { upstream: "0", downstream: "6_input1" },
-        { upstream: "6_output0", downstream: "7_input0" },
-        { upstream: "7_output0", downstream: "2" },
-        { upstream: "5_output0", downstream: "8" },
-    ],
-};
+const testCircuitJSON = require("./circuitTest.json");
 
-function generateLogicFunction(circuitJSON, newGateName) {
+function generateGate(circuitJSON, newGateName) {
     const components = circuitJSON.components;
     const connections = circuitJSON.connections;
 
     const globalOutputs = components.filter((component) => component.type === "output" && component.isGlobal);
     const globalInputs = components.filter((component) => component.type === "input" && component.isGlobal);
+    const gates = components.filter((component) => component.type === "gate");
 
+    // Write function name
+    let logicFunctionString = `function ${newGateName} () {\n`;
+
+    // Write instantiation of lastOutput
+    logicFunctionString += "this.lastOutput = {};\n";
+
+    // Write compute function
+    logicFunctionString += `this.compute = function (`;
+    globalInputs.forEach((globalInput, index) => {
+        logicFunctionString += `input${globalInput.IOId}`;
+        if (index < globalInputs.length - 1) {
+            logicFunctionString += ", ";
+        }
+    });
+    logicFunctionString += ") {\n";
+
+    // Write function's instantiation of gates
+    gates.forEach((gate) => {
+        const gateObjName = `${gate.name}${gate.circuitId}`;
+        logicFunctionString += `if (this.${gateObjName} === undefined) {\nthis.${gateObjName} = new ${gate.name}();\n}\n`;
+    });
+
+    // Get return object
     const outputObj = {};
     globalOutputs.forEach((globalOutput) => {
         const outputName = `output${globalOutput.IOId}`;
@@ -41,24 +42,29 @@ function generateLogicFunction(circuitJSON, newGateName) {
         outputObj[outputName] += getUpstreamLogic(upstreamComponent, upstreamConnection.upstream.split("_")[1]);
     });
 
-    let logicFunctionString = `function ${newGateName} (`;
-    globalInputs.forEach((globalInput, index) => {
-        logicFunctionString += `input${globalInput.IOId}`;
-        if (index < globalInputs.length - 1) {
-            logicFunctionString += ", ";
-        }
-    });
-    logicFunctionString += ") {\n";
-    logicFunctionString += "return {\n";
+    // Write output object
+    logicFunctionString += "let output = {\n";
     Object.keys(outputObj).forEach((output, index) => {
         logicFunctionString += `${output}: ${outputObj[output]}`;
         if (index < Object.keys(outputObj).length - 1) {
             logicFunctionString += ",\n";
         }
     });
-    logicFunctionString += "\n};\n}";
+    logicFunctionString += "\n};";
 
-    return logicFunctionString;
+    // Write lastOutput
+    logicFunctionString += `\nthis.lastOutput = output;`;
+
+    // Write return statement
+    logicFunctionString += "\nreturn output;\n};\n}";
+
+    return {
+        logicFunctionString,
+        ios: {
+            inputs: globalInputs.length,
+            outputs: globalOutputs.length,
+        },
+    };
 
     // Helper function to get upstreamCircuitId
     function getUpstreamComponent(upstreamConnection) {
@@ -70,14 +76,23 @@ function generateLogicFunction(circuitJSON, newGateName) {
         return upstreamComponent;
     }
 
-    // Recursive function to get the logic string for a component
-    function getUpstreamLogic(upstreamComponent, outputIOId) {
+    // Recursively get the logic string for a component with memoization
+    function getUpstreamLogic(upstreamComponent, outputIOId, memo = new Set()) {
+        const memoKey = `${upstreamComponent.circuitId}_${outputIOId}`;
+
+        // If the component has already been memoized, return the last output
+        if (memo.has(memoKey)) {
+            return `this.${upstreamComponent.name}${upstreamComponent.circuitId}.lastOutput?.${outputIOId}`;
+        }
+
+        memo.add(memoKey);
+
         let logicString = "";
 
         if (upstreamComponent.type === "input" && upstreamComponent.isGlobal) {
             logicString = `input${upstreamComponent.IOId}`;
         } else if (upstreamComponent.type === "gate") {
-            logicString = `${upstreamComponent.name}(`;
+            logicString = `this.${upstreamComponent.name}${upstreamComponent.circuitId}.compute(`;
 
             const gateInputs = upstreamComponent.inputs;
 
@@ -89,7 +104,7 @@ function generateLogicFunction(circuitJSON, newGateName) {
                 if (upComponent.type === "input" && upComponent.isGlobal) {
                     logicString += `input${upComponent.IOId}`;
                 } else if (upComponent.type === "gate") {
-                    logicString += getUpstreamLogic(upComponent, upstreamConnection.upstream.split("_")[1]);
+                    logicString += getUpstreamLogic(upComponent, upstreamConnection.upstream.split("_")[1], memo);
                 } else {
                     throw new Error("Invalid upstream component type");
                 }
@@ -108,5 +123,5 @@ function generateLogicFunction(circuitJSON, newGateName) {
     }
 }
 
-const logicFunctionString = generateLogicFunction(testCircuitJSON, "TEST");
+const logicFunctionString = generateGate(testCircuitJSON, "TEST");
 console.log(logicFunctionString);
