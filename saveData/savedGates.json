@@ -45,18 +45,9 @@
         }
     },
     {
-        "name": "SRLATCH",
-        "path": "./logic/SRLATCH.js",
-        "order": 5,
-        "ios": {
-            "inputs": 2,
-            "outputs": 1
-        }
-    },
-    {
         "name": "DLATCH",
         "path": "./logic/DLATCH.js",
-        "order": 6,
+        "order": 5,
         "ios": {
             "inputs": 2,
             "outputs": 1
@@ -65,7 +56,7 @@
     {
         "name": "REGISTER",
         "path": "./logic/REGISTER.js",
-        "order": 7,
+        "order": 6,
         "ios": {
             "inputs": 5,
             "outputs": 4
