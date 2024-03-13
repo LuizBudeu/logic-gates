@@ -87,6 +87,8 @@ class CircuitManager {
         if (io2.type === "output" && !io2.isGlobal()) {
             io1.value(false);
         }
+
+        CircuitManager.circuit.connections = CircuitManager.circuit.connections.filter((conn) => conn !== connection);
     }
 
     static getNewConnection(io1, io2) {
@@ -128,28 +130,6 @@ class CircuitManager {
     }
 
     static serialize() {
-        const serializedCircuit = {
-            components: [],
-            connections: [],
-        };
-
-        CircuitManager.circuit.components.forEach((component) => {
-            // Don't serialize non-global IOs because the gates will serialize them
-            if (component instanceof IO && !component.isGlobal()) {
-                return;
-            }
-
-            serializedCircuit.components.push(component.serialize());
-        });
-
-        CircuitManager.circuit.connections.forEach((connection) => {
-            serializedCircuit.connections.push(connection.serialize());
-        });
-
-        return JSON.stringify(serializedCircuit);
-    }
-
-    static serialize2() {
         const serializedCircuit = {
             components: [],
             connections: [],

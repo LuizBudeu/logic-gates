@@ -154,26 +154,16 @@ class Gate extends BaseComponent {
     delete() {
         // Delete inputs, output, and connections
         this.inputs.forEach((input) => {
-            input.IOConnections.forEach((connection) => {
-                CircuitManager.removeConnection(connection);
-            });
-            DeleteManager.deleteGameObject(input.selectionCircle, Settings.BACKGROUND_LAYER);
-            CircuitManager.removeComponent(input);
-            DeleteManager.deleteGameObject(input);
+            input.delete();
         });
 
         this.outputs.forEach((output) => {
-            output.IOConnections.forEach((connection) => {
-                CircuitManager.removeConnection(connection);
-            });
-            DeleteManager.deleteGameObject(output.selectionCircle, Settings.BACKGROUND_LAYER);
-            CircuitManager.removeComponent(output);
-            DeleteManager.deleteGameObject(output);
+            output.delete();
         });
 
         // Delete the gate
-        DeleteManager.deleteGameObject(this);
         CircuitManager.removeComponent(this);
+        DeleteManager.deleteGameObject(this);
     }
 
     calculateSize() {

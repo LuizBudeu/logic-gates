@@ -4,6 +4,7 @@ import Mouse from "../input/mouse.js";
 import Bridge from "../bridge.js";
 import SelectionManager from "../managers/selectionManager.js";
 import CircuitManager from "../managers/circuitManager.js";
+import DeleteManager from "../managers/deleteManager.js";
 import BaseComponent from "./baseComponent.js";
 import Text from "../UIComponents/text.js";
 
@@ -75,6 +76,15 @@ class IO extends BaseComponent {
 
     isUpstream(connection) {
         return connection.upstream === this;
+    }
+
+    delete() {
+        this.IOConnections.forEach((connection) => {
+            CircuitManager.removeConnection(connection);
+        });
+        DeleteManager.deleteGameObject(this.selectionCircle, Settings.BACKGROUND_LAYER);
+        CircuitManager.removeComponent(this);
+        DeleteManager.deleteGameObject(this);
     }
 
     serialize() {
