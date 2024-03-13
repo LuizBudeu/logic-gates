@@ -61,5 +61,41 @@
             "inputs": 5,
             "outputs": 4
         }
+    },
+    {
+        "name": "XOR",
+        "path": "./logic/XOR.js",
+        "order": 7,
+        "ios": {
+            "inputs": 2,
+            "outputs": 1
+        }
+    },
+    {
+        "name": "ADDER",
+        "path": "./logic/ADDER.js",
+        "order": 8,
+        "ios": {
+            "inputs": 3,
+            "outputs": 2
+        }
+    },
+    {
+        "name": "FOURBITADDER",
+        "path": "./logic/FOURBITADDER.js",
+        "order": 9,
+        "ios": {
+            "inputs": 9,
+            "outputs": 5
+        }
+    },
+    {
+        "name": "ALU",
+        "path": "./logic/ALU.js",
+        "order": 10,
+        "ios": {
+            "inputs": 9,
+            "outputs": 7
+        }
     }
 ]
