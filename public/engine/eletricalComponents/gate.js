@@ -157,7 +157,7 @@ class Gate extends BaseComponent {
             input.IOConnections.forEach((connection) => {
                 CircuitManager.removeConnection(connection);
             });
-            Bridge.sceneInstance.remove(input.selectionCircle, 0);
+            DeleteManager.deleteGameObject(input.selectionCircle, Settings.BACKGROUND_LAYER);
             CircuitManager.removeComponent(input);
             DeleteManager.deleteGameObject(input);
         });
@@ -166,7 +166,7 @@ class Gate extends BaseComponent {
             output.IOConnections.forEach((connection) => {
                 CircuitManager.removeConnection(connection);
             });
-            Bridge.sceneInstance.remove(output.selectionCircle, 0);
+            DeleteManager.deleteGameObject(output.selectionCircle, Settings.BACKGROUND_LAYER);
             CircuitManager.removeComponent(output);
             DeleteManager.deleteGameObject(output);
         });

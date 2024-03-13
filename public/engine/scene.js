@@ -82,13 +82,13 @@ class Scene {
         // this.debug();
     }
 
-    place(gameObject, layer = 5, start = false) {
+    place(gameObject, layer = Settings.FOREGROUND_LAYER, start = false) {
         this.layerGameObjects[layer].push(gameObject);
         this.addToGameObjectMap(gameObject);
         if (start) gameObject.start();
     }
 
-    remove(gameObject, layer = 5) {
+    remove(gameObject, layer = Settings.FOREGROUND_LAYER) {
         this.layerGameObjects[layer] = this.layerGameObjects[layer].filter((obj) => obj !== gameObject);
         this.removeFromGameObjectMap(gameObject);
     }

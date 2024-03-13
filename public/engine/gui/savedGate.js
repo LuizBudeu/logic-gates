@@ -41,7 +41,7 @@ class SavedGate extends Button {
         if (!this.canCreate) return;
 
         const gate = new Gate(this.ctx, this.logicFunction, this.name, this.ios);
-        Bridge.sceneInstance.place(gate, 1, true);
+        Bridge.sceneInstance.place(gate, Settings.FOREGROUND_LAYER, true);
 
         this.canCreate = false;
     }
