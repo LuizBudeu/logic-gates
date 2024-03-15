@@ -33,6 +33,7 @@ class Circle {
     }
 
     color(color = null) {
+        if (color === null) return this.circleColor;
         if (color !== null) this.circleColor = color;
         return this;
     }

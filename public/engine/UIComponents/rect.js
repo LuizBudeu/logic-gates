@@ -29,8 +29,8 @@ class Rect {
 
     at(x = null, y = null) {
         if (x === null && y === null) return { x: this.x, y: this.y }; // Return the current position if no arguments are passed
-        if (x) this.x = x;
-        if (y) this.y = y;
+        if (x !== null) this.x = x;
+        if (y !== null) this.y = y;
         return this;
     }
 
@@ -48,6 +48,7 @@ class Rect {
     }
 
     size(width = null, height = null, lineWidth = null) {
+        if (width === null && height === null) return { width: this.width, height: this.height };
         if (width) this.width = width;
         if (height) this.height = height;
         if (lineWidth) this.lineWidth = lineWidth;
@@ -55,6 +56,11 @@ class Rect {
     }
 
     color(rectColor = null, lineColor = null) {
+        if (rectColor === null && lineColor === null)
+            return {
+                rectColor: this.rectColor,
+                lineColor: this.lineColor,
+            };
         if (rectColor) this.rectColor = rectColor;
         if (lineColor) this.lineColor = lineColor;
         return this;

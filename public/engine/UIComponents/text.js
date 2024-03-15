@@ -28,18 +28,19 @@ class Text {
      */
     at(x = null, y = null) {
         if (x === null && y === null) return { x: this.x, y: this.y }; // Return the current position if no arguments are passed
-        if (x) this.x = x;
-        if (y) this.y = y;
+        if (x !== null) this.x = x;
+        if (y !== null) this.y = y;
         return this;
     }
 
     center(x = null, y = null) {
         if (x === null && y === null) return { x: this.x, y: this.y }; // Return the current position if no arguments are passed
+
         const textWidth = this.ctx.measureText(this.textContent).width;
         const textHeight = this.fontSize;
 
-        if (x) this.x = x - textWidth / 2;
-        if (y) this.y = y + textHeight / 3;
+        this.x = x - textWidth / 2;
+        this.y = y + textHeight / 3;
         return this;
     }
 
@@ -68,6 +69,7 @@ class Text {
      * @returns {Text} - The Text instance.
      */
     content(textContent = null) {
+        if (textContent === null) return this.textContent;
         if (textContent) this.textContent = textContent;
         return this;
     }
@@ -80,6 +82,13 @@ class Text {
      * @returns {Text} - The Text instance.
      */
     style(fontFamily = null, fontSize = null, fontColor = null) {
+        if (fontFamily === null && fontSize === null && fontColor === null)
+            return {
+                fontFamily: this.fontFamily,
+                fontSize: this.fontSize,
+                fontColor: this.fontColor,
+            };
+
         if (fontFamily) this.fontFamily = fontFamily;
         if (fontSize) this.fontSize = fontSize;
         if (fontColor) this.fontColor = fontColor;
@@ -93,6 +102,7 @@ class Text {
      * @returns {Text} - The Text instance.
      */
     color(color = null) {
+        if (color === null) return this.fontColor;
         if (color) this.fontColor = color;
         return this;
     }

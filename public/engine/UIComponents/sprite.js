@@ -29,8 +29,8 @@ class Sprite {
      */
     at(x = null, y = null) {
         if (x === null && y === null) return { x: this.x, y: this.y }; // Return the current position if no arguments are passed
-        if (x) this.x = x;
-        if (y) this.y = y;
+        if (x !== null) this.x = x;
+        if (y !== null) this.y = y;
         return this;
     }
 
@@ -53,6 +53,7 @@ class Sprite {
      * @returns {Sprite} - The Sprite instance.
      */
     source(src = null) {
+        if (src === null) return this.image.src;
         if (src) this.image.src = src;
         return this;
     }
