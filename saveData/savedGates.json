@@ -97,5 +97,14 @@
             "inputs": 9,
             "outputs": 7
         }
+    },
+    {
+        "name": "DFLIPFLOP",
+        "path": "./logic/DFLIPFLOP.js",
+        "order": 11,
+        "ios": {
+            "inputs": 2,
+            "outputs": 1
+        }
     }
 ]

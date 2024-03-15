@@ -27,7 +27,7 @@ class SaveManager {
     }
 
     static saveCircuitToGate(gateName) {
-        fetch("http://localhost:3000/circuitToGate", {
+        fetch("/circuitToGate", {
             method: "POST",
             body: JSON.stringify({
                 gateName,
