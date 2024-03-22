@@ -82,12 +82,55 @@ app.get("/logic/:name", (request, response) => {
             name: request.params.name,
             logic: null,
         });
+        return;
     }
     console.log("logic function is ", logicFunction.toString());
 
     response.send({
         name: request.params.name,
         logic: logicFunction.toString(),
+    });
+});
+
+app.delete("/gate/:name", (request, response) => {
+    console.log(`Deleting gate ${request.params.name}...`);
+
+    let savedGates = require("./saveData/savedGates.json");
+    let savedGatesNames = savedGates.map((savedGate) => savedGate.name);
+
+    if (!savedGatesNames.includes(request.params.name)) {
+        response.status(400);
+        response.send({
+            error: true,
+            message: `Could not find gate ${request.params.name} to delete`,
+        });
+        return;
+    }
+
+    // Delete logic function file
+    try {
+        fs.unlinkSync(`./saveData/logic/${request.params.name}.js`);
+    } catch (err) {
+        response.status(400);
+        response.send({
+            error: true,
+            message: `Could not find logic function file ${request.params.name}.js to delete`,
+        });
+        return;
+    }
+
+    savedGates = savedGates.filter((savedGate) => savedGate.name !== request.params.name);
+    // Recalculate order
+    savedGates.forEach((savedGate, index) => {
+        savedGate.order = index;
+    });
+    // Delete savedGate from savedGates.json
+    fs.writeFileSync(path.join(__dirname, "/saveData/savedGates.json"), JSON.stringify(savedGates, null, 4));
+
+    console.log(`Deleted gate ${request.params.name}`);
+    response.send({
+        error: false,
+        message: `Deleted gate ${request.params.name}`,
     });
 });
 
