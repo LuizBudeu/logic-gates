@@ -4,6 +4,14 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const fs = require("fs");
 const { log } = require("console");
+const sqlite3 = require('sqlite3').verbose();
+
+let db = new sqlite3.Database('./Nandesis.db', sqlite3.OPEN_READWRITE, (err) => {
+    if (err) {
+        return console.error(err.message);
+    }
+    console.log('Connected to the Nandesis.db SQlite database.');
+});
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -30,6 +38,31 @@ app.get("/status", (request, response) => {
     console.log("server status");
 
     response.send(JSON.stringify(status));
+});
+
+// login page route
+app.get("/login", (request, response) => {
+    response.sendFile(path.join(__dirname, "/login.html"));
+});
+
+// login route
+app.post("/login", (request, response) => {
+    console.log("login");
+    const body = request.body;
+    let email = body.email;
+    let password = body.password;
+
+    db.get(`select id from user
+        where email = ? and password = ?`, [email, password], 
+    (err, row) => {
+        if(row){
+            console.log("OK");
+            response.send("OK");
+        }else{
+            console.log("Falha");
+            response.send("Falha no login");
+        }
+    });
 });
 
 // Get saved gates from file
