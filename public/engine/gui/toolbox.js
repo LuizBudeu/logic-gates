@@ -25,7 +25,12 @@ class Toolbox {
     }
 
     loadSavedGates() {
-        SaveManager.loadSavedGatesFromFile(this.setupSavedGates.bind(this));
+        // Get user id
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        const userId = urlParams.get('id');
+
+        SaveManager.loadSavedGatesFromFile(this.setupSavedGates.bind(this), userId);
     }
 
     setupSavedGates(savedGatesData) {

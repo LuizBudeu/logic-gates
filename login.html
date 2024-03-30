@@ -38,10 +38,10 @@
                 })
                 .then((response) => response.text())
                 .then((data) => {
-                    if(data == "OK"){
-                        window.location.href = '../';
-                    }else{
+                    if(data == "Falha"){
                         alert("Falha no login, verifique as credenciais");
+                    }else{
+                        window.location.href = '../home?id='+data;
                     }
                 });
             }

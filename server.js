@@ -6,6 +6,28 @@ const fs = require("fs");
 const { log } = require("console");
 const sqlite3 = require('sqlite3').verbose();
 
+let NandGate = {
+    name: "NAND",
+    logic: `function NAND() \{
+        this.lastOutput = {};
+        this.compute = function (input0, input1) {
+            let output = {
+                output0: !(input0 && input1),
+            };
+            this.lastOutput = output;
+            return output;
+        };
+    }
+    
+    //module.exports = NAND;
+    new NAND();`,
+    order: 0,
+    ios: {
+        inputs: 2,
+        outputs: 1
+    },
+}
+
 let db = new sqlite3.Database('./Nandesis.db', sqlite3.OPEN_READWRITE, (err) => {
     if (err) {
         return console.error(err.message);
@@ -25,7 +47,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 // Main route
-app.get("/", (request, response) => {
+app.get("/home", (request, response) => {
     response.sendFile(path.join(__dirname, "/index.html"));
 });
 
@@ -56,46 +78,43 @@ app.post("/login", (request, response) => {
         where email = ? and password = ?`, [email, password], 
     (err, row) => {
         if(row){
-            console.log("OK");
-            response.send("OK");
+            response.send(row.id.toString());
         }else{
-            console.log("Falha");
-            response.send("Falha no login");
+            response.send("Falha");
         }
     });
 });
 
-// Get saved gates from file
-app.get("/savedGates", (request, response) => {
-    console.log("getting saved gates ...");
-    const savedGates = require("./saveData/savedGates.json");
-    console.log("saved gates are ", savedGates);
-    response.send(savedGates);
-});
-
 // Get all logic functions from files
-app.get("/savedGatesAndLoadLogic", (request, response) => {
-    let savedGates = require("./saveData/savedGates.json");
+app.get("/savedGatesAndLoadLogic/:userId", async (request, response) => {
+    console.log(`"getting gates and logic function for user ${request.params.userId} ..."`);
+    // let savedGates = require("./saveData/savedGates.json");
+
+    const savedGates = await getUserGates(request.params.userId);
 
     // Sort saved gates by order
     savedGates.sort((a, b) => {
-        return a.order - b.order;
+        return a.function_order - b.function_order;
     });
 
-    let accumulatedCode = "";
-    const logicFunctions = [];
+    let accumulatedCode = NandGate.logic + "\n";
+    const logicFunctions = [NandGate];
     let funcStr = "";
     savedGates.forEach((savedGate, index) => {
-        const logicFunction = require(`./saveData/${savedGate.path}`);
+        accumulatedCode += savedGate.function_string + "\n";
 
-        accumulatedCode += logicFunction.toString() + "\n";
         funcStr = accumulatedCode + `new ${savedGate.name}()`;
+
+        console.log(funcStr)
 
         logicFunctions.push({
             name: savedGate.name,
             logic: funcStr,
-            order: savedGate.order,
-            ios: savedGate.ios,
+            order: savedGate.function_order,
+            ios: {
+                inputs: savedGate.inputs,
+                outputs: savedGate.outputs
+            },
         });
     });
 
@@ -125,12 +144,13 @@ app.get("/logic/:name", (request, response) => {
 });
 
 // Save circuit to gate file
-app.post("/circuitToGate", (request, response) => {
+app.post("/circuitToGate", async (request, response) => {
     console.log("receiving data ...");
     console.log("body is ", request.body);
 
     const body = request.body;
     const gateName = body.gateName;
+    const userId = body.userId;
     const circuit = typeof body.circuit == "object" ? body.circuit : JSON.parse(body.circuit);
 
     function generateGate(circuitJSON, newGateName) {
@@ -259,7 +279,7 @@ app.post("/circuitToGate", (request, response) => {
     // Generate full logic function string
     let logicFunctionString = "";
 
-    const savedGates = require("./saveData/savedGates.json");
+    const savedGates = await getUserGates(userId);
     savedGates.forEach((savedGate) => {
         if (savedGate.name === gateName) {
             response.status(400);
@@ -270,31 +290,50 @@ app.post("/circuitToGate", (request, response) => {
 
             throw new Error("Gate name already exists. Please choose a different name.");
         }
-
-        logicFunctionString += `const ${savedGate.name} = require("./${savedGate.name}");\n`;
     });
 
     const newGate = generateGate(circuit, gateName);
 
     logicFunctionString += newGate.logicFunctionString;
-    logicFunctionString += `\nmodule.exports = ${gateName};`;
 
-    // Update savedGates file
-    const newSavedGate = {
-        name: gateName,
-        path: `./logic/${gateName}.js`,
-        order: savedGates.length,
-        ios: newGate.ios,
-    };
-    savedGates.push(newSavedGate);
-
-    fs.writeFileSync(path.join(__dirname, "/saveData/savedGates.json"), JSON.stringify(savedGates, null, 4));
-
-    // Save gate to file
-    fs.writeFileSync(path.join(__dirname, "/saveData/logic/" + gateName + ".js"), logicFunctionString);
+    // save gate
+    saveGate(userId, gateName, logicFunctionString, savedGates.length + 1, newGate.ios.inputs, newGate.ios.outputs);
 
     response.send(request.body);
 });
 
 app.listen(port);
 console.log("Server started at http://localhost:" + port);
+
+// database related functions
+async function getUserGates(userId){
+    return new Promise((resolve, reject) => {
+        db.all(`select * from gate
+            where user_id = ?`, 
+            [userId], 
+            (err, rows) => {
+                if(err) {
+                    reject(err);
+                }
+                resolve(rows);
+            }
+        )
+    })
+    
+}
+
+function saveGate(userId, gateName, functionString, functionOrder, inputs, outputs){
+    var currentdate = new Date();
+    console.log(currentdate);
+    db.run(`
+    insert into gate (user_id, name, function_string, function_order, inputs, outputs, hidden, created_at, updated_at)
+    values (?, ?, ?, ?, ?, ?, ?, ?, ?);
+    `, [userId, gateName, functionString, functionOrder, inputs, outputs, false, currentdate, currentdate]
+    , function(err) {
+        if (err) {
+          return console.log(err.message);
+        }
+        // get the last insert id
+        console.log(`A row has been inserted with rowid ${this.lastID}`);
+      });
+}

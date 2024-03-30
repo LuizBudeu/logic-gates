@@ -87,8 +87,13 @@ class Save extends Button {
             return;
         }
 
+        // Get user id
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        const userId = urlParams.get('id');
+
         // Save circuit to gate
-        SaveManager.saveCircuitToGate(gateName.toUpperCase());
+        SaveManager.saveCircuitToGate(gateName.toUpperCase(), userId);
     }
 }
 
