@@ -3,6 +3,7 @@ import Bridge from "../bridge.js";
 import Gate from "../eletricalComponents/gate.js";
 import Button from "../UIComponents/button.js";
 import Mouse from "../input/mouse.js";
+import DeleteManager from "../managers/deleteManager.js";
 
 class SavedGate extends Button {
     constructor(ctx, toolbox, name, logicFunction, ios) {
@@ -38,16 +39,25 @@ class SavedGate extends Button {
     }
 
     onLeftClickDown({ x, y, button }) {
-        if (!this.canCreate) return;
+        const deleteMode = Settings.SCENE_MODE === Settings.SCENE_MODE_OPTIONS.DELETE;
+        if (deleteMode) {
+            this.delete();
+        } else {
+            if (!this.canCreate) return;
 
-        const gate = new Gate(this.ctx, this.logicFunction, this.name, this.ios);
-        Bridge.sceneInstance.place(gate, Settings.FOREGROUND_LAYER, true);
+            const gate = new Gate(this.ctx, this.logicFunction, this.name, this.ios);
+            Bridge.sceneInstance.place(gate, Settings.FOREGROUND_LAYER, true);
 
-        this.canCreate = false;
+            this.canCreate = false;
+        }
     }
 
     onLeftClickUp({ x, y, button }) {
         this.canCreate = true;
+    }
+
+    delete() {
+        DeleteManager.deleteSavedGate(this);
     }
 }
 
