@@ -3,6 +3,9 @@ import Bridge from "../bridge.js";
 import Settings from "../settings.js";
 import SavedGate from "./savedGate.js";
 import SaveManager from "../managers/saveManager.js";
+import Mouse from "../input/mouse.js";
+
+// fazer uma toolbox draggable, movimentado-se apenas no eixo x
 
 class Toolbox {
     constructor(canvas, ctx) {
@@ -21,7 +24,17 @@ class Toolbox {
             .size(this.canvas.width, height)
             .color("#0C0C0C");
 
+        Mouse.addLeftClickDraggingEvent(this.handleDragging.bind(this), this.rect);
         this.loadSavedGates();
+    }
+
+    handleDragging({ deltaX, deltaY }) {
+        // Move the gate menu 
+        if (deltaX > 0 && this.rect.at().x == 0) {            
+            this.rect.x = this.rect.x;
+        } else {
+            this.rect.x += deltaX;
+        }
     }
 
     loadSavedGates() {
@@ -44,10 +57,14 @@ class Toolbox {
             savedGate.rect.at(gateX, gateY);
             savedGate.rect.innerText.centerInRect(savedGate.rect);
             Bridge.sceneInstance.place(savedGate, 0);
+
+            this.rect.width += savedGate.rect.width + Settings.SAVED_GATE_BASE_MARGIN.x;
         });
     }
 
-    update() {}
+    update() {
+
+    }
 
     draw() {
         this.rect.draw();
