@@ -75,7 +75,9 @@ class Scene {
     draw() {
         for (let i = 0; i <= 10; i++) {
             this.layerGameObjects[i].forEach((gameObject) => {
+                // Game objects can mess with the context, so we need to reset it every time
                 this.ctx.strokeStyle = "#000";
+                this.ctx.font = "20px Arial";
                 gameObject.draw();
             });
         }
