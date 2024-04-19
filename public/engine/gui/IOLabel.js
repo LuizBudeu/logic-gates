@@ -22,7 +22,7 @@ class IOLabel {
         const rectWidth = 40; // TODO: make size adjustable with text size
         const rectHeight = 20;
 
-        const offset = this.io.type === "input" ? 30 : -70;
+        const offset = this.getOffset();
         this.rect.at(this.io.circle.x + offset, this.io.circle.y - rectHeight / 2);
         this.rect.size(rectWidth, rectHeight).color(Settings.IO_LABEL_RECT_COLOR);
 
@@ -33,7 +33,7 @@ class IOLabel {
         const rectWidth = 40; // TODO: make size adjustable with text size
         const rectHeight = 20;
 
-        const offset = this.io.type === "input" ? 30 : -70;
+        const offset = this.getOffset();
         this.rect.at(this.io.circle.x + offset, this.io.circle.y - rectHeight / 2);
         this.text.centerInRect(this.rect);
     }
@@ -41,6 +41,16 @@ class IOLabel {
     draw() {
         this.rect.draw();
         this.text.draw();
+    }
+
+    getOffset() {
+        let offset;
+        if (this.io.isGlobal()) {
+            offset = this.io.type === "input" ? 30 : -70;
+        } else {
+            offset = this.io.type === "input" ? -55 : 15;
+        }
+        return offset;
     }
 }
 

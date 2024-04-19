@@ -59,9 +59,9 @@ class Gate extends BaseComponent {
             input.circle.at(rectPos.x, rectPos.y).radius(Settings.COMPONENT_IO_CIRCLE_RADIUS).color(Settings.COMPONENT_IO_OFF_COLOR);
 
             this.inputs.push(input);
-            Bridge.sceneInstance.place(input);
 
             input.IOId = i;
+            Bridge.sceneInstance.place(input, Settings.FOREGROUND_LAYER, true);
         }
 
         for (let i = 0; i < this.ios.outputs; i++) {
@@ -71,9 +71,9 @@ class Gate extends BaseComponent {
             output.circle.at(rectPos.x, rectPos.y).radius(Settings.COMPONENT_IO_CIRCLE_RADIUS).color(Settings.COMPONENT_IO_OFF_COLOR);
 
             this.outputs.push(output);
-            Bridge.sceneInstance.place(output);
 
             output.IOId = i;
+            Bridge.sceneInstance.place(output, Settings.FOREGROUND_LAYER, true);
         }
 
         Mouse.addLeftClickDraggingEvent(this.handleDragging.bind(this), this.rect);

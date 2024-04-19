@@ -7,6 +7,7 @@ import CircuitManager from "../managers/circuitManager.js";
 import DeleteManager from "../managers/deleteManager.js";
 import BaseComponent from "./baseComponent.js";
 import Text from "../UIComponents/text.js";
+import IOLabel from "../gui/IOLabel.js";
 
 class IO extends BaseComponent {
     constructor(ctx, debugName = "", gate = null) {
@@ -35,7 +36,10 @@ class IO extends BaseComponent {
         CircuitManager.addComponent(this);
     }
 
-    start() {}
+    start() {
+        this.IOLabel = new IOLabel(this.ctx, this);
+        Bridge.sceneInstance.place(this.IOLabel, Settings.UI_LAYER, true);
+    }
 
     update(deltaTime) {}
 

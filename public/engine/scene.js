@@ -14,7 +14,6 @@ import CircuitManager from "./managers/circuitManager.js";
 import PlusIO from "./gui/plusIO.js";
 import MinusIO from "./gui/minusIO.js";
 import WiringManager from "./managers/wiringManager.js";
-import IOLabel from "./gui/IOLabel.js";
 
 class Scene {
     constructor(canvas, ctx) {
@@ -177,12 +176,9 @@ class Scene {
         ioArray.push(io);
         io.debugName += "_" + (ioArray.length - 1);
         io.IOId = ioArray.length - 1;
-        this.place(io);
+        this.place(io, Settings.FOREGROUND_LAYER, true);
 
         this.repositionGlobalIOs(IOtype);
-
-        io.IOLabel = new IOLabel(this.ctx, io);
-        this.place(io.IOLabel, Settings.UI_LAYER, true);
     }
 
     removeGlobalIO(IOtype) {
