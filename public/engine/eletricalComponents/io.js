@@ -21,6 +21,7 @@ class IO extends BaseComponent {
         this.isSelected = false;
         this.type = null;
         this.IOId = null;
+        this.IOLabel = null;
 
         this.IOConnections = [];
 

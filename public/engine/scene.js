@@ -14,6 +14,7 @@ import CircuitManager from "./managers/circuitManager.js";
 import PlusIO from "./gui/plusIO.js";
 import MinusIO from "./gui/minusIO.js";
 import WiringManager from "./managers/wiringManager.js";
+import IOLabel from "./gui/IOLabel.js";
 
 class Scene {
     constructor(canvas, ctx) {
@@ -140,53 +141,46 @@ class Scene {
     setupInitialComponents() {
         this.addGlobalIO("input");
         this.addGlobalIO("input");
-
         this.addGlobalIO("output");
     }
 
     setupToolbox() {
         // Toolbox
         this.toolbox = new Toolbox(this.canvas, this.ctx);
-        this.place(this.toolbox, 0);
+        this.place(this.toolbox, Settings.BACKGROUND_LAYER);
 
         // Trash and save buttons
-        this.place(new Trash(this.ctx), 0);
-        this.place(new Save(this.ctx), 0);
-        this.place(new Reset(this.ctx), 0);
+        this.place(new Trash(this.ctx), Settings.BACKGROUND_LAYER);
+        this.place(new Save(this.ctx), Settings.BACKGROUND_LAYER);
+        this.place(new Reset(this.ctx), Settings.BACKGROUND_LAYER);
     }
 
     setupIOButtons() {
         this.plusInput = new PlusIO(this.ctx, "input");
-        this.place(this.plusInput, 0);
+        this.place(this.plusInput, Settings.BACKGROUND_LAYER);
 
         this.plusOutput = new PlusIO(this.ctx, "output");
-        this.place(this.plusOutput, 0);
+        this.place(this.plusOutput, Settings.BACKGROUND_LAYER);
 
         this.minusInput = new MinusIO(this.ctx, "input");
-        this.place(this.minusInput, 0);
+        this.place(this.minusInput, Settings.BACKGROUND_LAYER);
 
         this.minusOutput = new MinusIO(this.ctx, "output");
-        this.place(this.minusOutput, 0);
+        this.place(this.minusOutput, Settings.BACKGROUND_LAYER);
     }
 
     addGlobalIO(IOtype) {
-        if (IOtype === "input") {
-            const input = new Input(this.ctx, true, "Global");
-            input.circle.radius(Settings.IO_CIRCLE_RADIUS).color(Settings.COMPONENT_IO_OFF_COLOR);
+        const io = IOtype === "input" ? new Input(this.ctx, true, "Global") : new Output(this.ctx, "Global");
+        io.circle.radius(Settings.IO_CIRCLE_RADIUS).color(Settings.COMPONENT_IO_OFF_COLOR);
 
-            this.globalIOs.inputs.push(input);
-            input.debugName += "_" + (this.globalIOs.inputs.length - 1);
-            input.IOId = this.globalIOs.inputs.length - 1;
-            this.place(input);
-        } else {
-            const output = new Output(this.ctx, "Global");
-            output.circle.radius(Settings.IO_CIRCLE_RADIUS).color(Settings.COMPONENT_IO_OFF_COLOR);
+        const ioArray = IOtype === "input" ? this.globalIOs.inputs : this.globalIOs.outputs;
+        ioArray.push(io);
+        io.debugName += "_" + (ioArray.length - 1);
+        io.IOId = ioArray.length - 1;
+        this.place(io);
 
-            this.globalIOs.outputs.push(output);
-            output.debugName += "_" + (this.globalIOs.outputs.length - 1);
-            output.IOId = this.globalIOs.outputs.length - 1;
-            this.place(output);
-        }
+        io.IOLabel = new IOLabel(this.ctx, io);
+        this.place(io.IOLabel, Settings.UI_LAYER);
 
         this.repositionGlobalIOs(IOtype);
     }
@@ -202,7 +196,7 @@ class Scene {
             input.IOConnections.forEach((connection) => {
                 CircuitManager.removeConnection(connection);
             });
-            this.remove(input.selectionCircle, 0);
+            this.remove(input.selectionCircle, Settings.BACKGROUND_LAYER);
             CircuitManager.removeComponent(input);
             this.remove(input);
         } else {
@@ -215,7 +209,7 @@ class Scene {
             output.IOConnections.forEach((connection) => {
                 CircuitManager.removeConnection(connection);
             });
-            this.remove(output.selectionCircle, 0);
+            this.remove(output.selectionCircle, Settings.BACKGROUND_LAYER);
             CircuitManager.removeComponent(output);
             this.remove(output);
         }
