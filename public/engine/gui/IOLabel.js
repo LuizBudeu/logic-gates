@@ -11,24 +11,32 @@ class IOLabel {
         this.io = io;
 
         this.name = io.type === "input" ? "in" : "out";
-        this.name = io.isGlobal() ? "G." : "" + this.name;
-        this.name += io.IOId;
+        const prefix = io.isGlobal() ? "G." : "";
+        this.name = prefix + this.name + io.IOId;
 
         this.rect = new Rect(ctx);
         this.text = new Text(ctx);
     }
 
     start() {
-        const offset = this.io.type === "input" ? 130 : -130;
-        this.rect
-            .at(this.io.x + offset, this.io.y)
-            .size(100, 50)
-            .color(Settings.IO_LABEL_RECT_COLOR);
+        const rectWidth = 40; // TODO: make size adjustable with text size
+        const rectHeight = 20;
+
+        const offset = this.io.type === "input" ? 30 : -70;
+        this.rect.at(this.io.circle.x + offset, this.io.circle.y - rectHeight / 2);
+        this.rect.size(rectWidth, rectHeight).color(Settings.IO_LABEL_RECT_COLOR);
 
         this.text.content(this.name).style("Arial", Settings.IO_LABEL_FONT_SIZE, "#fff").centerInRect(this.rect);
     }
 
-    update() {}
+    update() {
+        const rectWidth = 40; // TODO: make size adjustable with text size
+        const rectHeight = 20;
+
+        const offset = this.io.type === "input" ? 30 : -70;
+        this.rect.at(this.io.circle.x + offset, this.io.circle.y - rectHeight / 2);
+        this.text.centerInRect(this.rect);
+    }
 
     draw() {
         this.rect.draw();

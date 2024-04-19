@@ -179,40 +179,23 @@ class Scene {
         io.IOId = ioArray.length - 1;
         this.place(io);
 
-        io.IOLabel = new IOLabel(this.ctx, io);
-        this.place(io.IOLabel, Settings.UI_LAYER);
-
         this.repositionGlobalIOs(IOtype);
+
+        io.IOLabel = new IOLabel(this.ctx, io);
+        this.place(io.IOLabel, Settings.UI_LAYER, true);
     }
 
     removeGlobalIO(IOtype) {
-        if (IOtype === "input") {
-            if (this.globalIOs.inputs.length === 1) {
-                alert("Cannot remove the last global input");
-                return;
-            }
+        const ioArray = IOtype === "input" ? this.globalIOs.inputs : this.globalIOs.outputs;
 
-            const input = this.globalIOs.inputs.pop();
-            input.IOConnections.forEach((connection) => {
-                CircuitManager.removeConnection(connection);
-            });
-            this.remove(input.selectionCircle, Settings.BACKGROUND_LAYER);
-            CircuitManager.removeComponent(input);
-            this.remove(input);
-        } else {
-            if (this.globalIOs.outputs.length === 1) {
-                alert("Cannot remove the last global output");
-                return;
-            }
-
-            const output = this.globalIOs.outputs.pop();
-            output.IOConnections.forEach((connection) => {
-                CircuitManager.removeConnection(connection);
-            });
-            this.remove(output.selectionCircle, Settings.BACKGROUND_LAYER);
-            CircuitManager.removeComponent(output);
-            this.remove(output);
+        if (ioArray.length === 1) {
+            alert(`Cannot remove the last global ${IOtype}`);
+            return;
         }
+
+        const io = ioArray.pop();
+        io.delete();
+
         this.repositionGlobalIOs(IOtype);
     }
 

@@ -84,6 +84,8 @@ class IO extends BaseComponent {
             CircuitManager.removeConnection(connection);
         });
         DeleteManager.deleteGameObject(this.selectionCircle, Settings.BACKGROUND_LAYER);
+        DeleteManager.deleteGameObject(this.IOLabel, Settings.UI_LAYER);
+
         CircuitManager.removeComponent(this);
         DeleteManager.deleteGameObject(this);
     }
