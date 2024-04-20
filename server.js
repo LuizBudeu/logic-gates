@@ -18,7 +18,7 @@ app.use(bodyParser.json());
 
 // Main route
 app.get("/", (request, response) => {
-    response.sendFile(path.join(__dirname, "/index.html"));
+    response.sendFile(path.join(__dirname, "/public/index.html"));
 });
 
 // Simple status route
