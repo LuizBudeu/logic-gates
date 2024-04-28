@@ -27,21 +27,29 @@ class SaveManager {
     }
 
     static saveCircuitToGate(gateName, userId) {
-        fetch("/circuitToGate", {
-            method: "POST",
-            body: JSON.stringify({
-                gateName,
-                userId,
-                circuit: CircuitManager.serialize(),
-            }),
-            headers: {
-                "Content-Type": "application/json",
-            },
-        })
-            .then((response) => response.json())
-            .then((json) => {
-                Core.reload();
-            });
+        try {
+            fetch("/circuitToGate", {
+                method: "POST",
+                body: JSON.stringify({
+                    gateName,
+                    userId,
+                    circuit: CircuitManager.serialize(),
+                }),
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            })
+                .then((response) => response.json())
+                .then((json) => {
+                    if (json.message?.includes("Gate name already exists")) {
+                        alert(`Gate with name ${gateName} already exists. Please choose a different name`);
+                        return;
+                    }
+                    Core.reload();
+                });
+        } catch {
+            Core.reload();
+        }
     }
 }
 

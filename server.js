@@ -48,7 +48,7 @@ app.use(bodyParser.json());
 
 // Main route
 app.get("/home", (request, response) => {
-    response.sendFile(path.join(__dirname, "/index.html"));
+    response.sendFile(path.join(__dirname, "/public/index.html"));
 });
 
 // Simple status route
@@ -85,12 +85,27 @@ app.post("/login", (request, response) => {
     });
 });
 
+// Get saved gates from file
+app.get("/savedGates", (request, response) => {
+    console.log("getting saved gates ...");
+    let savedGates = require("./saveData/savedGates.json");
+    savedGates = savedGates.filter((savedGate) => !savedGate.hidden);
+    savedGates = savedGates.map(({ hidden, ...savedGate }) => savedGate);
+    console.log("saved gates are ", savedGates);
+    response.send(savedGates);
+});
+
 // Get all logic functions from files
 app.get("/savedGatesAndLoadLogic/:userId", async (request, response) => {
     console.log(`"getting gates and logic function for user ${request.params.userId} ..."`);
     // let savedGates = require("./saveData/savedGates.json");
 
     const savedGates = await getUserGates(request.params.userId);
+
+// Get all logic functions from files
+// app.get("/savedGatesAndLoadLogic", (request, response) => {
+//     let savedGates = require("./saveData/savedGates.json");
+//     // savedGates = savedGates.filter((savedGate) => !savedGate.hidden);
 
     // Sort saved gates by order
     savedGates.sort((a, b) => {
@@ -105,8 +120,8 @@ app.get("/savedGatesAndLoadLogic/:userId", async (request, response) => {
 
         funcStr = accumulatedCode + `new ${savedGate.name}()`;
 
-        console.log(funcStr)
-
+        // TODO: Ajustar código para novos ios
+        
         logicFunctions.push({
             name: savedGate.name,
             logic: funcStr,
@@ -116,6 +131,14 @@ app.get("/savedGatesAndLoadLogic/:userId", async (request, response) => {
                 outputs: savedGate.outputs
             },
         });
+        // if (!savedGate.hidden) {
+        //     logicFunctions.push({
+        //         name: savedGate.name,
+        //         logic: funcStr,
+        //         order: savedGate.order,
+        //         ios: savedGate.ios,
+        //     });
+        // }
     });
 
     response.send(logicFunctions);
@@ -134,12 +157,39 @@ app.get("/logic/:name", (request, response) => {
             name: request.params.name,
             logic: null,
         });
+        return;
     }
     console.log("logic function is ", logicFunction.toString());
 
     response.send({
         name: request.params.name,
         logic: logicFunction.toString(),
+    });
+});
+
+app.delete("/gate/:name", (request, response) => {
+    console.log(`Deleting gate ${request.params.name}...`);
+
+    let savedGates = require("./saveData/savedGates.json");
+    let savedGatesNames = savedGates.map((savedGate) => savedGate.name);
+
+    if (!savedGatesNames.includes(request.params.name)) {
+        response.status(400);
+        response.send({
+            error: true,
+            message: `Could not find gate ${request.params.name} to delete`,
+        });
+        return;
+    }
+
+    const softDeletedGateIndex = savedGates.findIndex((savedGate) => savedGate.name === request.params.name);
+    savedGates[softDeletedGateIndex].hidden = true;
+    fs.writeFileSync(path.join(__dirname, "/saveData/savedGates.json"), JSON.stringify(savedGates, null, 4));
+
+    console.log(`Deleted gate ${request.params.name}`);
+    response.send({
+        error: false,
+        message: `Deleted gate ${request.params.name}`,
     });
 });
 
@@ -297,7 +347,22 @@ app.post("/circuitToGate", async (request, response) => {
     logicFunctionString += newGate.logicFunctionString;
 
     // save gate
-    saveGate(userId, gateName, logicFunctionString, savedGates.length + 1, newGate.ios.inputs, newGate.ios.outputs);
+    saveGate(userId, gateName, logicFunctionString, savedGates.length + 1, newGate.ios, false);
+    
+    // Update savedGates file
+    // const newSavedGate = {
+    //     name: gateName,
+    //     path: `./logic/${gateName}.js`,
+    //     order: savedGates.length,
+    //     ios: newGate.ios,
+    //     hidden: false,
+    // };
+    // savedGates.push(newSavedGate);
+
+    // fs.writeFileSync(path.join(__dirname, "/saveData/savedGates.json"), JSON.stringify(savedGates, null, 4));
+
+    // // Save gate to file
+    // fs.writeFileSync(path.join(__dirname, "/saveData/logic/" + gateName + ".js"), logicFunctionString);
 
     response.send(request.body);
 });
@@ -322,13 +387,14 @@ async function getUserGates(userId){
     
 }
 
-function saveGate(userId, gateName, functionString, functionOrder, inputs, outputs){
+// TODO: Fix ios
+function saveGate(userId, gateName, functionString, functionOrder, ios, hidden){
     var currentdate = new Date();
     console.log(currentdate);
     db.run(`
     insert into gate (user_id, name, function_string, function_order, inputs, outputs, hidden, created_at, updated_at)
     values (?, ?, ?, ?, ?, ?, ?, ?, ?);
-    `, [userId, gateName, functionString, functionOrder, inputs, outputs, false, currentdate, currentdate]
+    `, [userId, gateName, functionString, functionOrder, 1, 1, hidden, currentdate, currentdate]
     , function(err) {
         if (err) {
           return console.log(err.message);
