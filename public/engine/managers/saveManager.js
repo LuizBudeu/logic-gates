@@ -12,6 +12,7 @@ class SaveManager {
 
                 data.forEach((gate) => {
                     SaveManager.savedGates.push({
+                        id: gate.id,
                         name: gate.name,
                         logicFunction: gate.logic,
                         ios: gate.ios,

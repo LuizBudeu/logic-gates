@@ -8,8 +8,8 @@ class DeleteManager {
     }
 
     static deleteSavedGate(savedGate) {
-        let gateName = savedGate.name.toUpperCase();
-        fetch("/gate/" + gateName, {
+        let gateId = savedGate.id;
+        fetch("/gate/" + gateId, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
