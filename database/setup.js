@@ -18,7 +18,7 @@ function createTables(db) {
         create table user (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name text not null,
-            email text not null,
+            email text not null unique,
             password text not null,
             created_at datetime not null,
             updated_at datetime not null
