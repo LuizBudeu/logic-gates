@@ -21,6 +21,14 @@ app.get("/", (request, response) => {
     response.sendFile(path.join(__dirname, "/public/index.html"));
 });
 
+app.get("/docs", (request, response) => {
+    response.sendFile(path.join(__dirname, "/public/pages/docs.html"));
+});
+
+app.get("/solutions", (request, response) => {
+    response.sendFile(path.join(__dirname, "/public/pages/solutions.html"));
+});
+
 // Simple status route
 app.get("/status", (request, response) => {
     const status = {

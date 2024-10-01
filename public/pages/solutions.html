@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+
+<html lang="en">
+    <head>
+        <title>NANDesis.io Docs</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="../style.css" />
+    </head>
+    <body>
+
+        <div class="sidenav">
+            <a href="#NOT">NOT</a>
+            <a href="#">Link</a>
+            <a href="#">Link</a>
+        </div>
+
+        
+        <div class="content">
+            <h1 class="content-title">NANDesis.io Docs</h1>
+            
+            <section id="NOT">
+                <h2 class="section-title">NOT</h2>
+                <div class="spoiler">
+                    <img src="../assets/images/solutions/NOT.PNG" alt="Circuito NOT" class="solution-img">
+                    <button class="spoiler-button" onclick="unspoiler(this)">Clique para revelar a solução</button>
+                </div>
+            </section>
+
+            <section id="Template">
+                <h2 class="section-title">Template</h2>
+                <div class="spoiler">
+                    <img src="../assets/images/solutions/[CIRCUITO].PNG" alt="Circuito [CIRCUITO]" class="solution-img">
+                    <button class="spoiler-button" onclick="unspoiler(this)">Clique para revelar a solução</button>
+                </div>
+                
+            </section>
+        </div>
+
+    </body>
+</html>
+
+<script>
+    function unspoiler(spoiler) {
+        spoiler.parentNode.classList.add('nospoiler');
+    }
+</script>

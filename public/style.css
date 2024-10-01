@@ -236,3 +236,124 @@ canvas {
     height: 100%; /* Full height */
     display: block; /* Remove space below canvas */
 }
+
+/* docs style */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: "inter";
+    background-color: #1f1f1f;
+}
+
+/* Style the side navigation */
+.sidenav {
+    height: 100%;
+    width: 200px;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #1a1a1a;
+    overflow-x: hidden;
+}
+
+
+/* Side navigation links */
+.sidenav a {
+    color: white;
+    padding: 16px;
+    text-decoration: none;
+    display: block;
+}
+
+/* Change color on hover */
+.sidenav a:hover {
+    background-color: #ddd;
+    color: black;
+}
+
+/* Style the content */
+.content {
+    margin-left: 200px;
+    padding-left: 20px;
+    color: #b5b5bd;
+    overflow-y: scroll;
+    height: 100vh;
+}
+
+.section-title {
+    color: white;
+}
+
+.content-title{
+    color: white;
+    text-align: center;
+}
+
+table, tr, td, th {
+    border: 1px solid white;
+    border-collapse: collapse;
+}
+
+tr, td, th{
+    padding: 5px;
+}
+
+/* Spoiler images */
+div.spoiler {
+	overflow: hidden;
+	position: relative;
+	margin: 0;
+	padding: 0;
+}
+
+div.spoiler img {
+	vertical-align: bottom;
+	filter: blur(20px) grayscale(100%);
+	transition: 0.3s;
+}
+
+.spoiler-button {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	height: 3rem;
+	line-height: 3rem;
+	width: 50%;
+	padding: 0 1rem;
+	font-size: 1rem;
+	margin: auto;
+	background-color: #1a1a1a;
+	color: #FFF;
+	text-align: center;
+	border-radius: 1rem;
+	cursor: pointer;
+    border: none;
+}
+
+@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+	.spoiler-button {
+		display: none;
+	}
+}
+
+div.nospoiler img {
+	filter: none;
+}
+
+div.nospoiler button {
+	display: none;
+}
+
+.solution-img {
+    width: 90%;
+    /* align-self: center; */
+    display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
