@@ -1,13 +1,79 @@
 <!DOCTYPE html>
+<link href="https://fonts.googleapis.com/css2?family=Coda:wght@400;800&display=swap" rel="stylesheet">
+<!-- <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" href="style.css" />
-        <title>Logic Gates Circuit Builder</title>
+        <title>NANDesis.io</title>
     </head>
     <body oncontextmenu="return false;">
+        <!-- Header -->
+        <div class="menu_container">
+            <text class="nandesis_title">NANDesis.io</text>
+            <div class="left_menu_container">
+                <text class="options_text row_item">Home</text>
+                <text class="options_text row_item">Sobre nós</text>
+                <text class="options_text row_item" id="missoesModalBtn" style="cursor: pointer">Missões</text>
+                <div class="vertical_line row_item"></div>
+                <text class="options_text row_item">Olá, Fulano!</text>
+                <div class="row_item">
+                    <i class="fa-solid fa-gear" style="color: white; font-size: 30px;"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contant -->
         <canvas id="circuit-canvas"></canvas>
         <script src="index.js" type="module"></script>
     </body>
+
+    <!-- The Modal -->
+    <div id="missoesModal" class="modal">
+
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="close">&times;</span>
+                <h2>Missões</h2>
+            </div>
+            <div class="modal-body">
+                <p>Aqui está uma lista de componentes para serem construídos visando a criação de um processador. Esse é apenas um guia para auxiliar  no seu desenvolvimento. Aqui você poderá saber mais sobre os circuitos propostos, assim como visualizar uma solução possível.</p>
+                <p>Some other text...</p>
+            </div>
+        </div>
+    
+    </div>
 </html>
+
+<script>
+    // Get the modal
+    var missoesModal = document.getElementById("missoesModal");
+
+    // Get the button that opens the modal
+    var missoesModalBtn = document.getElementById("missoesModalBtn");
+
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
+
+    // When the user clicks on the button, open the modal
+    missoesModalBtn.onclick = function() {
+        missoesModal.style.display = "flex";
+    }
+
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function() {
+        missoesModal.style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+        if (event.target == missoesModal) {
+            missoesModal.style.display = "none";
+        }
+    }
+</script>
