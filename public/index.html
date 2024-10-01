@@ -17,19 +17,23 @@
         <div class="menu_container">
             <text class="nandesis_title">NANDesis.io</text>
             <div class="left_menu_container">
-                <text class="options_text row_item">Home</text>
-                <text class="options_text row_item">Sobre nós</text>
+                <a href="#" style="cursor: pointer" class="row_item no-text-decoration"><text class="options_text">Home</text></a>
+                <a href="#" style="cursor: pointer" class="row_item no-text-decoration"><text class="options_text">Sobre nós</text></a>
                 <text class="options_text row_item" id="missoesModalBtn" style="cursor: pointer">Missões</text>
                 <div class="vertical_line row_item"></div>
                 <text class="options_text row_item">Olá, Fulano!</text>
                 <div class="row_item">
-                    <i class="fa-solid fa-gear" style="color: white; font-size: 30px;"></i>
+                    <i onclick="toggleMenu()" class="fa-solid fa-gear" style="color: white; font-size: 30px; cursor: pointer"></i>
+                    <div id="configDropdownMenu" class="dropdown-menu">
+                        <a href="#"><text class="dropdown_menu_text">Meu perfil</text></a>
+                        <a href="#"><text class="dropdown_menu_text">Sair</text></a>
+                    </div>
                 </div>
             </div>
+            
         </div>
-
         <!-- Contant -->
-        <canvas id="circuit-canvas"></canvas>
+        <canvas id="circuit-canvas" class="canvas-content"></canvas>
         <script src="index.js" type="module"></script>
     </body>
 
@@ -41,9 +45,23 @@
                 <span class="close">&times;</span>
                 <h2>Missões</h2>
             </div>
-            <div class="modal-body">
+            <div class="modal-body scrollable">
                 <p>Aqui está uma lista de componentes para serem construídos visando a criação de um processador. Esse é apenas um guia para auxiliar  no seu desenvolvimento. Aqui você poderá saber mais sobre os circuitos propostos, assim como visualizar uma solução possível.</p>
-                <p>Some other text...</p>
+                <!-- <div class="row">
+                    <text class="options_text row_item">1. NOT <i class="fa-solid fa-arrow-up-right-from-square" style="color: white; font-size: 25px;"></i></text>
+                    <div class="row_item">
+                        <div class="row no-padding">
+                            <i class="fa-solid fa-eye" style="color: white; font-size: 30px;"></i>
+                            <div>
+                                <input class="checkbox" type="checkbox"/>
+                            </div>
+                        </div>                        
+                    </div>
+                </div> -->
+
+                <div id="mission_list">
+
+                </div>
             </div>
         </div>
     
@@ -51,6 +69,8 @@
 </html>
 
 <script>
+    var config_menu = document.getElementById("configDropdownMenu");
+
     // Get the modal
     var missoesModal = document.getElementById("missoesModal");
 
@@ -76,4 +96,38 @@
             missoesModal.style.display = "none";
         }
     }
+
+    // config dropdown menu
+    function toggleMenu() {
+        config_menu.classList.toggle("show");
+    }
+</script>
+
+<script type="module">
+
+    import { missions } from './engine/utils/mission.js';
+
+    // Populando a lista de missões
+    const mission_list = document.getElementById('mission_list');
+
+    missions.forEach(dado => {
+        mission_list.innerHTML += `
+                <div class="row">
+                    <text class="options_text row_item">${dado.order}. ${dado.name} 
+                        <a href="${dado.description_url}" target="_blank" title="Mais detalhes">
+                            <i class="fa-solid fa-arrow-up-right-from-square" style="color: white; font-size: 25px;"></i>
+                        </a>
+                    </text>
+                    <div class="row_item">
+                        <div class="row no-padding">
+                            <a href="${dado.solution_url}" target="_blank" title="Ver solução">
+                                <i class="fa-solid fa-eye" style="color: white; font-size: 30px;"></i>
+                            </a>
+                            <div>
+                                <input class="checkbox" type="checkbox" ${dado.checked ? 'checked' : ''}/>
+                            </div>
+                        </div>                        
+                    </div>
+                </div>`;
+        });
 </script>

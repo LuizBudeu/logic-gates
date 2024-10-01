@@ -16,13 +16,13 @@ canvas {
     padding-right: 20px;
     background-color: #1E1E1E;
     height: 60px;
-    gap: 36px;
 }
 
 .left_menu_container{
     display: flex;
     flex-direction: row;
     align-items: flex-end;
+    gap: 32px;
 }
 
 .nandesis_title{
@@ -33,7 +33,6 @@ canvas {
 }
 
 .row_item{
-    margin-left: 36px;
     align-self: center;
 }
 
@@ -106,4 +105,134 @@ canvas {
 @keyframes animatetop {
     from {top: -300px; opacity: 0}
     to {top: 0; opacity: 1}
+}
+
+/* Modal list */
+.row{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-left: 20px;
+    padding-right: 20px;
+    height: 60px;
+}
+
+.no-padding{
+    padding: 0px;
+}
+
+.checkbox{
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-left: 10px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 22px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.checkbox {
+    appearance: none;
+    width: 24px;
+    height: 24px;
+    border: 2px solid #888;
+    border-radius: 4px;
+    outline: none;
+    cursor: pointer;
+    position: relative;
+    background-color: transparent;
+    padding-left: 0px;
+}
+  
+/* Checked state */
+.checkbox:checked {
+    background-color: #444;
+    border-color: #444;
+}
+  
+/* Create the green check mark */
+.checkbox:checked::after {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 6px;
+    width: 6px;
+    height: 12px;
+    border: solid #00ff55;
+    border-width: 0 4px 4px 0;
+    transform: rotate(45deg);
+}
+
+/* Scroll bar */
+.scrollable {
+    overflow: auto;
+    max-height: 80%;
+}
+
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+}
+  
+/* Track */
+::-webkit-scrollbar-track {
+    background: #1E1E1E;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #3D3D3D;
+    border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #2e2e2e;
+    border-radius: 10px;
+}
+
+/* dropdown menu */ 
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    right: 20px;
+    background-color: #333;
+    color: white;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.dropdown-menu a {
+    color: white;
+    text-decoration: none;
+    display: block;
+    padding: 8px 0;
+}
+
+.dropdown_menu_text{
+    color: #FFFFFF;
+    font-family: 'inter';
+    font-size: 15px;
+    align-self: center;
+}
+
+.show {
+    display: block;
+}
+
+.no-text-decoration {
+    text-decoration: none;
+}
+
+/* canvas */
+.canvas-content {
+    /* max-height: 50%; */
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    display: block; /* Remove space below canvas */
 }
