@@ -257,7 +257,7 @@ class Scene {
 
     resizeCanvas() {
         this.canvas.width = window.innerWidth;
-        this.canvas.height = window.innerHeight;
+        this.canvas.height = window.innerHeight - 60; // 60px for top html header
         Settings.CANVAS_WIDTH = this.canvas.width;
         Settings.CANVAS_HEIGHT = this.canvas.height;
     }
