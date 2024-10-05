@@ -34,7 +34,6 @@
         </div>
         <!-- Contant -->
         <canvas id="circuit-canvas" class="canvas-content"></canvas>
-        <script src="index.js" type="module"></script>
     </body>
 
     <!-- The Modal -->
@@ -47,21 +46,7 @@
             </div>
             <div class="modal-body scrollable">
                 <p>Aqui está uma lista de componentes para serem construídos visando a criação de um processador. Esse é apenas um guia para auxiliar  no seu desenvolvimento. Aqui você poderá saber mais sobre os circuitos propostos, assim como visualizar uma solução possível.</p>
-                <!-- <div class="row">
-                    <text class="options_text row_item">1. NOT <i class="fa-solid fa-arrow-up-right-from-square" style="color: white; font-size: 25px;"></i></text>
-                    <div class="row_item">
-                        <div class="row no-padding">
-                            <i class="fa-solid fa-eye" style="color: white; font-size: 30px;"></i>
-                            <div>
-                                <input class="checkbox" type="checkbox"/>
-                            </div>
-                        </div>                        
-                    </div>
-                </div> -->
-
-                <div id="mission_list">
-
-                </div>
+                <div id="mission_list"></div>
             </div>
         </div>
     
@@ -105,7 +90,8 @@
 
 <script type="module">
 
-    import { missions } from './engine/utils/mission.js';
+    import { loadMissions } from './index.js';
+    const missions = await loadMissions();
 
     // Populando a lista de missões
     const mission_list = document.getElementById('mission_list');
@@ -124,7 +110,7 @@
                                 <i class="fa-solid fa-eye" style="color: white; font-size: 30px;"></i>
                             </a>
                             <div>
-                                <input class="checkbox" type="checkbox" ${dado.checked ? 'checked' : ''}/>
+                                <input class="checkbox" type="checkbox" ${dado.checked ? 'checked' : ''} onclick="saveMission(${dado.id}, this)"/>
                             </div>
                         </div>                        
                     </div>

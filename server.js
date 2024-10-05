@@ -28,7 +28,7 @@ let NandGate = {
     },
 }
 
-let db = new sqlite3.Database('./Nandesis.db', sqlite3.OPEN_READWRITE, (err) => {
+let db = new sqlite3.Database('./database/Nandesis.db', sqlite3.OPEN_READWRITE, (err) => {
     if (err) {
         return console.error(err.message);
     }
@@ -72,7 +72,7 @@ app.get("/status", (request, response) => {
 
 // login page route
 app.get("/login", (request, response) => {
-    response.sendFile(path.join(__dirname, "/login.html"));
+    response.sendFile(path.join(__dirname, "/public/pages/login.html"));
 });
 
 // login route
@@ -324,6 +324,33 @@ app.post("/circuitToGate", async (request, response) => {
     response.send(request.body);
 });
 
+// Get users missions status
+app.get("/missions/:userId", async (request, response) => {
+    let userMissions = await getUserMissions(request.params.userId);
+
+    response.send(userMissions);
+});
+
+// Get users missions status
+app.post("/saveMission", async (request, response) => {
+    console.log("API saveMission");
+    const body = request.body;
+
+    let userId = body.userId;
+    let missionId = body.missionId;
+    let value = body.value;
+
+    console.log(userId)
+    console.log(missionId)
+    console.log(value)
+
+    if(value){
+        await insertUserMissions(userId, missionId);
+    }else{
+        await deleteUserMissions(userId, missionId);
+    }
+});
+
 app.listen(port);
 console.log("Server started at http://localhost:" + port);
 
@@ -359,3 +386,53 @@ function saveGate(userId, gateName, functionString, functionOrder, ios, hidden){
         console.log(`A row has been inserted with rowid ${this.lastID}`);
       });
 }
+
+async function getUserMissions(userId){
+    return new Promise((resolve, reject) => {
+        db.all(`select M.id, name, [order], description_url, solution_url,
+                (UM.user_id is not null) as checked 
+                from mission as M
+                left join user_mission as UM ON UM.mission_id = M.id AND UM.user_id = ?
+                order by [order] asc`, 
+            [userId], 
+            (err, rows) => {
+                if(err) {
+                    reject(err);
+                }
+                resolve(rows);
+            }
+        )
+    })
+    
+}
+
+async function insertUserMissions(userId, mission_id){
+    return new Promise((resolve, reject) => {
+        db.all(`insert into user_mission (user_id, mission_id, created_at, updated_at)
+            values (?, ?, DATE('now'), DATE('now'))`, 
+            [userId, mission_id], 
+            (err, rows) => {
+                if(err) {
+                    reject(err);
+                }
+                resolve(rows);
+            }
+        )
+    })
+}
+
+async function deleteUserMissions(userId, mission_id){
+    return new Promise((resolve, reject) => {
+        db.all(`delete from user_mission
+            where user_id = ? and mission_id = ?`, 
+            [userId, mission_id], 
+            (err, rows) => {
+                if(err) {
+                    reject(err);
+                }
+                resolve(rows);
+            }
+        )
+    })
+}
+
