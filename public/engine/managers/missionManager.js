@@ -10,13 +10,12 @@ class MissionManager {
             });
     }
 
-    static async saveMission(userId, missionId, value) {
+    static async saveMission(userId, missions) {
         await fetch("/saveMission",{
             method: "POST",
             body: JSON.stringify({
                 "userId": userId,
-                "missionId": missionId,
-                "value": value,
+                "missions": missions
             }),
             headers: {
                 "Content-Type": "application/json",

@@ -1,5 +1,6 @@
 import Core from "./engine/core.js";
 import MissionManager from "./engine/managers/missionManager.js";
+import UserManager from "./engine/managers/userManager.js";
 
 const canvas = document.getElementById("circuit-canvas");
 const ctx = canvas.getContext("2d");
@@ -20,13 +21,22 @@ export async function loadMissions() {
     return MissionManager.missions;
 }
 
-async function saveMission(missionId, checkbox) {
+export async function saveMissions(missions) {
     // Get user id
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const userId = urlParams.get('id');
 
-    await MissionManager.saveMission(userId, missionId, checkbox.checked);
+    await MissionManager.saveMission(userId, missions);
 }
 
-window.saveMission = saveMission;
+export async function getUserInfo() {
+    // Get user id
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const userId = urlParams.get('id');
+
+    await UserManager.getUser(userId);
+
+    return UserManager.user;
+}

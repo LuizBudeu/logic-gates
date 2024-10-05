@@ -331,24 +331,25 @@ app.get("/missions/:userId", async (request, response) => {
     response.send(userMissions);
 });
 
-// Get users missions status
+// Save users missions status
 app.post("/saveMission", async (request, response) => {
-    console.log("API saveMission");
     const body = request.body;
 
     let userId = body.userId;
-    let missionId = body.missionId;
-    let value = body.value;
+    let missions = body.missions;
 
-    console.log(userId)
-    console.log(missionId)
-    console.log(value)
+    await deleteUserMissions(userId);
 
-    if(value){
+    for (const missionId of missions) {
         await insertUserMissions(userId, missionId);
-    }else{
-        await deleteUserMissions(userId, missionId);
     }
+});
+
+// Get user info
+app.get("/user/:userId", async (request, response) => {
+    let user = await getUserInfo(request.params.userId);
+
+    response.send(user);
 });
 
 app.listen(port);
@@ -421,11 +422,11 @@ async function insertUserMissions(userId, mission_id){
     })
 }
 
-async function deleteUserMissions(userId, mission_id){
+async function deleteUserMissions(userId){
     return new Promise((resolve, reject) => {
         db.all(`delete from user_mission
-            where user_id = ? and mission_id = ?`, 
-            [userId, mission_id], 
+            where user_id = ?`, 
+            [userId], 
             (err, rows) => {
                 if(err) {
                     reject(err);
@@ -434,5 +435,22 @@ async function deleteUserMissions(userId, mission_id){
             }
         )
     })
+}
+
+async function getUserInfo(userId){
+    return new Promise((resolve, reject) => {
+        db.get(`select name
+                from user
+                where id = ?`, 
+            [userId], 
+            (err, rows) => {
+                if(err) {
+                    reject(err);
+                }
+                resolve(rows);
+            }
+        )
+    })
+    
 }
 
