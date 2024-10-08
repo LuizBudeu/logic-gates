@@ -36,9 +36,9 @@
                         "Content-Type": "application/json",
                     },
                 })
-                .then((response) => response.text())
+                .then((response) => response.json())
                 .then((data) => {
-                    if(data == "Falha"){
+                    if(data.message == "Falha login"){
                         alert("Falha no login, verifique as credenciais");
                     }else{
                         window.location.href = '../home';

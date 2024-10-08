@@ -1,4 +1,5 @@
 const sqlite3 = require('sqlite3').verbose();
+const bcrypt = require('bcrypt');
 
 // open database
 let db = new sqlite3.Database('./database/Nandesis.db', async (err) => {
@@ -14,6 +15,8 @@ let db = new sqlite3.Database('./database/Nandesis.db', async (err) => {
 });
 
 async function createTables(db) {
+    const saltRounds = 10;
+    const usersPassword = await bcrypt.hash('1234qwer', saltRounds);
     await db.exec(`
         create table user (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -25,8 +28,8 @@ async function createTables(db) {
         );
 
         insert into user (name, email, password, created_at, updated_at)
-        values ('User 1', 'email@email.com', '1234qwer', DATE('now'), DATE('now')),
-            ('User 2', 'email2@email.com', '1234qwer', DATE('now'), DATE('now'));
+        values ('User 1', 'email@email.com', '${usersPassword}', DATE('now'), DATE('now')),
+            ('User 2', 'email2@email.com', '${usersPassword}', DATE('now'), DATE('now'));
         
         create table gate (
             id INTEGER PRIMARY KEY AUTOINCREMENT,

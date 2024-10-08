@@ -7,6 +7,7 @@ const { log } = require("console");
 const sqlite3 = require('sqlite3').verbose();
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
+const bcrypt = require('bcrypt');
 
 const JWT_SECRET = 'NandesiIoJwtSecret';
 
@@ -88,22 +89,28 @@ app.get("/login", (request, response) => {
 });
 
 // login route
-app.post("/login", (request, response) => {
+app.post("/login", async (request, response) => {
     const body = request.body;
     let email = body.email;
     let password = body.password;
 
-    db.get(`select id from user
-        where email = ? and password = ?`, [email, password], 
-    (err, row) => {
+    await db.get(`select id, password from user
+        where email = ?`, [email], 
+    async (err, row) => {
         if(row){
-            const token = jwt.sign({ id: row.id }, JWT_SECRET, { expiresIn: '1h' });
+            const match = await bcrypt.compare(password, row.password);
+            if(!match){
+                response.send({ message: 'Falha login' });
+            }else{
+                const token = jwt.sign({ id: row.id }, JWT_SECRET, { expiresIn: '1h' });
 
-            // Definir o token em um cookie HTTP-only
-            response.cookie('token', token, { httpOnly: true, secure: true, sameSite: 'Strict' });
-            response.json({ message: 'Login bem-sucedido' });
+                // Definir o token em um cookie HTTP-only
+                response.cookie('token', token, { httpOnly: true, secure: true, sameSite: 'Strict' });
+                response.json({ message: 'Login bem-sucedido' });
+            }
+            
         }else{
-            response.send("Falha");
+            response.send({ message: 'Falha login' });
         }
     });
 });
