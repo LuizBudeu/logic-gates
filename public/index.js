@@ -11,32 +11,17 @@ const core = new Core(canvas, ctx);
 core.start();
 
 export async function loadMissions() {
-    // Get user id
-    const queryString = window.location.search;
-    const urlParams = new URLSearchParams(queryString);
-    const userId = urlParams.get('id');
-
-    await MissionManager.loadMissions(userId);
+    await MissionManager.loadMissions();
 
     return MissionManager.missions;
 }
 
 export async function saveMissions(missions) {
-    // Get user id
-    const queryString = window.location.search;
-    const urlParams = new URLSearchParams(queryString);
-    const userId = urlParams.get('id');
-
-    await MissionManager.saveMission(userId, missions);
+    await MissionManager.saveMission(missions);
 }
 
 export async function getUserInfo() {
-    // Get user id
-    const queryString = window.location.search;
-    const urlParams = new URLSearchParams(queryString);
-    const userId = urlParams.get('id');
-
-    await UserManager.getUser(userId);
+    await UserManager.getUser();
 
     return UserManager.user;
 }

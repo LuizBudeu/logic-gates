@@ -1,8 +1,10 @@
 class MissionManager {
     static missions = [];
 
-    static async loadMissions(userId) {
-        await fetch("/missions/"+userId)
+    static async loadMissions() {
+        await fetch("/missions", {
+            credentials: 'include'
+        })
             .then((response) => response.json())
             .then((data) => {
                 console.log(data);
@@ -10,11 +12,11 @@ class MissionManager {
             });
     }
 
-    static async saveMission(userId, missions) {
+    static async saveMission(missions) {
         await fetch("/saveMission",{
+            credentials: 'include',
             method: "POST",
             body: JSON.stringify({
-                "userId": userId,
                 "missions": missions
             }),
             headers: {

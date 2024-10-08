@@ -4,8 +4,10 @@ import Core from "../core.js";
 class SaveManager {
     static savedGates = [];
 
-    static loadSavedGatesFromFile(finalCallback, userId) {
-        fetch("/savedGatesAndLoadLogic/"+userId)
+    static loadSavedGatesFromFile(finalCallback) {
+        fetch("/savedGatesAndLoadLogic", {
+            credentials: 'include'
+        })
             .then((response) => response.json())
             .then((data) => {
                 data.sort((a, b) => a.order - b.order);
@@ -27,13 +29,13 @@ class SaveManager {
         return SaveManager.savedGates;
     }
 
-    static saveCircuitToGate(gateName, userId) {
+    static saveCircuitToGate(gateName) {
         try {
             fetch("/circuitToGate", {
+                credentials: 'include',
                 method: "POST",
                 body: JSON.stringify({
                     gateName,
-                    userId,
                     circuit: CircuitManager.serialize(),
                 }),
                 headers: {

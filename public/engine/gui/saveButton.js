@@ -86,14 +86,9 @@ class Save extends Button {
             alert(`Gate name "${gateName}" already exists`);
             return;
         }
-
-        // Get user id
-        const queryString = window.location.search;
-        const urlParams = new URLSearchParams(queryString);
-        const userId = urlParams.get('id');
-
+        
         // Save circuit to gate
-        SaveManager.saveCircuitToGate(gateName.toUpperCase(), userId);
+        SaveManager.saveCircuitToGate(gateName.toUpperCase());
     }
 }
 

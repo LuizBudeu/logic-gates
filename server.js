@@ -5,6 +5,10 @@ const cors = require("cors");
 const fs = require("fs");
 const { log } = require("console");
 const sqlite3 = require('sqlite3').verbose();
+const jwt = require('jsonwebtoken');
+const cookieParser = require('cookie-parser');
+
+const JWT_SECRET = 'NandesiIoJwtSecret';
 
 let NandGate = {
     name: "NAND",
@@ -41,15 +45,23 @@ const port = process.env.PORT || 3000;
 app.use(express.static("public"));
 
 app.use(cors());
+app.use(cookieParser());
 
 // Configuring body parser middleware
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-// Main route
-app.get("/home", (request, response) => {
-    response.sendFile(path.join(__dirname, "/public/index.html"));
-});
+// Middleware para proteger rotas
+const authenticateToken = (req, res, next) => {
+    const token = req.cookies.token;
+    if (!token) return res.sendStatus(401);
+  
+    jwt.verify(token, JWT_SECRET, (err, user) => {
+      if (err) return res.sendStatus(403);
+      req.user = user;
+      next();
+    });
+  };
 
 app.get("/docs", (request, response) => {
     response.sendFile(path.join(__dirname, "/public/pages/docs.html"));
@@ -86,29 +98,31 @@ app.post("/login", (request, response) => {
         where email = ? and password = ?`, [email, password], 
     (err, row) => {
         if(row){
-            response.send(row.id.toString());
+            const token = jwt.sign({ id: row.id }, JWT_SECRET, { expiresIn: '1h' });
+
+            // Definir o token em um cookie HTTP-only
+            response.cookie('token', token, { httpOnly: true, secure: true, sameSite: 'Strict' });
+            response.json({ message: 'Login bem-sucedido' });
         }else{
             response.send("Falha");
         }
     });
 });
 
-// Get saved gates from file
-app.get("/savedGates", (request, response) => {
-    console.log("getting saved gates ...");
-    let savedGates = require("./saveData/savedGates.json");
-    savedGates = savedGates.filter((savedGate) => !savedGate.hidden);
-    savedGates = savedGates.map(({ hidden, ...savedGate }) => savedGate);
-    console.log("saved gates are ", savedGates);
-    response.send(savedGates);
+// ** Autenticated routes **//
+
+// Main route
+app.get("/home", authenticateToken, (request, response) => {
+    response.sendFile(path.join(__dirname, "/public/index.html"));
 });
 
 // Get all logic functions from files
-app.get("/savedGatesAndLoadLogic/:userId", async (request, response) => {
-    console.log(`"getting gates and logic function for user ${request.params.userId} ..."`);
+app.get("/savedGatesAndLoadLogic", authenticateToken, async (request, response) => {
+    const userId = request.user.id;
+    console.log(`"getting gates and logic function for user ${userId} ..."`);
     // let savedGates = require("./saveData/savedGates.json");
 
-    const savedGates = await getUserGates(request.params.userId);
+    const savedGates = await getUserGates(userId);
 
     // Sort saved gates by order
     savedGates.sort((a, b) => {
@@ -166,13 +180,13 @@ app.delete("/gate/:id", (request, response) => {
 });
 
 // Save circuit to gate file
-app.post("/circuitToGate", async (request, response) => {
+app.post("/circuitToGate", authenticateToken, async (request, response) => {
+    const userId = request.user.id;
     console.log("receiving data ...");
     console.log("body is ", request.body);
 
     const body = request.body;
     const gateName = body.gateName;
-    const userId = body.userId;
     const circuit = typeof body.circuit == "object" ? body.circuit : JSON.parse(body.circuit);
 
     function generateGate(circuitJSON, newGateName) {
@@ -325,17 +339,18 @@ app.post("/circuitToGate", async (request, response) => {
 });
 
 // Get users missions status
-app.get("/missions/:userId", async (request, response) => {
-    let userMissions = await getUserMissions(request.params.userId);
+app.get("/missions", authenticateToken, async (request, response) => {
+    const userId = request.user.id;
+    let userMissions = await getUserMissions(userId);
 
     response.send(userMissions);
 });
 
 // Save users missions status
-app.post("/saveMission", async (request, response) => {
+app.post("/saveMission", authenticateToken, async (request, response) => {
+    const userId = request.user.id;
     const body = request.body;
 
-    let userId = body.userId;
     let missions = body.missions;
 
     await deleteUserMissions(userId);
@@ -346,10 +361,16 @@ app.post("/saveMission", async (request, response) => {
 });
 
 // Get user info
-app.get("/user/:userId", async (request, response) => {
-    let user = await getUserInfo(request.params.userId);
+app.get("/user/", authenticateToken,  async (request, response) => {
+    const userId = request.user.id;
+    let user = await getUserInfo(userId);
 
     response.send(user);
+});
+
+// Default route
+app.get("*", function (req, res) {
+    res.redirect('/login');
 });
 
 app.listen(port);
