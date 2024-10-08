@@ -25,3 +25,7 @@ export async function getUserInfo() {
 
     return UserManager.user;
 }
+
+export async function logout() {
+    UserManager.logout();
+}

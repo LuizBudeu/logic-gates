@@ -89,7 +89,6 @@ app.get("/login", (request, response) => {
 
 // login route
 app.post("/login", (request, response) => {
-    console.log("login");
     const body = request.body;
     let email = body.email;
     let password = body.password;
@@ -110,6 +109,12 @@ app.post("/login", (request, response) => {
 });
 
 // ** Autenticated routes **//
+
+// login route
+app.post("/logout", (request, response) => {
+    response.clearCookie('token', { httpOnly: true, secure: true, sameSite: 'Strict' });
+    response.json({ message: 'OK' });
+});
 
 // Main route
 app.get("/home", authenticateToken, (request, response) => {
