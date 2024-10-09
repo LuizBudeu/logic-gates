@@ -10,6 +10,7 @@ const cookieParser = require('cookie-parser');
 const bcrypt = require('bcrypt');
 
 const JWT_SECRET = 'NandesiIoJwtSecret';
+const saltRounds = 10;
 
 let NandGate = {
     name: "NAND",
@@ -113,6 +114,39 @@ app.post("/login", async (request, response) => {
             response.send({ message: 'Falha login' });
         }
     });
+});
+
+// register page route
+app.get("/register", (request, response) => {
+    response.sendFile(path.join(__dirname, "/public/pages/register.html"));
+});
+
+// login route
+app.post("/register", async (request, response) => {
+    const body = request.body;
+    let name = body.name;
+    let email = body.email;
+    let password = body.password;
+
+    let passwordHash = await bcrypt.hash(password, saltRounds);
+
+    let hasUser = await checkUserByEmail(email);
+
+    if(hasUser){
+        response.send({ message: 'Usuario cadastrado' });
+    }else{
+        let userId = await registerUser(name, email, passwordHash);
+
+        if(userId){
+            const token = jwt.sign({ id: userId }, JWT_SECRET, { expiresIn: '1h' });
+
+            // Definir o token em um cookie HTTP-only
+            response.cookie('token', token, { httpOnly: true, secure: true, sameSite: 'Strict' });
+            response.json({ message: 'Cadastro bem-sucedido' });
+        }else{
+            response.send({ message: 'Falha cadastro' });
+        }
+    }
 });
 
 // ** Autenticated routes **//
@@ -485,5 +519,38 @@ async function getUserInfo(userId){
         )
     })
     
+}
+
+async function checkUserByEmail(email){
+    return new Promise((resolve, reject) => {
+        db.get(`select *
+                from user
+                where email = ?`, 
+            [email], 
+            (err, rows) => {
+                if(err) {
+                    reject(err);
+                }
+                resolve(rows != null);
+            }
+        )
+    });
+    
+}
+
+async function registerUser(name, email, password){
+    var currentdate = new Date();
+    return new Promise((resolve, reject) => {
+        db.run(`
+            insert into user (name, email, password, created_at, updated_at)
+            values (?, ?, ?, ?, ?);
+            `, [name, email, password, currentdate, currentdate]
+            , function(err) {
+                if(err) {
+                    reject(err);
+                }
+                resolve(this.lastID);
+                });
+    })
 }
 
