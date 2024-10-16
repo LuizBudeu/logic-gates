@@ -33,7 +33,7 @@ class Toolbox {
         let lastSavedGateX = 0;
 
         savedGatesData.forEach((gateObj, index) => {
-            const savedGate = new SavedGate(this.ctx, this, gateObj.name, gateObj.logicFunction, gateObj.ios);
+            const savedGate = new SavedGate(this.ctx, this, gateObj.id, gateObj.name, gateObj.logicFunction, gateObj.ios);
             savedGate.start();
 
             const gateX = toolboxPos.x + lastSavedGateX + Settings.SAVED_GATE_BASE_MARGIN.x;
