@@ -28,7 +28,7 @@ export const Login = () => {
 			return
 		}
 	
-		fetch('http://localhost:3080/Login', {
+		fetch(process.env.REACT_APP_API_HOSTNAME_PORT + '/Login', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
@@ -40,7 +40,6 @@ export const Login = () => {
 		})
 			.then((r) => r.json())
 			.then((r) => {
-				console.log(r.message);
 				if ('Login bem-sucedido' === r.message) {
 					navigate('/simulator');
 				} else {
