@@ -11,25 +11,6 @@ export function Header({ user, activities }) {
   const [showActivitiesModal, setShowActivitiesModal] = React.useState(false);
   const [ logout ] = Logout();
 
-  const missions = [
-    {
-      'order': 1,
-      'name': 'NOT',
-      'id': 1,
-      'checked': false,
-      'description_url': './',
-      'solution_url': './'
-    },
-    {
-      'order': 1,
-      'name': 'AND',
-      'id': 1,
-      'checked': true,
-      'description_url': './',
-      'solution_url': './'
-    },
-  ];
-
   const navigate = useNavigate();
 
   return (

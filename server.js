@@ -370,8 +370,7 @@ app.post("/circuitToGate", authenticateToken, async (request, response) => {
                 gateName,
                 message: "Gate name already exists. Please choose a different name.",
             });
-
-            throw new Error("Gate name already exists. Please choose a different name.");
+            return;
         }
     });
 
