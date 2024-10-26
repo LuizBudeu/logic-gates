@@ -63,6 +63,75 @@ export const Auth = () => {
   ];
 };
 
+export const Register = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
+  const [registerError, setRegisterError] = useState('');
+	const setCookie = useCookies()[1];
+  const [axios, hasToken] = useAxiosWithToken();
+
+  const navigate = useNavigate();
+
+  const register = () => {
+    // Set initial error values to empty
+    setRegisterError('')
+      
+    // Check if the user has entered both fields correctly
+    if ('' === name) {
+      setRegisterError('Insira um nome');
+      return
+    }
+
+    if ('' === email) {
+      setRegisterError('Insira um email');
+      return
+    }
+
+    if (!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)) {
+      setRegisterError('Insira um email válido')
+      return
+    }
+
+    if ('' === password) {
+      setRegisterError('Insira uma senha')
+      return
+    }
+
+    fetch(process.env.REACT_APP_API_HOSTNAME_PORT + '/api/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ name, email, password }),
+      headers: {
+          "Content-Type": "application/json",
+      },
+    })
+      .then((r) => r.json())
+      .then((r) => {
+        console.log(r);
+        if ('ok' === r.detail) {
+          setCookie("token", r.token);
+          navigate('/simulator');
+        } else {
+          window.alert('Falha no cadastro, verifique as credenciais');
+        }
+      })
+  }
+
+  return [
+      email,
+      setEmail,
+      password,
+      setPassword,
+      name,
+      setName,
+      registerError,
+      register,
+  ];
+};
+
 export const Logout = () => {
   const [axios, hasToken] = useAxiosWithToken();
   const removeCookie = useCookies()[2];

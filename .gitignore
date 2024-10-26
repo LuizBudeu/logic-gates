@@ -1,4 +1,10 @@
 node_modules/
 .vscode/
 env/
+__pycache__
+debug.log
+*.env
+tls.crt
+tls.key
+.idea
 
