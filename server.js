@@ -42,7 +42,7 @@ let db = new sqlite3.Database('./database/Nandesis.db', sqlite3.OPEN_READWRITE, 
 });
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3080;
 
 app.use(express.static("public"));
 
@@ -55,7 +55,7 @@ app.use(bodyParser.json());
 
 // Middleware para proteger rotas
 const authenticateToken = (req, res, next) => {
-    const token = req.cookies.token;
+    const token = req.headers.token;
     if (!token) return res.sendStatus(401);
   
     jwt.verify(token, JWT_SECRET, (err, user) => {
@@ -106,8 +106,10 @@ app.post("/login", async (request, response) => {
                 const token = jwt.sign({ id: row.id }, JWT_SECRET, { expiresIn: '1h' });
 
                 // Definir o token em um cookie HTTP-only
-                response.cookie('token', token, { httpOnly: true, secure: true, sameSite: 'Strict' });
-                response.json({ message: 'Login bem-sucedido' });
+                response.json({ 
+                    message: "Ok",
+                    token: token 
+                });
             }
             
         }else{
@@ -153,7 +155,6 @@ app.post("/register", async (request, response) => {
 
 // login route
 app.post("/logout", (request, response) => {
-    response.clearCookie('token', { httpOnly: true, secure: true, sameSite: 'Strict' });
     response.json({ message: 'OK' });
 });
 
@@ -384,8 +385,8 @@ app.post("/circuitToGate", authenticateToken, async (request, response) => {
     response.send(request.body);
 });
 
-// Get users missions status
-app.get("/missions", authenticateToken, async (request, response) => {
+// Get users activities status
+app.get("/activities", authenticateToken, async (request, response) => {
     const userId = request.user.id;
     let userMissions = await getUserMissions(userId);
 
@@ -407,7 +408,7 @@ app.post("/saveMission", authenticateToken, async (request, response) => {
 });
 
 // Get user info
-app.get("/user/", authenticateToken,  async (request, response) => {
+app.get("/user", authenticateToken,  async (request, response) => {
     const userId = request.user.id;
     let user = await getUserInfo(userId);
 

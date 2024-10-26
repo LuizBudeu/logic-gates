@@ -3,11 +3,13 @@ import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { FaGear } from "react-icons/fa6";
 import { ActivitiesModel } from "./ActivitiesModel.js";
+import { Logout } from "../controllers/AuthController.js"
 
-export function Header() {
+export function Header({ user, activities }) {
 
   const [showConfigOptions, setShowConfigOptions] = React.useState(false);
   const [showActivitiesModal, setShowActivitiesModal] = React.useState(false);
+  const [ logout ] = Logout();
 
   const missions = [
     {
@@ -46,14 +48,14 @@ export function Header() {
           </RowItem>
           <VerticalLine/>
           <RowItem>
-            <OptionsText>Olá, User name!</OptionsText>
+            <OptionsText>Olá, {user?.name}!</OptionsText>
           </RowItem>
           <RowItem>
             <IconStyle  onClick={() => setShowConfigOptions(!showConfigOptions)}></IconStyle >
             {showConfigOptions &&
               <DropdownMenu>
                 <DropdownMenuText onClick={() => navigate('./')}>Meu perfil</DropdownMenuText>
-                <DropdownMenuText onClick={() => navigate('./')}>Sair</DropdownMenuText>
+                <DropdownMenuText onClick={() => logout()}>Sair</DropdownMenuText>
               </DropdownMenu>
             }
           </RowItem>
@@ -62,7 +64,7 @@ export function Header() {
     <ActivitiesModel
       showModal={showActivitiesModal}
       setShowModal={setShowActivitiesModal}
-      missions={missions}
+      activities={activities}
     />
     </div>
     

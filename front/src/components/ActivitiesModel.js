@@ -19,7 +19,7 @@ function useOutsideAlerter(ref, setShowModal) {
   }, [ref]);
 }
 
-export function ActivitiesModel({ showModal, setShowModal, missions}) {
+export function ActivitiesModel({ showModal, setShowModal, activities}) {
 
   const wrapperRef = useRef(null);
   useOutsideAlerter(wrapperRef, setShowModal);
@@ -34,11 +34,11 @@ export function ActivitiesModel({ showModal, setShowModal, missions}) {
           </ModalHeader>
           <ModalBody>
             <p>Aqui está uma lista de componentes para serem construídos visando a criação de um processador. Esse é apenas um guia para auxiliar  no seu desenvolvimento. Aqui você poderá saber mais sobre os circuitos propostos, assim como visualizar uma solução possível.</p>
-            {missions.map((mission) => (
-              <Row>
+            {activities.map((activity) => (
+              <Row key={"row_activity_"+activity.id}>
                 <RowItem>
-                  <OptionsText>{mission.order}. {mission.name} 
-                    <a href={mission.description_url} target="_blank" title="Mais detalhes">
+                  <OptionsText>{activity.order}. {activity.name} 
+                    <a href={activity.description_url} target="_blank" title="Mais detalhes">
                       <ExternalIcon/>
                     </a>
                   </OptionsText>
@@ -46,12 +46,12 @@ export function ActivitiesModel({ showModal, setShowModal, missions}) {
                 <RowItem>
                   <Row> 
                     <RowItem>
-                      <a href={mission.solution_url} target="_blank" title="Ver solução">
+                      <a href={activity.solution_url} target="_blank" title="Ver solução">
                         <SolutionIcon/>
                       </a>
                     </RowItem>
                     <RowItem>
-                      <Checkbox id={"mission_"+mission.id} name={mission.id} type="checkbox" checked={mission.checked} disabled/>
+                      <Checkbox id={"activity_"+activity.id} name={activity.id} type="checkbox" checked={activity.checked} disabled/>
                     </RowItem>
                   </Row>                        
                 </RowItem>
