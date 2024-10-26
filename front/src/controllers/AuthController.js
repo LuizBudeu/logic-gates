@@ -32,7 +32,7 @@ export const Auth = () => {
       return
     }
 
-    fetch(process.env.REACT_APP_API_HOSTNAME_PORT + '/Login', {
+    fetch(process.env.REACT_APP_API_HOSTNAME_PORT + '/api/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -44,7 +44,8 @@ export const Auth = () => {
     })
       .then((r) => r.json())
       .then((r) => {
-        if ('Ok' === r.message) {
+        console.log(r)
+        if ('ok' === r.detail) {
           setCookie("token", r.token);
           navigate('/simulator');
         } else {
