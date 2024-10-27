@@ -13,7 +13,7 @@ export const useAxiosWithToken = () => {
     useEffect(() => {
         if (loggedIn) {
             axiosWithToken.interceptors.request.use(function (config) {
-                config.headers = { ...config.headers, token: cookies["token"] }
+                config.headers = { ...config.headers, Authorization: 'Bearer ' + cookies["token"] }
                 return config;
             });
             setHasToken(true);

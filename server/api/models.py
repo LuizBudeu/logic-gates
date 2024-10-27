@@ -19,7 +19,6 @@ class Gate(models.Model):
   updated_at = models.DateTimeField(auto_now=True) 
 
 class Activity(models.Model):
-  user = models.ForeignKey(User, on_delete=models.CASCADE)
   name = models.CharField(max_length=100)
   order = models.IntegerField()
   description_url = models.CharField(max_length=100)

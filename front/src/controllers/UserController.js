@@ -6,7 +6,7 @@ export const UserInfo = () => {
   const [axios, hasToken] = useAxiosWithToken();
 
   const getUserInfo = () => {
-      axios.get(process.env.REACT_APP_API_HOSTNAME_PORT + "/user",
+      axios.get(process.env.REACT_APP_API_HOSTNAME_PORT + "/api/userInfo",
       ).then((response) => {
           let resp = response.data;
           if(resp != null)

@@ -6,7 +6,7 @@ export const StudentActivities = () => {
   const [axios, hasToken] = useAxiosWithToken();
 
   const getActivities = () => {
-      axios.get(process.env.REACT_APP_API_HOSTNAME_PORT + "/activities",
+      axios.get(process.env.REACT_APP_API_HOSTNAME_PORT + "/api/listActivities",
       ).then((response) => {
           let resp = response.data;
           if(resp != null)

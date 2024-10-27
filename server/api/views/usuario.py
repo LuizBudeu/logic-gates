@@ -2,10 +2,12 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.db import IntegrityError
 from rest_framework.exceptions import ParseError
-
+import datetime
 import jwt
 import json
 from ..models import User
+
+SECRET_KEY = "sua_chave_secreta_super_segura"
 
 @api_view(['POST'])
 def create(request):
@@ -22,7 +24,13 @@ def create(request):
   except IntegrityError:
     raise ParseError("Email já está em uso. Por favor, escolha um email diferente.")
 
-  encoded_jwt = jwt.encode({"some": "payload"}, str(user.id), algorithm="HS256")
+  payload = {
+      'user_id': user.id,
+      'username': user.email,
+      'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=1)  # expira em 1 hora
+  }
+
+  encoded_jwt = jwt.encode(payload, SECRET_KEY, algorithm="HS256")
 
   return Response({
     'detail': 'ok',
@@ -42,9 +50,40 @@ def login(request):
   except User.DoesNotExist:
     raise ParseError("Usuário não foi encontrado.")
 
-  encoded_jwt = jwt.encode({"some": "payload"}, str(user.id), algorithm="HS256")
+  payload = {
+    'user_id': user.id,
+    'username': user.email,
+    'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=1)  # expira em 1 hora
+  }
+
+  encoded_jwt = jwt.encode(payload, SECRET_KEY, algorithm="HS256")
 
   return Response({
     'detail': 'ok',
     'token': encoded_jwt
   })
+
+@api_view(['GET'])
+def user(request):
+  token = request.headers.get('Authorization')
+
+  if(token != ""):
+      token = token.split(" ",1)[1]
+
+      user_id = jwt.decode(token, options={"verify_signature": False})['user_id']
+
+      try: 
+        user = User.objects.get(
+          id = user_id
+        )
+      except User.DoesNotExist:
+        raise ParseError("Usuário não foi encontrado.")
+
+      resp = {
+        'name': user.name,
+        'email': user.email
+      }
+          
+      return Response(resp)
+  else:
+      return Response("Token inválido", 401)
