@@ -9,7 +9,7 @@ class DeleteManager {
 
     static deleteSavedGate(axios, savedGate) {
         let gateId = savedGate.id;
-        axios.delete(process.env.REACT_APP_API_HOSTNAME_PORT + "/gate/" + gateId, {
+        axios.delete(process.env.REACT_APP_API_HOSTNAME_PORT + "/api/deleteCircuit/" + gateId, {
             headers: {
                     "Content-Type": "application/json",
                 } 

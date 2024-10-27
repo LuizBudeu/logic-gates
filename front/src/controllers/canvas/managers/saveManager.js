@@ -38,7 +38,7 @@ class SaveManager extends Component {
             circuit: CircuitManager.serialize(),
         });
         try {
-            axios.post(process.env.REACT_APP_API_HOSTNAME_PORT + "/circuitToGate", body, {
+            axios.post(process.env.REACT_APP_API_HOSTNAME_PORT + "/api/saveCircuit", body, {
                 headers: {
                         "Content-Type": "application/json",
                     } 
