@@ -7,8 +7,7 @@ class SaveManager extends Component {
     static savedGates = [];
 
     static loadSavedGatesFromFile(axios, finalCallback) {
-        axios
-            .get(process.env.REACT_APP_API_HOSTNAME_PORT + "/savedGatesAndLoadLogic")
+        axios.get(process.env.REACT_APP_API_HOSTNAME_PORT + "/api/listCircuits")
             .then((response) => {
                 let resp = response.data;
                 resp.sort((a, b) => a.order - b.order);
