@@ -106,7 +106,7 @@ def saveCircuit(request):
       return Response({
           'gateName': gateName,
           'message': "Gate name already exists. Please choose a different name.",
-        }, 400)
+        }, 301)
 
     newGate = generateGate(circuit, gateName)
 

@@ -45,15 +45,14 @@ class SaveManager extends Component {
                 })
                 .then((response) => {
                     let resp = response.data;
-                    console.log(response.data);
-                    console.log(resp);
-                    // resp = resp.json();
-                    if (resp.message?.includes("Gate name already exists")) {
+                    Core.reload();
+                })
+                .catch((e) => {
+                    if (e.response.data.message?.includes("Gate name already exists")) {
                         alert(`Gate with name ${gateName} already exists. Please choose a different name`);
                         return;
                     }
-                    Core.reload();
-                })
+                });
         } catch {
             Core.reload();
         }
