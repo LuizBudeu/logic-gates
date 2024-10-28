@@ -3,10 +3,14 @@ import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { FaGear } from "react-icons/fa6";
 import { ActivitiesModel } from "./ActivitiesModel.js";
-import { Logout } from "../controllers/AuthController.js"
+import { Logout } from "../controllers/AuthController.js";
+import { UserInfo } from "../controllers/UserController.js";
+import { StudentActivities } from "../controllers/ActivitiesController.js";
 
-export function Header({ user, activities }) {
+export function Header() {
 
+  const [user, getUserInfo] = UserInfo();
+	const [activities, getActivities] = StudentActivities();
   const [showConfigOptions, setShowConfigOptions] = React.useState(false);
   const [showActivitiesModal, setShowActivitiesModal] = React.useState(false);
   const [ logout ] = Logout();

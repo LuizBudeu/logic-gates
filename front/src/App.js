@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Login } from './interfaces/Login.js';
 import { Register } from './interfaces/Register.js';
 import { Simulator } from './interfaces/Simulator.js';
+import { Classrooms } from './interfaces/Classrooms.js';
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/simulator" element={<Simulator />} />
+        <Route path="/professor/classrooms" element={<Classrooms />} />
       </Routes>
     </BrowserRouter>
   );

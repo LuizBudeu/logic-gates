@@ -35,7 +35,8 @@ def create(request):
 
   return Response({
     'detail': 'ok',
-    'token': encoded_jwt
+    'token': encoded_jwt,
+    'role': user.role
   })
 
 @api_view(['POST'])
@@ -61,7 +62,8 @@ def login(request):
 
   return Response({
     'detail': 'ok',
-    'token': encoded_jwt
+    'token': encoded_jwt,
+    'role': user.role
   })
 
 @api_view(['GET'])

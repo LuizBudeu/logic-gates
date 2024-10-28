@@ -1,14 +1,12 @@
 import { useState, useEffect } from "react";
 import { useCookies } from "react-cookie";
 import { useNavigate } from 'react-router-dom';
-import { useAxiosWithToken } from "../utils/UseAxiosWithToken";
 
 export const Auth = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState('');
 	const setCookie = useCookies()[1];
-  const [axios, hasToken] = useAxiosWithToken();
 
   const navigate = useNavigate();
 
@@ -44,10 +42,13 @@ export const Auth = () => {
     })
       .then((r) => r.json())
       .then((r) => {
-        console.log(r)
         if ('ok' === r.detail) {
           setCookie("token", r.token);
-          navigate('/simulator');
+          if(r.role == 1){ // Professor
+            navigate('/professor/classrooms');
+          }else{
+            navigate('/simulator');
+          }
         } else {
           window.alert('Falha no login, verifique as credenciais');
         }
@@ -71,7 +72,6 @@ export const Register = () => {
   const [role, setRole] = useState('');
   const [registerError, setRegisterError] = useState('');
 	const setCookie = useCookies()[1];
-  const [axios, hasToken] = useAxiosWithToken();
 
   const navigate = useNavigate();
 
@@ -118,10 +118,14 @@ export const Register = () => {
     })
       .then((r) => r.json())
       .then((r) => {
-        console.log(r);
         if ('ok' === r.detail) {
           setCookie("token", r.token);
-          navigate('/simulator');
+          if(r.role == 1){ // Professor
+            navigate('/professor/classrooms');
+          }else{
+            navigate('/simulator');
+          }
+          
         } else {
           window.alert('Falha no cadastro, verifique as credenciais');
         }
@@ -143,23 +147,14 @@ export const Register = () => {
 };
 
 export const Logout = () => {
-  const [axios, hasToken] = useAxiosWithToken();
   const removeCookie = useCookies()[2];
 
   const navigate = useNavigate();
 
   const logout = () => {
     console.log("logout called");
-    axios.post(process.env.REACT_APP_API_HOSTNAME_PORT + "/logout",
-    ).then((response) => {
-        let resp = response.data;
-        if(resp != null){
-          removeCookie("token");
-          navigate('/login');
-        }
-    }).catch((e) => {
-        console.log(e);
-    });
+    removeCookie("token");
+    navigate('/login');
   }
 
   return [
