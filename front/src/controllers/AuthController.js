@@ -68,6 +68,7 @@ export const Register = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
+  const [role, setRole] = useState('');
   const [registerError, setRegisterError] = useState('');
 	const setCookie = useCookies()[1];
   const [axios, hasToken] = useAxiosWithToken();
@@ -99,12 +100,18 @@ export const Register = () => {
       return
     }
 
+    if ('' === role) {
+      setRegisterError('Escolha um tipo de conta');
+      return
+    }
+
+
     fetch(process.env.REACT_APP_API_HOSTNAME_PORT + '/api/register', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ name, email, password }),
+      body: JSON.stringify({ name, email, password, role }),
       headers: {
           "Content-Type": "application/json",
       },
@@ -128,6 +135,8 @@ export const Register = () => {
       setPassword,
       name,
       setName,
+      role, 
+      setRole,
       registerError,
       register,
   ];

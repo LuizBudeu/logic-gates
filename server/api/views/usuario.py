@@ -20,6 +20,7 @@ def create(request):
       name = data['name'],
       email = data['email'],
       password = data['password'],
+      role = data['role'],
     )
   except IntegrityError:
     raise ParseError("Email já está em uso. Por favor, escolha um email diferente.")

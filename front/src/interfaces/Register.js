@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { Register as RegisterController } from '../controllers/AuthController';
+import Form from 'react-bootstrap/Form';
 
 export const Register = () => {
-	const [email, setEmail, password, setPassword, name, setName, registerError, register] = RegisterController();
+	const [email, setEmail, password, setPassword, name, setName, role, setRole, registerError, register] = RegisterController();
 
 	return(
 		<div>
@@ -27,6 +28,12 @@ export const Register = () => {
 				className={'inputBox'}
 				type="password"
 			/>
+			<br/>
+			<Form.Select onChange={(ev) => setRole(ev.target.value)} value={role}>
+				<option>Escolha uma opção</option>
+				<option value="0">Estudante</option>
+				<option value="1">Professor</option>
+			</Form.Select>
 			<br/>
 			<text>{registerError}</text>
 			<br/>
