@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useAxiosWithToken } from "../utils/UseAxiosWithToken";
+import { useAxiosWithToken } from "../hooks/useAxiosWithToken";
 
 export const StudentActivities = () => {
   const [activities, setActivities] = useState();

@@ -1,7 +1,7 @@
 import axios from "axios"
 import { useState, useEffect } from "react";
 import { useCookies } from "react-cookie";
-import { UserIsLoggedIn } from "./UserIsLoggedIn";
+import { UserIsLoggedIn } from "./userIsLoggedIn";
 
 export const useAxiosWithToken = () => {
     const [cookies] = useCookies();

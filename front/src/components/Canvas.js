@@ -1,7 +1,7 @@
 import Core from "../controllers/canvas/core.js";
 import styled from 'styled-components';
 import React, { useRef, useEffect } from 'react';
-import { useAxiosWithToken } from "../utils/UseAxiosWithToken";
+import { useAxiosWithToken } from "../hooks/useAxiosWithToken.js";
 
 export function CustomCanvas() {
   const canvasRef = useRef(null);

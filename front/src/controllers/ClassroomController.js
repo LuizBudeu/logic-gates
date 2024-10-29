@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useAxiosWithToken } from "../utils/UseAxiosWithToken";
+import { useAxiosWithToken } from "../hooks/useAxiosWithToken";
 import { useNavigate } from 'react-router-dom';
 
 export const Classrooms = () => {
