@@ -57,7 +57,7 @@ class Classroom_Activity(models.Model):
     (2, "Finalizada")
   ]
 
-  classroom = models.ForeignKey(User, on_delete=models.CASCADE)
+  classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE)
   activity = models.ForeignKey(Activity, on_delete=models.CASCADE)
   status = models.IntegerField(choices=STATUS_CHOICES)
   created_at = models.DateTimeField(auto_now_add=True)

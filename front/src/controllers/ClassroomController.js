@@ -90,3 +90,37 @@ export const ClassroomInfo = (id) => {
   ];
   
 };
+
+export const ClassroomDetails = (id) => {
+  const [classroom, setClassroom] = useState();
+  const [students, setStudents] = useState([]);
+  const [activities, setActivities] = useState([]);
+  const [axios, hasToken] = useAxiosWithToken();
+
+  const getClassroomDetails = () => {
+      axios.get(process.env.REACT_APP_API_HOSTNAME_PORT + "/api/classroomDetails/" + id,
+      ).then((response) => {
+        let resp = response.data;
+        if(resp != null)
+          setClassroom(resp.classroom);
+          setStudents(resp.students);
+          setActivities(resp.activities);
+      }).catch((e) => {
+          console.log(e);
+      });
+  }
+
+  useEffect(() => {
+    if(id){
+      getClassroomDetails(); 
+    }
+  }, [id]);
+
+  return [
+    classroom,
+    students,
+    activities,
+    getClassroomDetails,
+  ];
+  
+};

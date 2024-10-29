@@ -1,10 +1,11 @@
 import { useRoutes, Navigate } from "react-router-dom";
+import { ProtectedRoute } from '../components/ProtectedRoute';
 import { Login } from '../interfaces/Login.js';
 import { Register } from '../interfaces/Register.js';
 import { Simulator } from '../interfaces/Simulator.js';
 import { Classrooms } from '../interfaces/Classrooms.js';
 import { Classroom } from '../interfaces/Classroom.js';
-import { ProtectedRoute } from '../components/ProtectedRoute';
+import { ClassroomDetailsPage } from '../interfaces/ClassroomDetailsPage.js';
 
 export default function Router() {
     let routes = useRoutes([
@@ -31,6 +32,10 @@ export default function Router() {
       {
         path: "/professor/classroom/edit/:id",
         element: <ProtectedRoute roles={[1]} element={<Classroom />} />
+      },
+      {
+        path: "/professor/classroom/details/:id",
+        element: <ProtectedRoute roles={[1]} element={<ClassroomDetailsPage />} />
       },
       {
         path: "*",

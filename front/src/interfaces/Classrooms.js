@@ -20,6 +20,7 @@ export const Classrooms = () => {
 					<div>
 						<text>{classroom.name}</text>
 						<button onClick={() => navigate('/professor/classroom/edit/' + classroom.id)}>Editar turma</button>
+						<button onClick={() => navigate('/professor/classroom/details/' + classroom.id)}>Detalhes da turma</button>
 					</div>
 				)}
 			</Background>

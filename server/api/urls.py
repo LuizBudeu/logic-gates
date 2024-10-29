@@ -10,6 +10,7 @@ from .views.circuit import deleteCircuit
 from .views.classroom import listClassrooms
 from .views.classroom import classroomInfo
 from .views.classroom import saveClassroom
+from .views.classroom import classroomDetails
 
 urlpatterns = [
   path('register', create_user, name='register_user'),
@@ -21,5 +22,6 @@ urlpatterns = [
   path('deleteCircuit/<int:gate_id>', deleteCircuit, name='deleteCircuit'),
   path('listClassrooms', listClassrooms, name='listClassrooms'),
   path('classroomInfo/<int:classroom_id>', classroomInfo, name='classroomInfo'),
-  path('saveClassroom', saveClassroom, name='saveClassroom')
+  path('saveClassroom', saveClassroom, name='saveClassroom'),
+  path('classroomDetails/<int:classroom_id>', classroomDetails, name='classroomDetails'),
 ]
