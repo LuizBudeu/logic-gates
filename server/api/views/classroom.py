@@ -1,7 +1,7 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.db import IntegrityError
-from django.db.models import Exists, OuterRef, F, Q
+from django.db.models import Exists, OuterRef, F, Q, Count
 from rest_framework.exceptions import ParseError
 
 import jwt
@@ -27,7 +27,9 @@ def listClassrooms(request):
     if(user.role != 1):
       return Response("Usuário não tem acesso", 401)
 
-    classrooms = Classroom.objects.filter(
+    classrooms = Classroom.objects.annotate(
+      numStudents = Count('classroom_student__id')
+    ).filter(
       professor = user
     ).values()
         
