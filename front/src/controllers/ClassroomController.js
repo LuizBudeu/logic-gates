@@ -66,7 +66,7 @@ export const ClassroomInfo = (id) => {
     ).then((response) => {
         let resp = response.data;
         if ('ok' === resp.detail) {
-          navigate('/professor/classrooms');
+          navigate(-1);
         } else {
           window.alert('Falha ao salvar turma');
         }
@@ -101,10 +101,12 @@ export const ClassroomDetails = (id) => {
       axios.get(process.env.REACT_APP_API_HOSTNAME_PORT + "/api/classroomDetails/" + id,
       ).then((response) => {
         let resp = response.data;
-        if(resp != null)
+        console.log(resp);
+        if(resp != null){
           setClassroom(resp.classroom);
           setStudents(resp.students);
           setActivities(resp.activities);
+        } 
       }).catch((e) => {
           console.log(e);
       });

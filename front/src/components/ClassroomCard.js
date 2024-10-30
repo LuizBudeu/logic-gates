@@ -2,7 +2,8 @@ import styled from 'styled-components'
 import { Colors } from "../utils/colors";
 import { useNavigate } from 'react-router-dom';
 import { Column } from './Column';
-import { MdEdit } from "react-icons/md";
+import { SubtitleStyle, TitleStyle } from '../utils/typology';
+import { MdEditStyle } from './MdEditStyle';
 
 export const ClassroomCard = ({classroom}) => {
     const navigate = useNavigate();
@@ -12,7 +13,7 @@ export const ClassroomCard = ({classroom}) => {
             <Column>
                 <div>
                     <TitleStyle>{classroom.name}</TitleStyle>
-                    <MdEditStyle  onClick={() => navigate('/professor/classroom/edit/' + classroom.id)} title="Editar turma"/>
+                    <MdEditStyle onClick={() => navigate('/professor/classroom/edit/' + classroom.id)} title="Editar turma"/>
                 </div>
                 <SubtitleStyle>{classroom.numStudents} alunos</SubtitleStyle>
                 <HorizontalLine/>
@@ -28,27 +29,6 @@ export const CardBackground = styled.div`
     width: 300px;
     padding: 15px;
 `
-
-export const TitleStyle = styled.text`
-    color: ${Colors.DarkGray};
-    font-size: 36px;
-    font-family: "inter";
-`
-
-export const SubtitleStyle = styled.text`
-    color: ${Colors.LightGray};
-    font-size: 24px;
-    font-family: "inter";
-`
-
-const MdEditStyle = styled(MdEdit)`
-  color: ${Colors.DarkGray}; 
-  font-size: 30px; 
-  cursor: pointer;
-  position: absolute;
-  margin-left: 5px;
-  transform: translateY(20%);
-`;
 
 const DetailsButtonStyle = styled.div`
   color: ${Colors.DarkGray}; 
