@@ -19,21 +19,30 @@ export const ClassroomDetailsPage = (props) => {
 	const [ classroom, students, activities, getClassroomDetails ] = ClassroomDetails(id);
 
 	return(
-		<div className="App">
+		<div>
 			<Header/>
 			<Background>
 				<CustomColumn>
 					<CardBackground>
-						<div>
-							<TitleStyle>{classroom?.name}</TitleStyle>
-							<MdEditStyle onClick={() => navigate('/professor/classroom/edit/' + id)} title="Editar turma"/>
-						</div>
-						<SubtitleStyle>{students.length} alunos</SubtitleStyle>
+						<Row>
+							<RowItem grow noPadding>
+								<Column>
+									<div>
+										<TitleStyle>{classroom?.name}</TitleStyle>
+										<MdEditStyle onClick={() => navigate('/professor/classroom/edit/' + id)} title="Editar turma"/>
+									</div>
+									<SubtitleStyle>{students.length} alunos</SubtitleStyle>
+								</Column>
+							</RowItem>
+							<RowItem>
+								<CustomTitleStyle>Identificador: {classroom?.identification}</CustomTitleStyle>
+							</RowItem>
+						</Row>
 					</CardBackground>
 					<CustomRow>
 						<RowItem grow flex={1} display={"null"} noPadding>
 							<CardBackground growHeight>
-								<TitleStyle>Estudantes</TitleStyle>
+								<CustomTitleStyle>Estudantes</CustomTitleStyle>
 								{students.map((student) => (
 									<div>
 										<text>{student.student__name}</text>
@@ -43,7 +52,7 @@ export const ClassroomDetailsPage = (props) => {
 						</RowItem>
 						<RowItem grow flex={2} display={"null"} noPadding>
 							<CardBackground growHeight>
-								<TitleStyle>Atividades</TitleStyle>
+								<CustomTitleStyle>Atividades</CustomTitleStyle>
 								{activities.map((activity) => (
 									<div>
 										<text>{activity.name}</text>
@@ -73,4 +82,8 @@ export const CustomRow = styled(Row)`
 
 export const CustomColumn = styled(Column)`
 		height: 100%;
+`
+
+export const CustomTitleStyle = styled(TitleStyle)`
+		font-size: 20px;
 `

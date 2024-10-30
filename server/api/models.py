@@ -41,6 +41,7 @@ class User_Activity(models.Model):
 class Classroom(models.Model):
   professor = models.ForeignKey(User, on_delete=models.CASCADE)
   name = models.CharField(max_length=100)
+  identification = models.CharField(max_length=100, unique=True)
   created_at = models.DateTimeField(auto_now_add=True)
   updated_at = models.DateTimeField(auto_now=True) 
 

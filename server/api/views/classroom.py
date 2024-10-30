@@ -3,6 +3,8 @@ from rest_framework.response import Response
 from django.db import IntegrityError
 from django.db.models import Exists, OuterRef, F, Q, Count
 from rest_framework.exceptions import ParseError
+import random
+import string
 
 import jwt
 import json
@@ -104,12 +106,16 @@ def saveClassroom(request):
         classroom.name = data.get('name')
         classroom.save()
       except Classroom.DoesNotExist:
-        raise ParseError(f"Turma com id={body.get('id')} não foi encontrada")
+        raise ParseError(f"Turma com id={data.get('id')} não foi encontrada")
     else:
+      codigo_gerado = gerar_codigo()
+      while Classroom.objects.filter(identification=codigo_gerado).exists():
+        codigo_gerado = gerar_codigo()
       classroom = Classroom.objects.create(
         professor = user,
         id = data.get('id'),
-        name = data.get('name')
+        name = data.get('name'),
+        identification = codigo_gerado
       )
         
     return Response({
@@ -150,14 +156,16 @@ def classroomDetails(request, classroom_id):
     ).values('student_id', 'student__name')
        
     activities = Activity.objects.annotate(
-      status=F('classroom_activity__status')
+      status=F('classroom_activity__status'),
+      identification=F('classroom_activity__classroom__identification')
     ).filter(
       Q(classroom_activity__id__isnull=True) | Q(classroom_activity__id=1)
-    ).order_by('order').values('id', 'name', 'order', 'description_url', 'solution_url', 'status')
+    ).order_by('order').values('id', 'name', 'identification', 'order', 'description_url', 'solution_url', 'status')
 
     resp = {
       'classroom': {
         'name': classroom.name,
+        'identification': classroom.identification,
       },
       'students': students,
       'activities': activities
@@ -166,3 +174,11 @@ def classroomDetails(request, classroom_id):
     return Response(resp)
   else:
     return Response("Token inválido", 401)
+  
+def gerar_codigo():
+  # Gera 5 caracteres aleatórios para cada parte
+  parte1 = ''.join(random.choices(string.ascii_uppercase + string.digits, k=5))
+  parte2 = ''.join(random.choices(string.ascii_uppercase + string.digits, k=5))
+  
+  # Concatena com um underline entre as partes
+  return f"{parte1}_{parte2}"
