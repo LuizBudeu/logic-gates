@@ -16,7 +16,7 @@ export default class ShiftingBar {
         this.visibleOptions = [];
         this.startIndex = null;
         this.endIndex = null;
-        this._visibleLength = 5;
+        this._visibleLength = 10;
 
         this.debugName = "ShiftingBar";
     }
@@ -45,8 +45,28 @@ export default class ShiftingBar {
         return this;
     }
 
+    shiftLeft() {
+        this.startIndex = (this.startIndex - 1 + this._allOptions.length) % this._allOptions.length;
+        this.apply(this.startIndex);
+    }
+
+    shiftRight() {
+        this.startIndex = (this.startIndex + 1) % this._allOptions.length;
+        this.apply(this.startIndex);
+    }
+
     apply(start_index = 0) {
-        this.visibleOptions = this._allOptions.slice(start_index, start_index + this._visibleLength);
+        this.startIndex = start_index;
+        this.endIndex = (this.startIndex + this._visibleLength) % this._allOptions.length;
+
+        if (this.startIndex + this._visibleLength <= this._allOptions.length) {
+            this.visibleOptions = this._allOptions.slice(this.startIndex, this.startIndex + this._visibleLength);
+        } else {
+            // Wrap-around case
+            const endSlice = this._allOptions.slice(this.startIndex);
+            const startSlice = this._allOptions.slice(0, this._visibleLength - endSlice.length);
+            this.visibleOptions = endSlice.concat(startSlice);
+        }
     }
 
     at(x = null, y = null) {

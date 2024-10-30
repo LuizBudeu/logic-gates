@@ -4,6 +4,8 @@ import Settings from "../settings.js";
 import SavedGate from "./savedGate.js";
 import SaveManager from "../managers/saveManager.js";
 import ShiftingBar from "../UIComponents/shiftingBar.js";
+import RightArrow from "./rightArrow.js";
+import LeftArrow from "./leftArrow.js";
 
 class Toolbox {
     constructor(canvas, ctx) {
@@ -22,16 +24,19 @@ class Toolbox {
             .size(this.canvas.width, height)
             .color("#0C0C0C");
 
-        this.shiftingBar = new ShiftingBar(this.ctx).at(0, this.canvas.height - height).size(this.canvas.width, height);
+        this.shiftingBar = new ShiftingBar(this.ctx).at(70, this.canvas.height - height).size(this.canvas.width, height);
 
         this.loadSavedGates();
+
+        Bridge.sceneInstance.place(new RightArrow(this.ctx, this.shiftingBar), 0);
+        Bridge.sceneInstance.place(new LeftArrow(this.ctx, this.shiftingBar), 0);
     }
 
     loadSavedGates() {
-        SaveManager.loadSavedGatesFromFile(this.setupSavedGates.bind(this));
+        SaveManager.loadSavedGatesFromFile(this.setup.bind(this));
     }
 
-    setupSavedGates(savedGatesData) {
+    setup(savedGatesData) {
         savedGatesData.forEach((gateObj, index) => {
             const savedGate = new SavedGate(this.ctx, this, gateObj.name, gateObj.logicFunction, gateObj.ios);
             savedGate.start();
