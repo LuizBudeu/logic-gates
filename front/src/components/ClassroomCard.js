@@ -12,7 +12,7 @@ export const ClassroomCard = ({classroom}) => {
             <Column>
                 <div>
                     <TitleStyle>{classroom.name}</TitleStyle>
-                    <MdEditStyle  onClick={() => navigate('/professor/classroom/edit/' + classroom.id)}/>
+                    <MdEditStyle  onClick={() => navigate('/professor/classroom/edit/' + classroom.id)} title="Editar turma"/>
                 </div>
                 <SubtitleStyle>{classroom.numStudents} alunos</SubtitleStyle>
                 <HorizontalLine/>

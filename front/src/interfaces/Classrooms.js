@@ -20,8 +20,10 @@ export const Classrooms = () => {
 		<div className="App">
 			<Header/>
 			<Background>
-				<MainTitle>Minhas Turmas</MainTitle>
-				<FaPlusCircleStyle onClick={() => navigate('/professor/classroom/new')} title="Nova turma"/>
+				<PaddingStyle>
+					<MainTitle>Minhas Turmas</MainTitle>
+					<FaPlusCircleStyle onClick={() => navigate('/professor/classroom/new')} title="Nova turma"/>
+				</PaddingStyle>
 				<Row wrap>
 					{classrooms.map((classroom) =>
 						<RowItem flex={1} center>
@@ -42,3 +44,8 @@ const FaPlusCircleStyle = styled(FaPlusCircle)`
   margin-left: 10px;
   transform: translateY(50%);
 `;
+
+
+export const PaddingStyle = styled.div`
+    padding: 15px;
+`
