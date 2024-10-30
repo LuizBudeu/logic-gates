@@ -38,7 +38,7 @@ class Toolbox {
 
     setup(savedGatesData) {
         savedGatesData.forEach((gateObj, index) => {
-            const savedGate = new SavedGate(this.ctx, this, gateObj.name, gateObj.logicFunction, gateObj.ios);
+            const savedGate = new SavedGate(this.ctx, this, gateObj.id, gateObj.name, gateObj.logicFunction, gateObj.ios);
             savedGate.start();
             this.shiftingBar.addOption(savedGate);
         });

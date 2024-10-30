@@ -1,13 +1,153 @@
 <!DOCTYPE html>
+<link href="https://fonts.googleapis.com/css2?family=Coda:wght@400;800&display=swap" rel="stylesheet">
+<!-- <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" href="style.css" />
-        <title>Logic Gates Circuit Builder</title>
+        <title>NANDesis.io</title>
     </head>
     <body oncontextmenu="return false;">
-        <canvas id="circuit-canvas"></canvas>
-        <script src="index.js" type="module"></script>
+        <!-- Header -->
+        <div class="menu_container">
+            <text class="nandesis_title">NANDesis.io</text>
+            <div class="left_menu_container">
+                <a href="#" style="cursor: pointer" class="row_item no-text-decoration"><text class="options_text">Home</text></a>
+                <a href="#" style="cursor: pointer" class="row_item no-text-decoration"><text class="options_text">Sobre nós</text></a>
+                <text class="options_text row_item" id="missoesModalBtn" style="cursor: pointer">Missões</text>
+                <div class="vertical_line row_item"></div>
+                <text class="options_text row_item" id="user_name"></text>
+                <div class="row_item">
+                    <i onclick="toggleMenu()" class="fa-solid fa-gear" style="color: white; font-size: 30px; cursor: pointer"></i>
+                    <div id="configDropdownMenu" class="dropdown-menu">
+                        <a href="#"><text class="dropdown_menu_text">Meu perfil</text></a>
+                        <text id="logoutBtn" class="dropdown_menu_text" style="cursor: pointer">Sair</text>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        <!-- Contant -->
+        <canvas id="circuit-canvas" class="canvas-content"></canvas>
     </body>
+
+    <!-- The Modal -->
+    <div id="missoesModal" class="modal">
+
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="close">&times;</span>
+                <h2>Missões</h2>
+            </div>
+            <div class="modal-body scrollable">
+                <p>Aqui está uma lista de componentes para serem construídos visando a criação de um processador. Esse é apenas um guia para auxiliar  no seu desenvolvimento. Aqui você poderá saber mais sobre os circuitos propostos, assim como visualizar uma solução possível.</p>
+                <form id="mission_form">
+                    <div id="mission_list"></div>
+                </form>
+            </div>
+        </div>
+    
+    </div>
 </html>
+
+<script>
+    var config_menu = document.getElementById("configDropdownMenu");
+
+    // config dropdown menu
+    function toggleMenu() {
+        config_menu.classList.toggle("show");
+    }
+</script>
+
+<script type="module">
+
+    // Modal    
+    // Get the form element
+    var mission_form = document.getElementById('mission_form');
+
+    // Get the modal
+    var missoesModal = document.getElementById("missoesModal");
+
+    // Get the button that opens the modal
+    var missoesModalBtn = document.getElementById("missoesModalBtn");
+
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
+
+    // When the user clicks on the button, open the modal
+    missoesModalBtn.onclick = function() {
+        missoesModal.style.display = "flex";    
+    }
+
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function() {
+        missoesModal.style.display = "none";
+        handleMissionForm();
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+        if (event.target == missoesModal) {
+            missoesModal.style.display = "none";
+            handleMissionForm();
+        }
+    }
+
+    import { loadMissions, saveMissions, getUserInfo, logout } from './index.js';
+    const missions = await loadMissions();
+    const user = await getUserInfo();
+
+    // Populando a lista de missões
+    const mission_list = document.getElementById('mission_list');
+
+    missions.forEach(dado => {
+        mission_list.innerHTML += `
+                <div class="row">
+                    <text class="options_text row_item">${dado.order}. ${dado.name} 
+                        <a href="${dado.description_url}" target="_blank" title="Mais detalhes">
+                            <i class="fa-solid fa-arrow-up-right-from-square" style="color: white; font-size: 25px;"></i>
+                        </a>
+                    </text>
+                    <div class="row_item">
+                        <div class="row no-padding">
+                            <a href="${dado.solution_url}" target="_blank" title="Ver solução">
+                                <i class="fa-solid fa-eye" style="color: white; font-size: 30px;"></i>
+                            </a>
+                            <div>
+                                <input id="mission_${dado.id}" name="${dado.id}" class="checkbox" type="checkbox" ${dado.checked ? 'checked' : ''}/>
+                            </div>
+                        </div>                        
+                    </div>
+                </div>`;
+        });
+
+    // Mission form
+    function handleMissionForm(){
+        var formData = new FormData(mission_form);
+
+        var checked_missions = [];
+
+        for (const [key, value] of Object.entries(Object.fromEntries(formData))) {
+            checked_missions.push(key);
+        }
+
+        saveMissions(checked_missions);
+    }
+    
+    // Apresentado nome de usuario
+    const user_name = document.getElementById('user_name');
+    user_name.innerHTML = `Olá, ${user.name}!`;
+
+    // Get logout button
+    var logoutBtn = document.getElementById("logoutBtn");
+
+    logoutBtn.onclick = function() {
+        console.log("front button");
+        logout();
+    }
+</script>

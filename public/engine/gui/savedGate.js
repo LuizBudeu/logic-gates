@@ -6,10 +6,11 @@ import Mouse from "../input/mouse.js";
 import DeleteManager from "../managers/deleteManager.js";
 
 class SavedGate extends Button {
-    constructor(ctx, toolbox, name, logicFunction, ios) {
+    constructor(ctx, toolbox, id, name, logicFunction, ios) {
         super(ctx);
         this.ctx = ctx;
         this.toolbox = toolbox;
+        this.id = id;
         this.name = name;
         this.logicFunction = logicFunction;
         this.ios = ios;

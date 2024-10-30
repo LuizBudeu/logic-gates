@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="style.css" />
+        <title>Logic Gates Circuit Builder</title>
+    </head>
+    <body oncontextmenu="return false;">
+        <form action="" id="registerForm">
+            Nome: <input id="name" type="text"/>
+            <br/>
+            Email: <input id="email" type="text"/>
+            <br/>
+            Senha: <input id="password" type="password"/>
+            <br/>
+            <button id="submitButton" type="submit">Criar conta</button>
+        </form>
+    </body>
+    <script type="text/javascript">
+        let registerForm = document.getElementById("registerForm");
+        registerForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+
+            let name = document.getElementById("name");
+            let email = document.getElementById("email");
+            let password = document.getElementById("password");
+
+            if (name.value == "" || email.value == "" || password.value == "") {
+                alert("Campos não preenchidos");
+            } else {
+                fetch("/register", {
+                    method: "POST",
+                    body: JSON.stringify({
+                        name: name.value,
+                        email: email.value,
+                        password: password.value
+                    }),
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                })
+                .then((response) => response.json())
+                .then((data) => {
+                    if(data.message == "Falha cadastro"){
+                        alert("Falha no cadastro");
+                    }else if(data.message == "Usuario cadastrado"){
+                        alert("Usuário já cadastrado");
+                    }else{
+                        window.location.href = '../home';
+                    }
+                });
+            }
+        });
+  
+      </script>
+</html>

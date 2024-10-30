@@ -86,7 +86,7 @@ class Save extends Button {
             alert(`Gate name "${gateName}" already exists`);
             return;
         }
-
+        
         // Save circuit to gate
         SaveManager.saveCircuitToGate(gateName.toUpperCase());
     }
