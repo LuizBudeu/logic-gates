@@ -57,15 +57,21 @@ export default class ShiftingBar {
 
     apply(start_index = 0) {
         this.startIndex = start_index;
-        this.endIndex = (this.startIndex + this._visibleLength) % this._allOptions.length;
 
-        if (this.startIndex + this._visibleLength <= this._allOptions.length) {
-            this.visibleOptions = this._allOptions.slice(this.startIndex, this.startIndex + this._visibleLength);
+        if (this._allOptions.length <= this._visibleLength) {
+            // If there are fewer items than the visible length, show all items
+            this.visibleOptions = this._allOptions;
         } else {
-            // Wrap-around case
-            const endSlice = this._allOptions.slice(this.startIndex);
-            const startSlice = this._allOptions.slice(0, this._visibleLength - endSlice.length);
-            this.visibleOptions = endSlice.concat(startSlice);
+            this.endIndex = (this.startIndex + this._visibleLength) % this._allOptions.length;
+
+            if (this.startIndex + this._visibleLength <= this._allOptions.length) {
+                this.visibleOptions = this._allOptions.slice(this.startIndex, this.startIndex + this._visibleLength);
+            } else {
+                // Wrap-around case
+                const endSlice = this._allOptions.slice(this.startIndex);
+                const startSlice = this._allOptions.slice(0, this._visibleLength - endSlice.length);
+                this.visibleOptions = endSlice.concat(startSlice);
+            }
         }
     }
 
