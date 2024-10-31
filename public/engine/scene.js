@@ -14,6 +14,7 @@ import CircuitManager from "./managers/circuitManager.js";
 import PlusIO from "./gui/plusIO.js";
 import MinusIO from "./gui/minusIO.js";
 import WiringManager from "./managers/wiringManager.js";
+import Keyboard, { Keys } from "./input/keyboard.js";
 
 class Scene {
     constructor(canvas, ctx) {
@@ -51,6 +52,7 @@ class Scene {
         this.setupBackground();
         this.setupToolbox();
         this.setupIOButtons();
+        this.setupInitialListeners();
 
         this.setupInitialComponents();
 
@@ -154,6 +156,13 @@ class Scene {
         this.place(new Reset(this.ctx), Settings.BACKGROUND_LAYER);
     }
 
+    setupInitialListeners() {
+        // Press H to hide/show IO labels
+        Keyboard.addKeyDownEvent(() => {
+            Settings.IS_SHOWING_IO_LABELS = !Settings.IS_SHOWING_IO_LABELS;
+        }, Keys.H);
+    }
+
     setupIOButtons() {
         this.plusInput = new PlusIO(this.ctx, "input");
         this.place(this.plusInput, Settings.BACKGROUND_LAYER);
@@ -176,7 +185,7 @@ class Scene {
         ioArray.push(io);
         io.debugName += "_" + (ioArray.length - 1);
         io.IOId = ioArray.length - 1;
-        this.place(io, Settings.FOREGROUND_LAYER, true);
+        this.place(io, Settings.FOREGROUND_LAYER);
 
         this.repositionGlobalIOs(IOtype);
     }

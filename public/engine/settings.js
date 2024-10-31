@@ -27,6 +27,7 @@ const Settings = {
         DEFAULT: 0,
         DELETE: 1,
     },
+    IS_SHOWING_IO_LABELS: false,
     GATE_BASE_HEIGHT: 40,
     GATE_BASE_WIDTH: 80,
     GATE_BASE_HEIGHT_MULTIPLIER: 40,
