@@ -98,6 +98,7 @@ class IO extends BaseComponent {
         if (!this.isGlobal()) {
             return {
                 IOId: `${this.IOId}`,
+                label: `${this.IOLabel.name}`,
             };
         } else {
             return {
@@ -105,6 +106,7 @@ class IO extends BaseComponent {
                 circuitId: `${this.circuitId}`,
                 isGlobal: true,
                 IOId: `${this.IOId}`,
+                label: `${this.IOLabel.name}`,
             };
         }
     }
