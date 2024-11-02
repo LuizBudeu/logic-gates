@@ -95,8 +95,6 @@ def saveClassroom(request):
 
     data = json.loads(request.body)
 
-    print(data)
-
     if(data.get('id')):
       try:
         classroom = Classroom.objects.get(
@@ -159,8 +157,6 @@ def classroomDetails(request, classroom_id):
       starts_at=F('classroom_activity__starts_at'),
       ends_at=F('classroom_activity__ends_at'),
       identification=F('classroom_activity__classroom__identification')
-    ).filter(
-      Q(classroom_activity__id__isnull=True) | Q(classroom_activity__id=1)
     ).order_by('order').values('id', 'name', 'identification', 'order', 'description_url', 'solution_url', 'starts_at', 'ends_at')
 
     resp = {

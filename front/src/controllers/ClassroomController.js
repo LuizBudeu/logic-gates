@@ -112,17 +112,26 @@ export const ClassroomDetails = (id) => {
       });
   }
 
+  const updateActivityOnList = (updatedActivity) => {
+    setActivities((prevItems) =>
+      prevItems.map((item) =>
+        item.id === updatedActivity.id ? updatedActivity : item
+      )
+    );
+  }
+
   useEffect(() => {
     if(id){
       getClassroomDetails(); 
     }
   }, [id]);
 
-  return [
+  return {
     classroom,
     students,
     activities,
+    updateActivityOnList,
     getClassroomDetails,
-  ];
+  };
   
 };

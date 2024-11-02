@@ -15,12 +15,14 @@ import { FaPlusCircle } from "react-icons/fa";
 import { ActivityItem } from '../components/ActivityItem.js';
 import { CenterContent } from '../components/CenterContent.js';
 import { ActivityInfo } from '../components/ActivityInfo.js';
+import { ScrollContainer } from '../components/ScrollContainer.js';
+import { StaticContainer } from '../components/StaticContainer.js';
 
 export const ClassroomDetailsPage = (props) => {
 	const navigate = useNavigate();
 
 	const { id } = useParams();
-	const [ classroom, students, activities, getClassroomDetails ] = ClassroomDetails(id);
+	const { classroom, students, activities, updateActivityOnList, getClassroomDetails } = ClassroomDetails(id);
 	const [ selectedActivity, setSelectedActivity ] = useState();
 
 	const copyNewStudentLink = () => {
@@ -28,8 +30,13 @@ export const ClassroomDetailsPage = (props) => {
 		alert("Link de convite copiado");
 	}
 
+	const onActivityUpdate = (activity) => {
+		setSelectedActivity(activity);
+		updateActivityOnList(activity);
+	}
+
 	return(
-		<div>
+		<StaticContainer>
 			<Header/>
 			<Background>
 				<CustomColumn>
@@ -50,7 +57,7 @@ export const ClassroomDetailsPage = (props) => {
 						</Row>
 					</CardBackground>
 					<CustomRow>
-						<RowItem grow flex={1} display={"null"} noPadding>
+						<RowItem flex={1} display={"null"} noPadding>
 							<CardBackground growHeight>
 								<Row>
 									<CustomTitleStyle>Estudantes</CustomTitleStyle>
@@ -63,20 +70,23 @@ export const ClassroomDetailsPage = (props) => {
 								))}
 							</CardBackground>
 						</RowItem>
-						<RowItem grow flex={2} display={"null"} noPadding>
+						<RowItem flex={2} display={"null"} noPadding>
 							<CardBackground growHeight>
 								<Row style={{height: "100%"}}>
 									<RowItem flex={1} noPadding>
-										<Column>
-											<CustomTitleStyle>Atividades</CustomTitleStyle>
-											{activities.map((activity) => (
-												<ActivityItem
-													activity={activity}
-													onClick={() => setSelectedActivity(activity)}
-													selected={activity.id == selectedActivity?.id}
-												/>
-											))}
-										</Column>
+										<ScrollContainer>
+											<Column>
+												<CustomTitleStyle>Atividades</CustomTitleStyle>
+												{activities.map((activity) => (
+													<ActivityItem
+														activity={activity}
+														onClick={() => setSelectedActivity(activity)}
+														selected={activity.id == selectedActivity?.id}
+													/>
+												))}
+											</Column>
+										</ScrollContainer>
+										
 									</RowItem>
 									<RowItem noPadding>
 										<VerticalLine/>
@@ -85,6 +95,8 @@ export const ClassroomDetailsPage = (props) => {
 									{selectedActivity ? (
 											<ActivityInfo 
 												activity={selectedActivity} 
+												onUpdate={onActivityUpdate}
+												classroomId={id}
 											/>
 										) : (
 											<CenterContent>
@@ -98,28 +110,28 @@ export const ClassroomDetailsPage = (props) => {
 					</CustomRow>
 				</CustomColumn>
 			</Background>
-		</div>
+		</StaticContainer>
 	)
 };
 
-export const CardBackground = styled.div`
+const CardBackground = styled.div`
 	background-color: ${Colors.White};
 	border-radius: 30px;
 	padding: 15px;
 	margin: 15px;
 	max-height: 100%;
-	height: ${({growHeight}) => growHeight ? "calc(100% - 60px);" : "null"};
+	height: ${({growHeight}) => growHeight ? "calc(100% - 224px);" : "null"};
 `
 
-export const CustomRow = styled(Row)`
+const CustomRow = styled(Row)`
+	// height: 100%;
+`
+
+const CustomColumn = styled(Column)`
 	height: 100%;
 `
 
-export const CustomColumn = styled(Column)`
-	height: 100%;
-`
-
-export const CustomTitleStyle = styled(TitleStyle)`
+const CustomTitleStyle = styled(TitleStyle)`
 	font-size: 30px;
 `
 

@@ -4,6 +4,7 @@ from .views.usuario import create as create_user
 from .views.usuario import login
 from .views.usuario import user
 from .views.activity import listActivities
+from .views.activity import saveActivity
 from .views.circuit import listCircuits
 from .views.circuit import saveCircuit
 from .views.circuit import deleteCircuit
@@ -17,6 +18,7 @@ urlpatterns = [
   path('login', login, name='login'),
   path('userInfo', user, name='userInfo'),
   path('listActivities', listActivities, name='listActivities'),
+  path('saveActivity', saveActivity, name='saveActivity'),
   path('listCircuits', listCircuits, name='listCircuits'),
   path('saveCircuit', saveCircuit, name='saveCircuit'),
   path('deleteCircuit/<int:gate_id>', deleteCircuit, name='deleteCircuit'),
