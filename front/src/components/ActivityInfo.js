@@ -3,7 +3,7 @@ import { Row } from "./Row";
 import { StatusBadge } from "./StatusBadge";
 import { RowItem } from "./RowItem";
 import { Column } from "./Column";
-import { ActivityStatus } from "../utils/utils";
+import { ActivityStatus, getActivityStatus } from "../utils/utils";
 
 export const ActivityInfo = ({activity}) => {
   const status = getActivityStatus(activity.starts_at, activity.ends_at);
