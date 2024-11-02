@@ -5,7 +5,7 @@ from rest_framework.exceptions import ParseError
 import datetime
 import jwt
 import json
-from ..models import User
+from ..models import User, Classroom, Classroom_Student
 
 SECRET_KEY = "sua_chave_secreta_super_segura"
 
@@ -15,6 +15,14 @@ def create(request):
   data = json.loads(request.body)
 
   user = None
+
+  if data['role'] == '0' and data['classroomIdentification'] != '':
+    try: 
+      classroom = Classroom.objects.get(
+        identification = data['classroomIdentification']
+      )
+    except Classroom.DoesNotExist:
+      raise ParseError(f"Turma com identificador '{data['classroomIdentification']}' não foi encontrada")
   try: 
     user = User.objects.create(
       name = data['name'],
@@ -24,6 +32,13 @@ def create(request):
     )
   except IntegrityError:
     raise ParseError("Email já está em uso. Por favor, escolha um email diferente.")
+  
+  if(classroom):
+    Classroom_Student.objects.create(
+      classroom = classroom,
+      student = user,
+    )
+
 
   payload = {
       'user_id': user.id,

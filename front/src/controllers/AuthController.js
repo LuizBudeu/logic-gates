@@ -74,6 +74,7 @@ export const Register = () => {
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const [role, setRole] = useState('');
+  const [classroomIdentification, setClassroomIdentification] = useState('');
   const [registerError, setRegisterError] = useState('');
 	const setCookie = useCookies()[1];
   const { login: loginAuth } = useAuth();
@@ -110,13 +111,12 @@ export const Register = () => {
       return
     }
 
-
     fetch(process.env.REACT_APP_API_HOSTNAME_PORT + '/api/register', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ name, email, password, role }),
+      body: JSON.stringify({ name, email, password, role, classroomIdentification }),
       headers: {
           "Content-Type": "application/json",
       },
@@ -138,7 +138,7 @@ export const Register = () => {
       })
   }
 
-  return [
+  return {
       email,
       setEmail,
       password,
@@ -147,9 +147,11 @@ export const Register = () => {
       setName,
       role, 
       setRole,
+      classroomIdentification, 
+      setClassroomIdentification,
       registerError,
       register,
-  ];
+  };
 };
 
 export const Logout = () => {
