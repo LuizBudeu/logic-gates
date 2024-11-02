@@ -156,11 +156,12 @@ def classroomDetails(request, classroom_id):
     ).values('student_id', 'student__name')
        
     activities = Activity.objects.annotate(
-      status=F('classroom_activity__status'),
+      starts_at=F('classroom_activity__starts_at'),
+      ends_at=F('classroom_activity__ends_at'),
       identification=F('classroom_activity__classroom__identification')
     ).filter(
       Q(classroom_activity__id__isnull=True) | Q(classroom_activity__id=1)
-    ).order_by('order').values('id', 'name', 'identification', 'order', 'description_url', 'solution_url', 'status')
+    ).order_by('order').values('id', 'name', 'identification', 'order', 'description_url', 'solution_url', 'starts_at', 'ends_at')
 
     resp = {
       'classroom': {

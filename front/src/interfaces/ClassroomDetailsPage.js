@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import { Colors } from "../utils/colors";
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { Header } from "../components/Header.js"
 import { ClassroomDetails } from "../controllers/ClassroomController.js"
@@ -12,12 +12,16 @@ import { RowItem } from '../components/RowItem.js';
 import { SubtitleStyle, TitleStyle } from '../utils/typology.js';
 import { MdEditStyle } from '../components/MdEditStyle.js';
 import { FaPlusCircle } from "react-icons/fa";
+import { ActivityItem } from '../components/ActivityItem.js';
+import { CenterContent } from '../components/CenterContent.js';
+import { ActivityInfo } from '../components/ActivityInfo.js';
 
 export const ClassroomDetailsPage = (props) => {
 	const navigate = useNavigate();
 
 	const { id } = useParams();
 	const [ classroom, students, activities, getClassroomDetails ] = ClassroomDetails(id);
+	const [ selectedActivity, setSelectedActivity ] = useState();
 
 	const copyNewStudentLink = () => {
 		navigator.clipboard.writeText(process.env.REACT_APP_FRONT_HOSTNAME_PORT + "/register?id=" + classroom?.identification);
@@ -62,21 +66,31 @@ export const ClassroomDetailsPage = (props) => {
 						<RowItem grow flex={2} display={"null"} noPadding>
 							<CardBackground growHeight>
 								<Row style={{height: "100%"}}>
-									<RowItem flex={1}>
+									<RowItem flex={1} noPadding>
 										<Column>
 											<CustomTitleStyle>Atividades</CustomTitleStyle>
 											{activities.map((activity) => (
-												<div>
-													<text>{activity.name}</text>
-												</div>
+												<ActivityItem
+													activity={activity}
+													onClick={() => setSelectedActivity(activity)}
+													selected={activity.id == selectedActivity?.id}
+												/>
 											))}
 										</Column>
 									</RowItem>
 									<RowItem noPadding>
 										<VerticalLine/>
 									</RowItem>
-									<RowItem flex={2}>
-
+									<RowItem flex={2} noPadding>
+									{selectedActivity ? (
+											<ActivityInfo 
+												activity={selectedActivity} 
+											/>
+										) : (
+											<CenterContent>
+												<text>Selecione uma atividade</text>
+											</CenterContent>
+										)}
 									</RowItem>
 								</Row>
 							</CardBackground>

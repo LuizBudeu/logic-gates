@@ -52,14 +52,9 @@ class Classroom_Student(models.Model):
   updated_at = models.DateTimeField(auto_now=True) 
 
 class Classroom_Activity(models.Model):
-  STATUS_CHOICES = [
-    (0, "Fechada"),
-    (1, "Aberta"),
-    (2, "Finalizada")
-  ]
-
   classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE)
   activity = models.ForeignKey(Activity, on_delete=models.CASCADE)
-  status = models.IntegerField(choices=STATUS_CHOICES)
+  starts_at = models.DateTimeField(blank=True)
+  ends_at = models.DateTimeField(blank=True)
   created_at = models.DateTimeField(auto_now_add=True)
   updated_at = models.DateTimeField(auto_now=True) 
