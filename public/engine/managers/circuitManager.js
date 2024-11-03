@@ -148,6 +148,8 @@ class CircuitManager {
             serializedCircuit.connections.push(connection.serialize());
         });
 
+        debugger;
+
         return JSON.stringify(serializedCircuit);
     }
 }

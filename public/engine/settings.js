@@ -29,6 +29,7 @@ const Settings = {
         DELETE: 1,
     },
     GATE_COLOR: "#7a130d",
+    IS_SHOWING_IO_LABELS: false,
     GATE_BASE_HEIGHT: 40,
     GATE_BASE_WIDTH: 80,
     GATE_BASE_HEIGHT_MULTIPLIER: 40,
