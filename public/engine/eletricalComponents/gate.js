@@ -44,14 +44,14 @@ class Gate extends BaseComponent {
         this.rect = new Rect(this.ctx)
             .at(Settings.CANVAS_WIDTH / 2 - 50, Settings.CANVAS_HEIGHT / 2 - 50)
             .size(rectSize.width, rectSize.height)
-            .color("#7a130d");
+            .color(Settings.GATE_COLOR);
 
         this.rect.innerText.style("Arial", Settings.GATE_NAME_FONT_SIZE, "#fff").content(this.name);
         this.rect.innerText.centerInRect(this.rect);
 
-        // Position the inputs and output
         const debugName = `${this.name}_Gate`;
 
+        // Position the inputs and output
         for (let i = 0; i < this.ios.inputs; i++) {
             const rectPos = this.calculateIOPosition(i, "input");
 

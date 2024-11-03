@@ -1,6 +1,7 @@
 const Settings = {
     CANVAS_WIDTH: 800, // This is the default value, it will be changed in core.js
     CANVAS_HEIGHT: 600, // This is the default value, it will be changed in core.js
+    DELTA_TIME: 0.167, // This is the default value, it will be changed in core.js
     BACKGROUND_LAYER: 0,
     FOREGROUND_LAYER: 5,
     UI_LAYER: 8,
@@ -27,6 +28,7 @@ const Settings = {
         DEFAULT: 0,
         DELETE: 1,
     },
+    GATE_COLOR: "#7a130d",
     GATE_BASE_HEIGHT: 40,
     GATE_BASE_WIDTH: 80,
     GATE_BASE_HEIGHT_MULTIPLIER: 40,
