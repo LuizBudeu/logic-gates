@@ -26,7 +26,7 @@ export const ActivityItemModal = ({activity}) => {
             </a>
           }
 
-          {status == ActivityStatus.emAndamento &&
+          {[ActivityStatus.emAndamento, ActivityStatus.naoConfigurada].includes(status) &&
             <a href={activity.solution_url} target="_blank" title="Validar circuito">
               <CenterContent>
                 <JudgeIcon/>
@@ -34,7 +34,7 @@ export const ActivityItemModal = ({activity}) => {
             </a>
           }   
 
-          {status == ActivityStatus.finalizada &&
+          {[ActivityStatus.finalizada, ActivityStatus.naoConfigurada].includes(status) &&
             <a href={activity.solution_url} target="_blank" title="Ver solução">
               <CenterContent>
                 <SolutionIcon/>
@@ -43,11 +43,13 @@ export const ActivityItemModal = ({activity}) => {
             </a>
           }  
       </RowItem> 
-      <RowItem grow>
-        <CenterContent>
-          <StatusBadge status={status}/>
-        </CenterContent>
-      </RowItem> 
+      {status != ActivityStatus.naoConfigurada &&
+        <RowItem grow>
+          <CenterContent>
+            <StatusBadge status={status}/>
+          </CenterContent>
+        </RowItem> 
+      }
       {status == ActivityStatus.finalizada &&
         <RowItem>
           <a href={activity.solution_url} target="_blank" title="Ver solução">

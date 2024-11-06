@@ -26,24 +26,41 @@ def listActivities(request):
     except User.DoesNotExist:
       raise ParseError("Usuário não foi encontrado.")
     
-    activities = Activity.objects.filter(
-      Q(user_activity__id__isnull=False) | Q(classroom_activity__id__isnull=False),
-      classroom_activity__classroom__classroom_student__classroom_id=F('classroom_activity__classroom_id'),
-      classroom_activity__classroom__classroom_student__student=user
-    ).annotate(
-      starts_at=Max('classroom_activity__starts_at'),
-      ends_at=Max('classroom_activity__ends_at'),
-      score=Max('user_activity__score'),
-    ).values(
-      'id', 
-      'name', 
-      'order', 
-      'description_url', 
-      'solution_url', 
-      'starts_at', 
-      'ends_at', 
-      'score'
-    ).order_by('order')
+    try: 
+      classroom = Classroom.objects.get(
+        classroom_student__student = user
+      )
+      activities = Activity.objects.filter(
+        Q(user_activity__id__isnull=False) | Q(classroom_activity__id__isnull=False),
+        classroom_activity__classroom__classroom_student__classroom_id=F('classroom_activity__classroom_id'),
+        classroom_activity__classroom__classroom_student__student=user
+      ).annotate(
+        starts_at=Max('classroom_activity__starts_at'),
+        ends_at=Max('classroom_activity__ends_at'),
+        score=Max('user_activity__score'),
+      ).values(
+        'id', 
+        'name', 
+        'order', 
+        'description_url', 
+        'solution_url', 
+        'starts_at', 
+        'ends_at', 
+        'score'
+      ).order_by('order')
+    except Classroom.DoesNotExist:
+      activities = Activity.objects.annotate(
+        score=Max(
+          'user_activity__score',
+          filter=Q(user_activity__user=user)),
+      ).values(
+        'id', 
+        'name', 
+        'order', 
+        'description_url', 
+        'solution_url', 
+        'score'
+      ).order_by('order')
 
     return Response(activities)
   else:
