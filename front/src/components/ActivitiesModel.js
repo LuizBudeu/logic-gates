@@ -1,7 +1,6 @@
 import React, {useEffect, useRef} from "react";
 import styled from 'styled-components';
-import { FaExternalLinkAlt } from "react-icons/fa";
-import { FaEye } from "react-icons/fa";
+import { ActivityItemModal } from "./ActivityItemModal";
 
 function useOutsideAlerter(ref, setShowModal) {
   useEffect(() => {
@@ -35,27 +34,9 @@ export function ActivitiesModel({ showModal, setShowModal, activities}) {
           <ModalBody>
             <p>Aqui está uma lista de componentes para serem construídos visando a criação de um processador. Esse é apenas um guia para auxiliar  no seu desenvolvimento. Aqui você poderá saber mais sobre os circuitos propostos, assim como visualizar uma solução possível.</p>
             {activities.map((activity) => (
-              <Row key={"row_activity_"+activity.id}>
-                <RowItem>
-                  <OptionsText>{activity.order}. {activity.name} 
-                    <a href={activity.description_url} target="_blank" title="Mais detalhes">
-                      <ExternalIcon/>
-                    </a>
-                  </OptionsText>
-                </RowItem>                
-                <RowItem>
-                  <Row> 
-                    <RowItem>
-                      <a href={activity.solution_url} target="_blank" title="Ver solução">
-                        <SolutionIcon/>
-                      </a>
-                    </RowItem>
-                    <RowItem>
-                      <Checkbox id={"activity_"+activity.id} name={activity.id} type="checkbox" checked={activity.checked} disabled/>
-                    </RowItem>
-                  </Row>                        
-                </RowItem>
-              </Row>
+              <ActivityItemModal
+                activity={activity}
+              />
             ))}
           </ModalBody>
         </ModalContent>
@@ -110,69 +91,4 @@ const ModalBody = styled.div`
   padding: 2px 16px;
   overflow: auto;
   max-height: 80%;
-`;
-
-const Row = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  padding-left: 20px;
-  padding-right: 20px;
-  height: 60px;
-`;
-
-const RowItem = styled.div`
-  align-self: center;
-`;
-
-const OptionsText = styled.text`
-  color: #FFFFFF;
-  font-family: 'inter';
-  font-size: 20px;
-  align-self: center;
-  cursor: ${({clickable}) => clickable ? 'pointer' : 'default'};
-`;
-
-const Checkbox = styled.input`
-  appearance: none;
-  width: 24px;
-  height: 24px;
-  border: 2px solid #888;
-  border-radius: 4px;
-  outline: none;
-  cursor: default;
-  position: relative;
-  background-color: transparent;
-  padding-left: 0px;
-
-  &:checked {
-    background-color: #444;
-    border-color: #444;
-  }
-
-  &:checked::after {
-    content: '';
-    position: absolute;
-    top: 3px;
-    left: 6px;
-    width: 6px;
-    height: 12px;
-    border: solid #00ff55;
-    border-width: 0 4px 4px 0;
-    transform: rotate(45deg);
-  }
-`;
-
-const ExternalIcon = styled(FaExternalLinkAlt)`
-  padding-left: 10px;
-  color: white; 
-  font-size: 25px;
-  cursor: pointer;
-`;
-
-const SolutionIcon = styled(FaEye)`
-  padding-right: 5px;
-  color: white; 
-  font-size: 30px;
-  cursor: pointer;
 `;

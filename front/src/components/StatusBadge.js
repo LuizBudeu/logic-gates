@@ -6,7 +6,7 @@ import { CenterContent } from './CenterContent';
 const BadgeColor = (status) => {
   if(status==ActivityStatus.indisponivel){
     return Colors.CancelRed;
-  }else if(status==ActivityStatus.pendente){
+  }else if(status==ActivityStatus.emAndamento){
     return Colors.WarningYellow;
   }else if(status==ActivityStatus.finalizada){
     return Colors.ConfirmBlue;

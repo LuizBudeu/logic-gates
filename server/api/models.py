@@ -35,6 +35,7 @@ class Activity(models.Model):
 class User_Activity(models.Model):
   user = models.ForeignKey(User, on_delete=models.CASCADE)
   activity = models.ForeignKey(Activity, on_delete=models.CASCADE)
+  score = models.BooleanField()
   created_at = models.DateTimeField(auto_now_add=True)
   updated_at = models.DateTimeField(auto_now=True) 
 

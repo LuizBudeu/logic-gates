@@ -1,13 +1,13 @@
 export const ActivityStatus = {
   indisponivel: 0,
-  pendente: 1,
+  emAndamento: 1,
   finalizada: 2,
   naoConfigurada: 3
 };
 
 export const ActivityStatusString = {
   0: "Indisponível",
-  1: "Pendente",
+  1: "Em andamento",
   2: "Finalizada",
   3: "Não configurada"
 };
@@ -22,7 +22,7 @@ export const getActivityStatus = (startsAtStr, endsAtStr) => {
     if(currentDate < startsAt){
       return ActivityStatus.indisponivel;
     }else if(currentDate < endsAt){
-      return ActivityStatus.pendente;
+      return ActivityStatus.emAndamento;
     }else{
       return ActivityStatus.finalizada;
     }

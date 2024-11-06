@@ -1,7 +1,7 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.db import IntegrityError
-from django.db.models import Exists, OuterRef, F, Q, Count
+from django.db.models import Exists, OuterRef, F, Q, Count, FilteredRelation
 from rest_framework.exceptions import ParseError
 import random
 import string
@@ -152,13 +152,21 @@ def classroomDetails(request, classroom_id):
     students = Classroom_Student.objects.filter(
       classroom = classroom
     ).values('student_id', 'student__name')
-       
-    activities = Activity.objects.annotate(
-      starts_at=F('classroom_activity__starts_at'),
-      ends_at=F('classroom_activity__ends_at'),
-      identification=F('classroom_activity__classroom__identification')
-    ).order_by('order').values('id', 'name', 'identification', 'order', 'description_url', 'solution_url', 'starts_at', 'ends_at')
 
+    activities = Activity.objects.order_by('order').values()
+
+    for activity in activities:
+      classroom_activity = Classroom_Activity.objects.filter(
+        classroom = classroom,
+        activity_id = activity['id']
+      ).first()
+      if(classroom_activity is not None):
+        activity['starts_at'] = classroom_activity.starts_at
+        activity['ends_at'] = classroom_activity.ends_at
+      else:
+        activity['starts_at'] = None
+        activity['ends_at'] = None
+      
     resp = {
       'classroom': {
         'name': classroom.name,

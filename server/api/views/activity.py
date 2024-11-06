@@ -1,7 +1,7 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.db import IntegrityError
-from django.db.models import Exists, OuterRef
+from django.db.models import Exists, OuterRef, Max, Q, F
 from rest_framework.exceptions import ParseError
 import pytz
 from datetime import datetime
@@ -19,12 +19,32 @@ def listActivities(request):
 
     user_id = jwt.decode(token, options={"verify_signature": False})['user_id']
 
-    activities = Activity.objects.annotate(
-        checked=Exists(
-            User_Activity.objects.filter(activity_id=OuterRef('id'), user_id=user_id)
-        )
-    ).order_by('order').values('id', 'name', 'order', 'description_url', 'solution_url', 'checked')
-        
+    try: 
+      user = User.objects.get(
+        id = user_id
+      )
+    except User.DoesNotExist:
+      raise ParseError("Usuário não foi encontrado.")
+    
+    activities = Activity.objects.filter(
+      Q(user_activity__id__isnull=False) | Q(classroom_activity__id__isnull=False),
+      classroom_activity__classroom__classroom_student__classroom_id=F('classroom_activity__classroom_id'),
+      classroom_activity__classroom__classroom_student__student=user
+    ).annotate(
+      starts_at=Max('classroom_activity__starts_at'),
+      ends_at=Max('classroom_activity__ends_at'),
+      score=Max('user_activity__score'),
+    ).values(
+      'id', 
+      'name', 
+      'order', 
+      'description_url', 
+      'solution_url', 
+      'starts_at', 
+      'ends_at', 
+      'score'
+    ).order_by('order')
+
     return Response(activities)
   else:
       return Response("Token inválido", 401)
