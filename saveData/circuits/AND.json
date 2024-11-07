@@ -9,10 +9,10 @@
             "name": "NAND",
             "circuitId": "4",
             "inputs": [
-                { "IOId": "0", "label": "in0" },
-                { "IOId": "1", "label": "in1" }
+                { "IOId": "0", "label": "in0sasas" },
+                { "IOId": "1", "label": "in1sasa" }
             ],
-            "outputs": [{ "IOId": "0", "label": "out0" }]
+            "outputs": [{ "IOId": "0", "label": "out0sasa" }]
         }
     ],
     "connections": [

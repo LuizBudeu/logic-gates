@@ -10,12 +10,13 @@ import Text from "../UIComponents/text.js";
 import IOLabel from "../gui/IOLabel.js";
 
 class IO extends BaseComponent {
-    constructor(ctx, debugName = "", gate = null) {
+    constructor(ctx, debugName = "", gate = null, IOLabelName = null) {
         super(debugName);
 
         /** @type {CanvasRenderingContext2D} */
         this.ctx = ctx;
         this.gate = gate;
+        this.IOLabelName = IOLabelName;
 
         this.circle = new Circle(this.ctx);
         this._value = false;
@@ -37,7 +38,7 @@ class IO extends BaseComponent {
     }
 
     start() {
-        this.IOLabel = new IOLabel(this.ctx, this);
+        this.IOLabel = new IOLabel(this.ctx, this, this.IOLabelName);
         Bridge.sceneInstance.place(this.IOLabel, Settings.UI_LAYER, true);
     }
 

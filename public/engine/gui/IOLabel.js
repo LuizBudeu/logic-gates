@@ -4,14 +4,18 @@ import Mouse from "../input/mouse.js";
 import Button from "../UIComponents/button.js";
 
 class IOLabel extends Button {
-    constructor(ctx, io) {
+    constructor(ctx, io, name = null) {
         /** @type {CanvasRenderingContext2D} */
         super(ctx);
         this.io = io;
 
-        this.name = io.type === "input" ? "in" : "out";
-        const prefix = io.isGlobal() ? "G." : "";
-        this.name = prefix + this.name + io.IOId;
+        if (name === null) {
+            this.name = io.type === "input" ? "in" : "out";
+            const prefix = io.isGlobal() ? "G." : "";
+            this.name = prefix + this.name + io.IOId;
+        } else {
+            this.name = name;
+        }
     }
 
     start() {

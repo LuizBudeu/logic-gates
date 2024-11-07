@@ -11,15 +11,7 @@ import BaseComponent from "./baseComponent.js";
 import CircuitManager from "../managers/circuitManager.js";
 
 class Gate extends BaseComponent {
-    constructor(
-        ctx,
-        logicFunctionStr,
-        name,
-        ios = {
-            inputs: 2,
-            outputs: 1,
-        }
-    ) {
+    constructor(ctx, logicFunctionStr, name, ios) {
         super(`${name}_Gate`);
 
         /** @type {CanvasRenderingContext2D} */
@@ -51,8 +43,10 @@ class Gate extends BaseComponent {
 
         const debugName = `${this.name}_Gate`;
 
+        console.log(this.ios);
+
         // Position the inputs and output
-        for (let i = 0; i < this.ios.inputs; i++) {
+        for (let i = 0; i < this.ios.inputs.length; i++) {
             const rectPos = this.calculateIOPosition(i, "input");
 
             const input = new Input(this.ctx, false, debugName + `_${i}`, this, i);
@@ -64,7 +58,7 @@ class Gate extends BaseComponent {
             Bridge.sceneInstance.place(input, Settings.FOREGROUND_LAYER, true);
         }
 
-        for (let i = 0; i < this.ios.outputs; i++) {
+        for (let i = 0; i < this.ios.outputs.length; i++) {
             const rectPos = this.calculateIOPosition(i, "output");
 
             const output = new Output(this.ctx, debugName + `_${i}`, this, i);

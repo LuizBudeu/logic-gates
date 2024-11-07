@@ -3,7 +3,6 @@ const path = require("path");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const fs = require("fs");
-const { log } = require("console");
 const generateGate = require("./generateGate");
 
 let NandGate = {
@@ -21,8 +20,11 @@ let NandGate = {
     new NAND();`,
     order: 0,
     ios: {
-        inputs: [{ 0: "in0", 1: "in1" }],
-        outputs: [{ 0: "out0" }],
+        inputs: [
+            { IOId: "0", label: "in0asasa" },
+            { IOId: "1", label: "in1fsa" },
+        ],
+        outputs: [{ IOId: "0", label: "out0asasa" }],
     },
 };
 
@@ -96,7 +98,6 @@ app.get("/savedGates", (request, response) => {
 // });
 
 app.get("/savedGatesAndLoadLogic", (request, response) => {
-    // todo luiz mudar para pegar JSON e carregar funções
     let savedGates = require("./saveData/savedGates.json");
     // savedGates = savedGates.filter((savedGate) => !savedGate.hidden);
 
@@ -105,23 +106,31 @@ app.get("/savedGatesAndLoadLogic", (request, response) => {
         return a.order - b.order;
     });
 
-    let accumulatedCode = "";
-    const logicFunctions = [];
+    // Always has NAND gate
+    let accumulatedCode = NandGate.logic + "\n";
+    const logicFunctions = [NandGate];
     let funcStr = "";
-    savedGates.forEach((savedGate, index) => {
-        const logicFunction = require(`./saveData/${savedGate.path}`);
 
-        accumulatedCode += logicFunction.toString() + "\n";
+    // For each saved gate, grab circuit JSON and generate logic function string
+    savedGates.forEach((savedGate, index) => {
+        if (savedGate.hidden) {
+            return;
+        }
+
+        let circuit = require(`./saveData/circuits/${savedGate.name}.json`);
+        const gate = generateGate(circuit, savedGate.name);
+
+        accumulatedCode += gate.logicFunctionString + "\n";
+
         funcStr = accumulatedCode + `new ${savedGate.name}()`;
 
-        if (!savedGate.hidden) {
-            logicFunctions.push({
-                name: savedGate.name,
-                logic: funcStr,
-                order: savedGate.order,
-                ios: savedGate.ios,
-            });
-        }
+        logicFunctions.push({
+            id: savedGate.id,
+            name: savedGate.name,
+            logic: funcStr,
+            order: savedGate.function_order,
+            ios: circuit.ios, // todo resolver ios no load. os ios devem ser os globais,pegar do generateGate, e botar lógica para colocar os labels
+        });
     });
 
     response.send(logicFunctions);
@@ -185,6 +194,11 @@ app.post("/circuitToGate", (request, response) => {
     const gateName = body.gateName;
     const circuit = typeof body.circuit == "object" ? body.circuit : JSON.parse(body.circuit);
 
+    const gates = circuit.components.filter((component) => component.type === "gate");
+    const ios = {};
+    ios.inputs = gates.inputs;
+    ios.outputs = gates.outputs;
+
     // const newGate = generateGate(circuit, gateName);  // todo get ios object from circuit
 
     // // Generate full logic function string
@@ -213,7 +227,7 @@ app.post("/circuitToGate", (request, response) => {
         name: gateName,
         path: `./logic/${gateName}.js`,
         order: savedGates.length,
-        ios: newGate.ios,
+        ios: ios,
         hidden: false,
     };
     savedGates.push(newSavedGate);
