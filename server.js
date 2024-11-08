@@ -4,7 +4,6 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const fs = require("fs");
 const generateLogicFunctionString = require("./generateLogicFunctionString");
-const { default: IOLabel } = require("./public/engine/gui/IOLabel");
 
 let NandGate = {
     name: "NAND",
