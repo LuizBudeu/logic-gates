@@ -3,7 +3,8 @@ const path = require("path");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const fs = require("fs");
-const generateGate = require("./generateGate");
+const generateLogicFunctionString = require("./generateLogicFunctionString");
+const { default: IOLabel } = require("./public/engine/gui/IOLabel");
 
 let NandGate = {
     name: "NAND",
@@ -21,8 +22,8 @@ let NandGate = {
     order: 0,
     ios: {
         inputs: [
-            { IOId: "0", label: "in0asasa" },
-            { IOId: "1", label: "in1fsa" },
+            { IOId: "0", IOlabel: "in0asasa" },
+            { IOId: "1", IOlabel: "in1fsa" },
         ],
         outputs: [{ IOId: "0", label: "out0asasa" }],
     },
@@ -117,10 +118,32 @@ app.get("/savedGatesAndLoadLogic", (request, response) => {
             return;
         }
 
-        let circuit = require(`./saveData/circuits/${savedGate.name}.json`);
-        const gate = generateGate(circuit, savedGate.name);
+        const circuit = require(`./saveData/circuits/${savedGate.name}.json`);
+        const logicFunctionString = generateLogicFunctionString(circuit, savedGate.name);
 
-        accumulatedCode += gate.logicFunctionString + "\n";
+        // Get global IO labels
+        const globalIOs = circuit.components.filter((component) => component.isGlobal);
+        const ios = {
+            inputs: [],
+            outputs: [],
+        };
+        const inputs = globalIOs.filter((io) => io.type === "input");
+        inputs.forEach((input) => {
+            ios.inputs.push({
+                IOId: input.IOId,
+                IOLabel: input.label,
+            });
+        });
+
+        const outputs = globalIOs.filter((io) => io.type === "output");
+        outputs.forEach((input) => {
+            ios.outputs.push({
+                IOId: input.IOId,
+                IOLabel: input.label,
+            });
+        });
+
+        accumulatedCode += logicFunctionString + "\n";
 
         funcStr = accumulatedCode + `new ${savedGate.name}()`;
 
@@ -129,7 +152,7 @@ app.get("/savedGatesAndLoadLogic", (request, response) => {
             name: savedGate.name,
             logic: funcStr,
             order: savedGate.function_order,
-            ios: circuit.ios, // todo resolver ios no load. os ios devem ser os globais,pegar do generateGate, e botar lógica para colocar os labels
+            ios: ios,
         });
     });
 
@@ -194,40 +217,23 @@ app.post("/circuitToGate", (request, response) => {
     const gateName = body.gateName;
     const circuit = typeof body.circuit == "object" ? body.circuit : JSON.parse(body.circuit);
 
-    const gates = circuit.components.filter((component) => component.type === "gate");
-    const ios = {};
-    ios.inputs = gates.inputs;
-    ios.outputs = gates.outputs;
-
-    // const newGate = generateGate(circuit, gateName);  // todo get ios object from circuit
-
-    // // Generate full logic function string
-    // let logicFunctionString = "";
-
     const savedGates = require("./saveData/savedGates.json");
-    // savedGates.forEach((savedGate) => {
-    //     if (savedGate.name === gateName) {
-    //         response.status(400);
-    //         response.send({
-    //             gateName,
-    //             message: "Gate name already exists. Please choose a different name.",
-    //         });
+    savedGates.forEach((savedGate) => {
+        if (savedGate.name === gateName) {
+            response.status(400);
+            response.send({
+                gateName,
+                message: "Gate name already exists. Please choose a different name.",
+            });
 
-    //         throw new Error("Gate name already exists. Please choose a different name.");
-    //     }
-
-    //     logicFunctionString += `const ${savedGate.name} = require("./${savedGate.name}");\n`;
-    // });
-
-    // logicFunctionString += newGate.logicFunctionString;
-    // logicFunctionString += `\nmodule.exports = ${gateName};`;
+            throw new Error("Gate name already exists. Please choose a different name.");
+        }
+    });
 
     // Update savedGates file
     const newSavedGate = {
         name: gateName,
-        path: `./logic/${gateName}.js`,
         order: savedGates.length,
-        ios: ios,
         hidden: false,
     };
     savedGates.push(newSavedGate);
@@ -236,9 +242,6 @@ app.post("/circuitToGate", (request, response) => {
 
     // Save circuit JSON
     fs.writeFileSync(path.join(__dirname, "/saveData/circuits/" + gateName + ".json"), JSON.stringify(circuit, null, 4));
-
-    // // Save gate to file
-    // fs.writeFileSync(path.join(__dirname, "/saveData/logic/" + gateName + ".js"), logicFunctionString);
 
     response.send(request.body);
 });

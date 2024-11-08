@@ -1,8 +1,8 @@
 {
     "components": [
-        { "type": "input", "circuitId": "0", "isGlobal": true, "IOId": "0", "label": "G.in0" },
-        { "type": "input", "circuitId": "1", "isGlobal": true, "IOId": "1", "label": "G.in1" },
-        { "type": "output", "circuitId": "2", "isGlobal": true, "IOId": "0", "label": "G.out0" },
+        { "type": "input", "circuitId": "0", "isGlobal": true, "IOId": "0", "label": "inin0" },
+        { "type": "input", "circuitId": "1", "isGlobal": true, "IOId": "1", "label": "inin1" },
+        { "type": "output", "circuitId": "2", "isGlobal": true, "IOId": "0", "label": "outout0" },
         { "type": "gate", "name": "NOT", "circuitId": "3", "inputs": [{ "IOId": "0", "label": "in0" }], "outputs": [{ "IOId": "0", "label": "out0" }] },
         {
             "type": "gate",

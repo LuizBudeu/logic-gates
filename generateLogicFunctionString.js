@@ -1,4 +1,4 @@
-function generateGate(circuitJSON, newGateName) {
+function generateLogicFunctionString(circuitJSON, newGateName) {
     const components = circuitJSON.components;
     const connections = circuitJSON.connections;
 
@@ -56,13 +56,7 @@ function generateGate(circuitJSON, newGateName) {
     // Write return statement
     logicFunctionString += "\nreturn output;\n};\n}";
 
-    return {
-        logicFunctionString,
-        ios: {
-            inputs: globalInputs.length,
-            outputs: globalOutputs.length,
-        },
-    };
+    return logicFunctionString;
 
     // Helper function to get upstreamCircuitId
     function getUpstreamComponent(upstreamConnection) {
@@ -120,3 +114,4 @@ function generateGate(circuitJSON, newGateName) {
         return logicString;
     }
 }
+module.exports = generateLogicFunctionString;

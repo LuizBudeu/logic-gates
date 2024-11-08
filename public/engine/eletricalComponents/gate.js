@@ -46,22 +46,36 @@ class Gate extends BaseComponent {
         console.log(this.ios);
 
         // Position the inputs and output
-        for (let i = 0; i < this.ios.inputs.length; i++) {
+        this.ios.inputs.forEach((input, index) => {
+            const i = input.IOId;
             const rectPos = this.calculateIOPosition(i, "input");
 
-            const input = new Input(this.ctx, false, debugName + `_${i}`, this, i);
-            input.circle.at(rectPos.x, rectPos.y).radius(Settings.COMPONENT_IO_CIRCLE_RADIUS).color(Settings.COMPONENT_IO_OFF_COLOR);
+            const inputComponent = new Input(this.ctx, false, debugName + `_${i}`, this, i, input.IOLabel);
+            inputComponent.circle.at(rectPos.x, rectPos.y).radius(Settings.COMPONENT_IO_CIRCLE_RADIUS).color(Settings.COMPONENT_IO_OFF_COLOR);
 
-            this.inputs.push(input);
+            this.inputs.push(inputComponent);
 
-            input.IOId = i;
-            Bridge.sceneInstance.place(input, Settings.FOREGROUND_LAYER, true);
-        }
+            inputComponent.IOId = i;
+            Bridge.sceneInstance.place(inputComponent, Settings.FOREGROUND_LAYER, true);
+        });
+
+        this.ios.outputs.forEach((output, index) => {
+            const i = output.IOId;
+            const rectPos = this.calculateIOPosition(i, "output");
+
+            const outputComponent = new Output(this.ctx, debugName + `_${i}`, this, i, output.IOLabel);
+            outputComponent.circle.at(rectPos.x, rectPos.y).radius(Settings.COMPONENT_IO_CIRCLE_RADIUS).color(Settings.COMPONENT_IO_OFF_COLOR);
+
+            this.outputs.push(outputComponent);
+
+            outputComponent.IOId = i;
+            Bridge.sceneInstance.place(outputComponent, Settings.FOREGROUND_LAYER, true);
+        });
 
         for (let i = 0; i < this.ios.outputs.length; i++) {
             const rectPos = this.calculateIOPosition(i, "output");
 
-            const output = new Output(this.ctx, debugName + `_${i}`, this, i);
+            const output = new Output(this.ctx, debugName + `_${i}`, this, i, this.ios.outputs[i].IOLabel);
             output.circle.at(rectPos.x, rectPos.y).radius(Settings.COMPONENT_IO_CIRCLE_RADIUS).color(Settings.COMPONENT_IO_OFF_COLOR);
 
             this.outputs.push(output);
@@ -69,6 +83,31 @@ class Gate extends BaseComponent {
             output.IOId = i;
             Bridge.sceneInstance.place(output, Settings.FOREGROUND_LAYER, true);
         }
+
+        // // Position the inputs and output
+        // for (let i = 0; i < this.ios.inputs.length; i++) {
+        //     const rectPos = this.calculateIOPosition(i, "input");
+
+        //     const input = new Input(this.ctx, false, debugName + `_${i}`, this, i, this.ios.inputs[i].IOLabel);
+        //     input.circle.at(rectPos.x, rectPos.y).radius(Settings.COMPONENT_IO_CIRCLE_RADIUS).color(Settings.COMPONENT_IO_OFF_COLOR);
+
+        //     this.inputs.push(input);
+
+        //     input.IOId = i;
+        //     Bridge.sceneInstance.place(input, Settings.FOREGROUND_LAYER, true);
+        // }
+
+        // for (let i = 0; i < this.ios.outputs.length; i++) {
+        //     const rectPos = this.calculateIOPosition(i, "output");
+
+        //     const output = new Output(this.ctx, debugName + `_${i}`, this, i, this.ios.outputs[i].IOLabel);
+        //     output.circle.at(rectPos.x, rectPos.y).radius(Settings.COMPONENT_IO_CIRCLE_RADIUS).color(Settings.COMPONENT_IO_OFF_COLOR);
+
+        //     this.outputs.push(output);
+
+        //     output.IOId = i;
+        //     Bridge.sceneInstance.place(output, Settings.FOREGROUND_LAYER, true);
+        // }
 
         Mouse.addLeftClickDraggingEvent(this.handleDragging.bind(this), this.rect);
     }

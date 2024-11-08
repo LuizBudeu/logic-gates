@@ -3,7 +3,7 @@ import Bridge from "../bridge.js";
 import Mouse from "../input/mouse.js";
 import Button from "../UIComponents/button.js";
 
-class IOLabel extends Button {
+export default class IOLabel extends Button {
     constructor(ctx, io, name = null) {
         /** @type {CanvasRenderingContext2D} */
         super(ctx);
@@ -71,5 +71,3 @@ class IOLabel extends Button {
         }
     }
 }
-
-export default IOLabel;
