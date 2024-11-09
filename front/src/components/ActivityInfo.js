@@ -8,9 +8,14 @@ import { MdEditStyle } from './MdEditStyle.js';
 import { useEffect, useState } from "react";
 import { IoClose } from "react-icons/io5";
 import { MdCheck } from "react-icons/md";
+import { FaAngleDown } from "react-icons/fa";
+import { FaAngleUp } from "react-icons/fa";
+import { FaFileExport } from "react-icons/fa";
 import { Colors } from "../utils/colors";
 import styled from 'styled-components';
 import { ManegeActivities } from "../controllers/ActivitiesController.js";
+import { CenterContent } from "./CenterContent.js";
+import { animations } from 'react-animation'
 
 export const ActivityInfo = ({activity, onUpdate, classroomId}) => {
   const status = getActivityStatus(activity.starts_at, activity.ends_at);
@@ -24,6 +29,7 @@ export const ActivityInfo = ({activity, onUpdate, classroomId}) => {
     editActivity,
     setEditActivity,
     saveActivity, 
+    studentsScore
   } = ManegeActivities(activity, classroomId);
 
   const cancelEdit = () => {
@@ -82,7 +88,17 @@ export const ActivityInfo = ({activity, onUpdate, classroomId}) => {
           />
           :
           getDateTime(activity.ends_at)}</text>
-        <text>Pontuação dos alunos:</text>
+        <Row>
+          <RowItem grow>
+            <text><b>Pontuação dos alunos:</b></text>
+          </RowItem>
+          <RowItem center>
+            <FaFileExportStyle onClick={() => console.log("Exportar notas")} title="Exportar notas"/>
+          </RowItem>
+        </Row>
+        {studentsScore.map((studentScore) =>
+          <StudentScoreItem studentScore={studentScore}/>
+        )}
       </Column>
       <br/>
     </div>
@@ -97,6 +113,14 @@ export const IoCloseStyle = styled(IoClose)`
   transform: translateY(20%);
 `;
 
+export const FaFileExportStyle = styled(FaFileExport)`
+  color: ${Colors.DarkGray}; 
+  font-size: 30px; 
+  cursor: pointer;
+  margin-left: 5px;
+  transform: translateY(20%);
+`;
+
 export const MdCheckStyle = styled(MdCheck)`
   color: ${Colors.DarkGray}; 
   font-size: 30px; 
@@ -104,3 +128,71 @@ export const MdCheckStyle = styled(MdCheck)`
   margin-left: 5px;
   transform: translateY(20%);
 `;
+
+const StudentScoreItem = ({studentScore}) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleOpen = () => {
+    if(studentScore.scores != null){
+      setIsOpen(true);
+    }
+  }
+
+  return (
+    <div>
+      <StudentScoreItemContainerStyle selected={isOpen}>
+        <Row>
+          <RowItem grow>
+            {studentScore.name}
+          </RowItem>
+          <RowItem>
+            {studentScore.max_score ? studentScore.max_score+'/10' : 'N/A'}
+          </RowItem>
+          <RowItem center>
+            {isOpen ? 
+              <FaAngleUpStyle onClick={() => setIsOpen(false)} title="Fechar detalhes"/>
+            :
+              <FaAngleDownStyle onClick={handleOpen} disabled={studentScore.scores == null} title="Abrir detalhes"/>
+            }
+          </RowItem>
+        </Row>
+      </StudentScoreItemContainerStyle>
+      {isOpen && studentScore.scores.map((score) => 
+        <ScoreItem score={score}/>
+      )}
+    </div>
+  );
+};
+
+const StudentScoreItemContainerStyle = styled.div`
+  background-color: ${({selected}) => selected ? Colors.LighterGray : Colors.White}; 
+  border-radius: 10px;
+`;
+
+export const FaAngleDownStyle = styled(FaAngleDown)`
+  color: ${({disabled}) => disabled ? Colors.LightGray : Colors.DarkGray}; 
+  font-size: 30px;
+  cursor: ${({disabled}) => disabled ? 'default' : 'pointer'};
+`;
+
+export const FaAngleUpStyle = styled(FaAngleUp)`
+  color: ${Colors.DarkGray}; 
+  font-size: 30px; 
+  cursor: pointer;
+`;
+
+const ScoreItem = ({score}) => {
+  return (
+    <div style={{animation: animations.fadeIn}}>
+      <Row>
+        <RowItem grow customPadding={10}>
+          {getDateTime(score.created_at)}
+        </RowItem>
+        <RowItem customPadding={10}>
+          {score.score}/10
+        </RowItem>
+      </Row>
+    </div>
+    
+  );
+};

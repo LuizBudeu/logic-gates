@@ -29,6 +29,7 @@ export const StudentActivities = () => {
 
 export const ManegeActivities = (activity, classroomId) => {
   const [editActivity, setEditActivity] = useState(activity);
+  const [studentsScore, setStudentsScore] = useState([]);
   const [axios, hasToken] = useAxiosWithToken();
 
   const saveActivity = async () => {
@@ -53,6 +54,21 @@ export const ManegeActivities = (activity, classroomId) => {
     });
   }
 
+  const getActivityDetails = () => {
+    axios.get(process.env.REACT_APP_API_HOSTNAME_PORT + "/api/activityDetails/"+classroomId+"/"+activity.id,
+    ).then((response) => {
+        let resp = response.data;
+        if(resp != null)
+          setStudentsScore(resp);
+    }).catch((e) => {
+        console.log(e);
+    });
+  }
+
+  useEffect(() => {
+    getActivityDetails()
+  }, [activity]);
+
   useEffect(() => {
     setEditActivity(activity)
   }, [activity]);
@@ -61,6 +77,7 @@ export const ManegeActivities = (activity, classroomId) => {
     editActivity,
     setEditActivity,
     saveActivity, 
+    studentsScore
   };
   
 };

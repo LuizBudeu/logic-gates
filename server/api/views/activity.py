@@ -1,14 +1,14 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.db import IntegrityError
-from django.db.models import Exists, OuterRef, Max, Q, F
+from django.db.models import Exists, OuterRef, Max, Q, F, Value, CharField
 from rest_framework.exceptions import ParseError
 import pytz
 from datetime import datetime
 
 import jwt
 import json
-from ..models import Activity, User_Activity, User, Classroom, Classroom_Activity
+from ..models import Activity, User_Activity, User, Classroom, Classroom_Activity, Classroom_Student
 
 @api_view(['GET'])
 def listActivities(request):
@@ -123,5 +123,88 @@ def saveActivity(request):
     return Response({
       'detail': 'ok'
     })
+  else:
+    return Response("Token inválido", 401)
+  
+@api_view(['GET'])
+def activityDetails(request, classroom_id, activity_id):
+  token = request.headers.get('Authorization')
+
+  if(token != ""):
+    token = token.split(" ",1)[1]
+
+    user_id = jwt.decode(token, options={"verify_signature": False})['user_id']
+
+    print(user_id)
+
+    try: 
+      user = User.objects.get(
+        id = user_id
+      )
+    except User.DoesNotExist:
+      raise ParseError("Usuário não foi encontrado.")
+
+    if(user.role != 1):
+      return Response("Usuário não tem acesso", 401)
+
+    try: 
+      classroom = Classroom.objects.get(
+        professor = user,
+        id = classroom_id
+      )
+    except Classroom.DoesNotExist:
+      raise ParseError(f"Turma com id={classroom_id} não foi encontrada")
+    
+    students = Classroom_Student.objects.annotate(
+      name=F('student__name'),
+      user_id=F('student_id'),
+      max_score=Value(None, output_field=CharField()),
+      scores=Value(None, output_field=CharField())
+    ).filter(
+      classroom=classroom,
+    ).values('user_id', 'name', 'max_score', 'scores')
+
+    # return Response(user_scores)
+    
+    user_scores = User_Activity.objects.annotate(
+      name=F('user__name')
+    ).filter(
+      user__classroom_student__classroom=classroom,
+      activity_id=activity_id
+    ).values('user_id', 'score', 'created_at')
+
+    # students = []
+
+    for user_score in user_scores:
+      score_student = None
+      for student in students:
+        if student['user_id'] == user_score['user_id']:
+          print("i found it!")
+          score_student = student
+          break
+      
+      if(score_student):
+        if(score_student['max_score'] == None or score_student['max_score'] < user_score['score']):
+          score_student['max_score'] = user_score['score']
+        
+        if(score_student['scores'] == None):
+          score_student['scores'] = []
+        
+        score_student['scores'].append({
+          'score':user_score['score'],
+          'created_at':user_score['created_at']
+        })
+      # else:
+      #   students.append({
+      #     'user_id': user_score['user_id'],
+      #     'name':user_score['name'],
+      #     'max_score':user_score['score'],
+      #     'scores':[{
+      #       'score':user_score['score'],
+      #       'created_at':user_score['created_at']
+      #     }]
+      #   })
+        
+    return Response(students)
   else:
     return Response("Token inválido", 401)
