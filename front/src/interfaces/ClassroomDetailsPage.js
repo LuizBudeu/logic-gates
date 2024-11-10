@@ -56,7 +56,7 @@ export const ClassroomDetailsPage = (props) => {
 							</RowItem>
 						</Row>
 					</CardBackground>
-					<CustomRow>
+					<Row>
 						<RowItem flex={1} display={"null"} noPadding>
 							<CardBackground growHeight>
 								<Row>
@@ -64,9 +64,9 @@ export const ClassroomDetailsPage = (props) => {
 									<FaPlusCircleStyle onClick={copyNewStudentLink} title="Convidar alunos"/>
 								</Row>
 								{students.map((student) => (
-									<div>
+									<StuddentsListContainer>
 										<text>{student.student__name}</text>
-									</div>
+									</StuddentsListContainer>
 								))}
 							</CardBackground>
 						</RowItem>
@@ -107,7 +107,7 @@ export const ClassroomDetailsPage = (props) => {
 								</Row>
 							</CardBackground>
 						</RowItem>
-					</CustomRow>
+					</Row>
 				</CustomColumn>
 			</Background>
 		</StaticContainer>
@@ -123,9 +123,10 @@ const CardBackground = styled.div`
 	height: ${({growHeight}) => growHeight ? "calc(100% - 224px);" : "null"};
 `
 
-const CustomRow = styled(Row)`
-	// height: 100%;
+const StuddentsListContainer = styled.div`
+	padding: 5px;
 `
+
 
 const CustomColumn = styled(Column)`
 	height: 100%;

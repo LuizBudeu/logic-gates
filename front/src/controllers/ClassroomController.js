@@ -101,7 +101,6 @@ export const ClassroomDetails = (id) => {
       axios.get(process.env.REACT_APP_API_HOSTNAME_PORT + "/api/classroomDetails/" + id,
       ).then((response) => {
         let resp = response.data;
-        console.log(resp);
         if(resp != null){
           setClassroom(resp.classroom);
           setStudents(resp.students);
