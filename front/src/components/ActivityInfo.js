@@ -29,7 +29,8 @@ export const ActivityInfo = ({activity, onUpdate, classroomId}) => {
     editActivity,
     setEditActivity,
     saveActivity, 
-    studentsScore
+    studentsScore,
+    exportarParaExcel
   } = ManegeActivities(activity, classroomId);
 
   const cancelEdit = () => {
@@ -93,7 +94,7 @@ export const ActivityInfo = ({activity, onUpdate, classroomId}) => {
             <text><b>Pontuação dos alunos:</b></text>
           </RowItem>
           <RowItem center>
-            <FaFileExportStyle onClick={() => console.log("Exportar notas")} title="Exportar notas"/>
+            <FaFileExportStyle onClick={exportarParaExcel} title="Exportar notas"/>
           </RowItem>
         </Row>
         {studentsScore.map((studentScore) =>

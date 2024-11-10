@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { useAxiosWithToken } from "../hooks/useAxiosWithToken";
+import * as XLSX from 'xlsx';
+import { getDateTime } from "../utils/date";
 
 export const StudentActivities = () => {
   const [activities, setActivities] = useState();
@@ -65,6 +67,45 @@ export const ManegeActivities = (activity, classroomId) => {
     });
   }
 
+  const exportarParaExcel = () => {
+    // Organiza dados
+    let studentsMaxScore = []
+    let studentsAllScore = []
+
+    studentsScore.forEach((studentScore) => {
+      console.log(studentScore);
+      studentsMaxScore.push({
+        Nome: studentScore.name,
+        'Maior Nota': studentScore.max_score ?? "N/A",
+      })
+
+      if(studentScore.scores){
+        studentScore.scores.forEach((score) => {
+          studentsAllScore.push({
+            Nome: studentScore.name,
+            Data: getDateTime(score.created_at),
+            Nota: score.score,
+          })
+        })
+      }
+    })
+
+
+    // Cria um novo workbook (arquivo Excel)
+    const workbook = XLSX.utils.book_new();
+
+    // Cria e adiciona a primeira aba
+    const worksheet1 = XLSX.utils.json_to_sheet(studentsMaxScore);
+    XLSX.utils.book_append_sheet(workbook, worksheet1, "Notas finais");
+
+    // Cria e adiciona a segunda aba
+    const worksheet2 = XLSX.utils.json_to_sheet(studentsAllScore);
+    XLSX.utils.book_append_sheet(workbook, worksheet2, "Todas notas");
+
+    // Exporta o arquivo
+    XLSX.writeFile(workbook, `notas-${classroomId}-${activity.name}.xlsx`);
+  };
+
   useEffect(() => {
     getActivityDetails()
   }, [activity]);
@@ -77,7 +118,8 @@ export const ManegeActivities = (activity, classroomId) => {
     editActivity,
     setEditActivity,
     saveActivity, 
-    studentsScore
+    studentsScore,
+    exportarParaExcel
   };
   
 };
