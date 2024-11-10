@@ -8,8 +8,9 @@ import { FaEye } from "react-icons/fa";
 import { TbFileAnalytics } from "react-icons/tb";
 import { StatusBadge } from './StatusBadge';
 import { CenterContent } from './CenterContent';
+import { Judge } from '../controllers/ActivitiesController';
 
-export const ActivityItemModal = ({activity}) => {
+export const ActivityItemModal = ({activity, sendCircuitToJudge}) => {
   const status = getActivityStatus(activity.starts_at, activity.ends_at);
 
   return (
@@ -27,11 +28,11 @@ export const ActivityItemModal = ({activity}) => {
           }
 
           {[ActivityStatus.emAndamento, ActivityStatus.naoConfigurada].includes(status) &&
-            <a href={activity.solution_url} target="_blank" title="Validar circuito">
+            <div>
               <CenterContent>
-                <JudgeIcon/>
+                <JudgeIcon onClick={sendCircuitToJudge} title="Validar circuito"/>
               </CenterContent>
-            </a>
+            </div>
           }   
 
           {[ActivityStatus.finalizada, ActivityStatus.naoConfigurada].includes(status) &&
@@ -49,14 +50,7 @@ export const ActivityItemModal = ({activity}) => {
             <StatusBadge status={status}/>
           </CenterContent>
         </RowItem> 
-      }
-      {status == ActivityStatus.finalizada &&
-        <RowItem>
-          <a href={activity.solution_url} target="_blank" title="Ver solução">
-            <SolutionIcon/>
-          </a>
-        </RowItem>
-      }              
+      }          
       <RowItem>
         <OptionsText>{activity.score == null ? "N/A" : activity.score+"/10"}</OptionsText>
       </RowItem>

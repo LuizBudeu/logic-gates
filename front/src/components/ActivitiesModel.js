@@ -1,6 +1,7 @@
 import React, {useEffect, useRef} from "react";
 import styled from 'styled-components';
 import { ActivityItemModal } from "./ActivityItemModal";
+import { StudentActivities } from "../controllers/ActivitiesController";
 
 function useOutsideAlerter(ref, setShowModal) {
   useEffect(() => {
@@ -18,10 +19,11 @@ function useOutsideAlerter(ref, setShowModal) {
   }, [ref]);
 }
 
-export function ActivitiesModel({ showModal, setShowModal, activities}) {
+export function ActivitiesModel({ showModal, setShowModal}) {
 
   const wrapperRef = useRef(null);
   useOutsideAlerter(wrapperRef, setShowModal);
+  const {activities, sendCircuitToJudge} = StudentActivities();
 
   return (
     showModal &&
@@ -36,6 +38,7 @@ export function ActivitiesModel({ showModal, setShowModal, activities}) {
             {activities.map((activity) => (
               <ActivityItemModal
                 activity={activity}
+                sendCircuitToJudge={() => sendCircuitToJudge(activity.id)}
               />
             ))}
           </ModalBody>

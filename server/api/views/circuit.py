@@ -1,3 +1,4 @@
+import random
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.db import IntegrityError
@@ -6,7 +7,7 @@ from rest_framework.exceptions import ParseError
 
 import jwt
 import json
-from ..models import Gate, User
+from ..models import Gate, User, User_Activity, Activity
 
 NandGate = {
     'name': "NAND",
@@ -157,6 +158,50 @@ def deleteCircuit(request, gate_id):
     
       
     return Response(gate_id)
+  else:
+    return Response("Token inválido", 401)
+
+@api_view(['POST'])
+def judgeCircuit(request):
+  token = request.headers.get('Authorization')
+
+  if(token != ""):
+    token = token.split(" ",1)[1]
+
+    user_id = jwt.decode(token, options={"verify_signature": False})['user_id']
+
+    try: 
+      user = User.objects.get(
+        id = user_id
+      )
+    except User.DoesNotExist:
+      raise ParseError("Usuário não foi encontrado.")
+    
+    data = json.loads(request.body)
+    activity_id = data['activity_id']
+    circuit = json.loads(data['circuit'])
+    
+    try: 
+      activity = Activity.objects.get(
+        id = activity_id
+      )
+    except Activity.DoesNotExist:
+      raise ParseError("Atividade não foi encontrada.")
+
+    # TODO: Process gate and generate score
+    score = round(random.uniform(0, 10), 1)
+
+    # Save score
+    user_activity = User_Activity.objects.create(
+      user = user,
+      activity = activity,
+      score = score,
+    )
+      
+    return Response({
+      'detail': 'ok',
+      'score': score
+      })
   else:
     return Response("Token inválido", 401)
 

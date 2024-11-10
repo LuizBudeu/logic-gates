@@ -9,6 +9,7 @@ from .views.activity import activityDetails
 from .views.circuit import listCircuits
 from .views.circuit import saveCircuit
 from .views.circuit import deleteCircuit
+from .views.circuit import judgeCircuit
 from .views.classroom import listClassrooms
 from .views.classroom import classroomInfo
 from .views.classroom import saveClassroom
@@ -24,6 +25,7 @@ urlpatterns = [
   path('listCircuits', listCircuits, name='listCircuits'),
   path('saveCircuit', saveCircuit, name='saveCircuit'),
   path('deleteCircuit/<int:gate_id>', deleteCircuit, name='deleteCircuit'),
+  path('judgeCircuit', judgeCircuit, name='judgeCircuit'),
   path('listClassrooms', listClassrooms, name='listClassrooms'),
   path('classroomInfo/<int:classroom_id>', classroomInfo, name='classroomInfo'),
   path('saveClassroom', saveClassroom, name='saveClassroom'),

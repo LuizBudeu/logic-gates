@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useAxiosWithToken } from "../hooks/useAxiosWithToken";
 import * as XLSX from 'xlsx';
 import { getDateTime } from "../utils/date";
+import CircuitManager from "./canvas/managers/circuitManager";
 
 export const StudentActivities = () => {
   const [activities, setActivities] = useState();
@@ -18,14 +19,39 @@ export const StudentActivities = () => {
       });
   }
 
+  const sendCircuitToJudge = async (activity_id) => {
+    const body = JSON.stringify({
+      activity_id: activity_id,
+      circuit: CircuitManager.serialize()
+    })
+
+    return await axios.post(process.env.REACT_APP_API_HOSTNAME_PORT + "/api/judgeCircuit", 
+      body,
+    ).then((response) => {
+        let resp = response.data;
+        console.log(resp);
+        if ('ok' === resp.detail) {
+          window.alert('Sua nota e: ' + resp.score);
+          getActivities();
+          return true;
+        } else {
+          window.alert('Falha ao salvar atividade');
+          return false;
+        }
+    }).catch((e) => {
+        console.log(e);
+        return false;
+    });
+  }
+
   useEffect(() => {
     getActivities(); 
   }, []);
 
-  return [
+  return {
     activities,
-    getActivities, 
-  ];
+    sendCircuitToJudge,
+  };
   
 };
 
