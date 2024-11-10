@@ -6,13 +6,13 @@ git clone https://github.com/LuizBudeu/logic-gates.git
 
 cd logic-gates
 
+cd server
+
 python -m venv env
 
 /env/Scripts/Activate.ps1
 
 pip install -r requirements.txt
-
-cd server
 
 python manage.py runserver
 
