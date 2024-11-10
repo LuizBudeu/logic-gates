@@ -157,12 +157,13 @@ def activityDetails(request, classroom_id, activity_id):
     
     students = Classroom_Student.objects.annotate(
       name=F('student__name'),
+      email=F('student__email'),
       user_id=F('student_id'),
       max_score=Value(None, output_field=CharField()),
       scores=Value(None, output_field=CharField())
     ).filter(
       classroom=classroom,
-    ).values('user_id', 'name', 'max_score', 'scores')
+    ).values('user_id', 'name', 'email', 'max_score', 'scores')
 
     # return Response(user_scores)
     
@@ -194,16 +195,6 @@ def activityDetails(request, classroom_id, activity_id):
           'score':user_score['score'],
           'created_at':user_score['created_at']
         })
-      # else:
-      #   students.append({
-      #     'user_id': user_score['user_id'],
-      #     'name':user_score['name'],
-      #     'max_score':user_score['score'],
-      #     'scores':[{
-      #       'score':user_score['score'],
-      #       'created_at':user_score['created_at']
-      #     }]
-      #   })
         
     return Response(students)
   else:

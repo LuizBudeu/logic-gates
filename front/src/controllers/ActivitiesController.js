@@ -76,6 +76,7 @@ export const ManegeActivities = (activity, classroomId) => {
       console.log(studentScore);
       studentsMaxScore.push({
         Nome: studentScore.name,
+        Email: studentScore.email,
         'Maior Nota': studentScore.max_score ?? "N/A",
       })
 
@@ -83,6 +84,7 @@ export const ManegeActivities = (activity, classroomId) => {
         studentScore.scores.forEach((score) => {
           studentsAllScore.push({
             Nome: studentScore.name,
+            Email: studentScore.email,
             Data: getDateTime(score.created_at),
             Nota: score.score,
           })
