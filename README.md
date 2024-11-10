@@ -1,3 +1,39 @@
+# Developer setup
+
+Em um terminal:
+
+git clone https://github.com/LuizBudeu/logic-gates.git
+
+cd logic-gates
+
+python -m venv env
+
+/env/Scripts/Activate.ps1
+
+pip install -r requirements.txt
+
+cd server
+
+python manage.py runserver
+
+Outro terminal:
+
+cd front
+
+npm install
+
+Adicionar o `.env` em `./front`
+
+adicione `REACT_APP_API_HOSTNAME_PORT="http://127.0.0.1:8000"` ao `.env`
+
+npm start
+
+Utilização:
+
+Backend API em `http://127.0.0.1:8000/`
+
+Frontend em `http://localhost:3000/`
+
 # Logic Gates
 
 Visualization engine for simple logic gates circuits
