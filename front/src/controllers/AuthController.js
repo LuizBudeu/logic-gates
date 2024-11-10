@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { useCookies } from "react-cookie";
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from "../hooks/useAuth";
 
@@ -7,7 +6,6 @@ export const Auth = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState('');
-	const setCookie = useCookies()[1];
 
   const { login: loginAuth } = useAuth();
 
@@ -46,7 +44,6 @@ export const Auth = () => {
       .then((r) => r.json())
       .then((r) => {
         if ('ok' === r.detail) {
-          setCookie("token", r.token);
           loginAuth(r);
           if(r.role == 1){ // Professor
             navigate('/professor/classrooms');
@@ -76,7 +73,6 @@ export const Register = () => {
   const [role, setRole] = useState('');
   const [classroomIdentification, setClassroomIdentification] = useState('');
   const [registerError, setRegisterError] = useState('');
-	const setCookie = useCookies()[1];
   const { login: loginAuth } = useAuth();
 
   const navigate = useNavigate();
@@ -124,7 +120,6 @@ export const Register = () => {
       .then((r) => r.json())
       .then((r) => {
         if ('ok' === r.detail) {
-          setCookie("token", r.token);
           loginAuth(r);
           if(r.role == 1){ // Professor
             navigate('/professor/classrooms');
@@ -155,13 +150,11 @@ export const Register = () => {
 };
 
 export const Logout = () => {
-  const removeCookie = useCookies()[2];
   const { logout: logoutAuth } = useAuth();
 
   const navigate = useNavigate();
 
   const logout = () => {
-    removeCookie("token");
     logoutAuth();
     navigate('/login');
   }
