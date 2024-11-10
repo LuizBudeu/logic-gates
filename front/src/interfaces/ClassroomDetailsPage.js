@@ -59,6 +59,7 @@ export const ClassroomDetailsPage = (props) => {
 					<Row>
 						<RowItem flex={1} display={"null"} noPadding>
 							<CardBackground growHeight>
+								<ScrollContainer barLeft>
 								<Row>
 									<CustomTitleStyle>Estudantes</CustomTitleStyle>
 									<FaPlusCircleStyle onClick={copyNewStudentLink} title="Convidar alunos"/>
@@ -68,6 +69,7 @@ export const ClassroomDetailsPage = (props) => {
 										<text>{student.student__name}</text>
 									</StuddentsListContainer>
 								))}
+								</ScrollContainer>
 							</CardBackground>
 						</RowItem>
 						<RowItem flex={2} display={"null"} noPadding>

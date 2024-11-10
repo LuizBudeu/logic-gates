@@ -16,6 +16,7 @@ import styled from 'styled-components';
 import { ManegeActivities } from "../controllers/ActivitiesController.js";
 import { CenterContent } from "./CenterContent.js";
 import { animations } from 'react-animation'
+import { ScrollContainer } from "./ScrollContainer.js";
 
 export const ActivityInfo = ({activity, onUpdate, classroomId}) => {
   const status = getActivityStatus(activity.starts_at, activity.ends_at);
@@ -47,64 +48,78 @@ export const ActivityInfo = ({activity, onUpdate, classroomId}) => {
   }
 
   return (
-    <div style={{width: "100%", padding: "16px"}}>
-      <Row>
-        <RowItem grow noPadding>
-          <h3>{activity.name}</h3>
-        </RowItem>
-        <RowItem grow noPadding center>
-          <StatusBadge status={status}/>
-        </RowItem>
-        {edit ? 
-          <>
-            <RowItem noPadding center>
-              <MdCheckStyle onClick={saveEdit} title="Salvar"/>
+    <ContainerStyle>
+      <ScrollContainer barLeft>
+        <ContainerPaddingStyle>
+          <Row>
+            <RowItem grow noPadding>
+              <h3>{activity.name}</h3>
             </RowItem>
-            <RowItem noPadding center>
-              <IoCloseStyle onClick={cancelEdit} title="Cancelar"/>
+            <RowItem grow noPadding center>
+              <StatusBadge status={status}/>
             </RowItem>
-          </>
-        :
-        <RowItem noPadding center>
-          <MdEditStyle onClick={() => setEdit(true)} title="Editar atividade"/>
-        </RowItem>
-        }
-      </Row>
-      <Column>
-        <text>Data de início: {edit ? 
-          <input
-            value={editActivity.starts_at ? new Date(editActivity.starts_at).toISOString().slice(0, 16) : null}
-            onChange={(ev) => setEditActivity(prevValue => ({...prevValue, starts_at: ev.target.value + ":00Z"}))}
-            className={'inputBox'}
-            type="datetime-local"
-          />
-          :
-          getDateTime(activity.starts_at)}</text>
-        <text>Data de fechamaneto: {edit ? 
-          <input
-            value={editActivity.ends_at ? new Date(editActivity.ends_at).toISOString().slice(0, 16) : null}
-            onChange={(ev) => setEditActivity(prevValue => ({...prevValue, ends_at: ev.target.value}))}
-            className={'inputBox'}
-            type="datetime-local"
-          />
-          :
-          getDateTime(activity.ends_at)}</text>
-        <Row>
-          <RowItem grow>
-            <text><b>Pontuação dos alunos:</b></text>
-          </RowItem>
-          <RowItem center>
-            <FaFileExportStyle onClick={exportarParaExcel} title="Exportar notas"/>
-          </RowItem>
-        </Row>
-        {studentsScore.map((studentScore) =>
-          <StudentScoreItem studentScore={studentScore}/>
-        )}
-      </Column>
+            {edit ? 
+              <>
+                <RowItem noPadding center>
+                  <MdCheckStyle onClick={saveEdit} title="Salvar"/>
+                </RowItem>
+                <RowItem noPadding center>
+                  <IoCloseStyle onClick={cancelEdit} title="Cancelar"/>
+                </RowItem>
+              </>
+            :
+            <RowItem noPadding center>
+              <MdEditStyle onClick={() => setEdit(true)} title="Editar atividade"/>
+            </RowItem>
+            }
+          </Row>
+          <Column>
+            <text>Data de início: {edit ? 
+              <input
+                value={editActivity.starts_at ? new Date(editActivity.starts_at).toISOString().slice(0, 16) : null}
+                onChange={(ev) => setEditActivity(prevValue => ({...prevValue, starts_at: ev.target.value + ":00Z"}))}
+                className={'inputBox'}
+                type="datetime-local"
+              />
+              :
+              getDateTime(activity.starts_at)}</text>
+            <text>Data de fechamaneto: {edit ? 
+              <input
+                value={editActivity.ends_at ? new Date(editActivity.ends_at).toISOString().slice(0, 16) : null}
+                onChange={(ev) => setEditActivity(prevValue => ({...prevValue, ends_at: ev.target.value}))}
+                className={'inputBox'}
+                type="datetime-local"
+              />
+              :
+              getDateTime(activity.ends_at)}</text>
+            <Row>
+              <RowItem grow>
+                <text><b>Pontuação dos alunos:</b></text>
+              </RowItem>
+              <RowItem center>
+                <FaFileExportStyle onClick={exportarParaExcel} title="Exportar notas"/>
+              </RowItem>
+            </Row>
+            {studentsScore.map((studentScore) =>
+              <StudentScoreItem studentScore={studentScore}/>
+            )}
+          </Column>
+        </ContainerPaddingStyle>
+        
+      </ScrollContainer>
       <br/>
-    </div>
+    </ContainerStyle>
   );
 };
+
+export const ContainerStyle = styled.div`
+  width: 100%;
+`;
+
+export const ContainerPaddingStyle = styled.div`
+  padding-right: 16px;
+  padding-left: 16px;
+`;
 
 export const IoCloseStyle = styled(IoClose)`
   color: ${Colors.DarkGray}; 

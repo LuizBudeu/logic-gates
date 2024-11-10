@@ -104,6 +104,7 @@ export const ClassroomDetails = (id) => {
         if(resp != null){
           setClassroom(resp.classroom);
           setStudents(resp.students);
+          // setStudents([...resp.students,...resp.students,...resp.students,...resp.students,...resp.students,...resp.students,...resp.students,...resp.students,...resp.students]);
           setActivities(resp.activities);
         } 
       }).catch((e) => {
