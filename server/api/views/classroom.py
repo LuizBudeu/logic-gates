@@ -187,3 +187,37 @@ def gerar_codigo():
   
   # Concatena com um underline entre as partes
   return f"{parte1}_{parte2}"
+
+@api_view(['GET'])
+def classroomStudentInfo(request):
+  token = request.headers.get('Authorization')
+
+  if(token != ""):
+    token = token.split(" ",1)[1]
+
+    user_id = jwt.decode(token, options={"verify_signature": False})['user_id']
+
+    try: 
+      user = User.objects.get(
+        id = user_id
+      )
+    except User.DoesNotExist:
+      raise ParseError("Usuário não foi encontrado.")
+
+    if(user.role != 0):
+      return Response("Usuário não é aluno", 401)
+
+    try: 
+      classroom = Classroom_Student.objects.annotate(
+        professor_name = F('classroom__professor__name'),
+        professor_email = F('classroom__professor__email'),
+        name = F('classroom__name')
+      ).filter(
+        student = user
+      ).values('name', 'professor_name', 'professor_email' ).first()
+    except Classroom_Student.DoesNotExist:
+      raise ParseError(f"Turma de aluno não foi encontrada")
+        
+    return Response(classroom)
+  else:
+    return Response("Token inválido", 401)

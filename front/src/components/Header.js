@@ -2,15 +2,17 @@ import React from "react";
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { FaGear } from "react-icons/fa6";
-import { ActivitiesModel } from "./ActivitiesModel.js";
+import { ActivitiesModal } from "./ActivitiesModal.js";
 import { Logout } from "../controllers/AuthController.js";
 import { UserInfo } from "../controllers/UserController.js";
+import { ClassroomModal } from "./ClassroomModal.js";
 
 export function Header() {
 
   const [user, getUserInfo] = UserInfo();
   const [showConfigOptions, setShowConfigOptions] = React.useState(false);
   const [showActivitiesModal, setShowActivitiesModal] = React.useState(false);
+  const [showClassroomModal, setShowClassroomModal] = React.useState(false);
   const [ logout ] = Logout();
 
   const navigate = useNavigate();
@@ -26,9 +28,21 @@ export function Header() {
           <RowItem>
             <OptionsText clickable onClick={() => navigate('./')}>Sobre nós</OptionsText>
           </RowItem>
-          <RowItem>
-            <OptionsText clickable onClick={() => setShowActivitiesModal(true)}>Atividades</OptionsText>
-          </RowItem>
+          {user?.role == '0' && 
+            <>
+              <RowItem>
+                <OptionsText clickable onClick={() => setShowClassroomModal(true)}>Minha turma</OptionsText>
+              </RowItem>
+              <RowItem>
+                <OptionsText clickable onClick={() => setShowActivitiesModal(true)}>Atividades</OptionsText>
+              </RowItem>
+            </>
+          }
+          {user?.role == '1' && 
+            <RowItem>
+              <OptionsText clickable onClick={() => navigate('./professor/classrooms')}>Minhas turmas</OptionsText>
+            </RowItem>
+          }          
           <VerticalLine/>
           <RowItem>
             <OptionsText>Olá, {user?.name}!</OptionsText>
@@ -44,10 +58,19 @@ export function Header() {
           </RowItem>
         </LeftMenuContainer>
       </HeaderContainer>
-    <ActivitiesModel
-      showModal={showActivitiesModal}
-      setShowModal={setShowActivitiesModal}
-    />
+      {user?.role == '0' && 
+      <>
+        <ActivitiesModal
+          showModal={showActivitiesModal}
+          setShowModal={setShowActivitiesModal}
+        />
+        <ClassroomModal
+          showModal={showClassroomModal}
+          setShowModal={setShowClassroomModal}
+        />
+      </>
+        
+      }
     </div>
     
   );

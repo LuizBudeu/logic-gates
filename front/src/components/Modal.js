@@ -1,7 +1,5 @@
 import React, {useEffect, useRef} from "react";
 import styled from 'styled-components';
-import { ActivityItemModal } from "./ActivityItemModal";
-import { StudentActivities } from "../controllers/ActivitiesController";
 
 function useOutsideAlerter(ref, setShowModal) {
   useEffect(() => {
@@ -19,36 +17,29 @@ function useOutsideAlerter(ref, setShowModal) {
   }, [ref]);
 }
 
-export function ActivitiesModel({ showModal, setShowModal}) {
+export function Modal({ showModal, setShowModal, title, children}) {
 
   const wrapperRef = useRef(null);
   useOutsideAlerter(wrapperRef, setShowModal);
-  const {activities, sendCircuitToJudge} = StudentActivities();
 
   return (
     showModal &&
-      <Modal>
+      <ModalContainer>
         <ModalContent ref={wrapperRef}>
           <ModalHeader>
             <Close onClick={() => setShowModal(false)}>&times;</Close>
-            <h2>Atividades</h2>
+            <h2>{title}</h2>
           </ModalHeader>
           <ModalBody>
-            <p>Aqui está uma lista de componentes para serem construídos visando a criação de um processador. Esse é apenas um guia para auxiliar  no seu desenvolvimento. Aqui você poderá saber mais sobre os circuitos propostos, assim como visualizar uma solução possível.</p>
-            {activities.map((activity) => (
-              <ActivityItemModal
-                activity={activity}
-                sendCircuitToJudge={() => sendCircuitToJudge(activity.id)}
-              />
-            ))}
+            {children}
           </ModalBody>
         </ModalContent>
-      </Modal>
+      </ModalContainer>
   );
 }
 
 /* Modal */
-const Modal = styled.div`
+const ModalContainer = styled.div`
   position: fixed;
   z-index: 1;
   left: 0;

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useAxiosWithToken } from "../hooks/useAxiosWithToken";
 import { useNavigate } from 'react-router-dom';
+import { UserInfo } from "./UserController";
 
 export const Classrooms = () => {
   const [classrooms, setClassrooms] = useState([]);
@@ -132,6 +133,34 @@ export const ClassroomDetails = (id) => {
     activities,
     updateActivityOnList,
     getClassroomDetails,
+  };
+  
+};
+
+export const ClassroomStudentInfo = () => {
+  const [classroom, setClassroom] = useState("");
+  const [axios, hasToken] = useAxiosWithToken();
+
+  const navigate = useNavigate();
+
+  const getClassroomInfo = () => {
+      axios.get(process.env.REACT_APP_API_HOSTNAME_PORT + "/api/classroomStudentInfo",
+      ).then((response) => {
+          let resp = response.data;
+          if(resp != null)
+            setClassroom(resp);
+      }).catch((e) => {
+          console.log(e);
+      });
+  }
+
+  useEffect(() => {
+    getClassroomInfo(); 
+  }, []);
+
+  return {
+    classroom,
+    getClassroomInfo, 
   };
   
 };
