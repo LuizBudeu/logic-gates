@@ -21,10 +21,10 @@ let NandGate = {
     order: 0,
     ios: {
         inputs: [
-            { IOId: "0", IOlabel: "in0asasa" },
-            { IOId: "1", IOlabel: "in1fsa" },
+            { IOId: "0", IOLabel: "in0asasa" },
+            { IOId: "1", IOLabel: "in1fsa" },
         ],
-        outputs: [{ IOId: "0", label: "out0asasa" }],
+        outputs: [{ IOId: "0", IOLabel: "out0asasa" }],
     },
 };
 
@@ -64,38 +64,6 @@ app.get("/savedGates", (request, response) => {
     console.log("saved gates are ", savedGates);
     response.send(savedGates);
 });
-
-// Get all logic functions from files
-// app.get("/savedGatesAndLoadLogic", (request, response) => {
-//     let savedGates = require("./saveData/savedGates.json");
-//     // savedGates = savedGates.filter((savedGate) => !savedGate.hidden);
-
-//     // Sort saved gates by order
-//     savedGates.sort((a, b) => {
-//         return a.order - b.order;
-//     });
-
-//     let accumulatedCode = "";
-//     const logicFunctions = [];
-//     let funcStr = "";
-//     savedGates.forEach((savedGate, index) => {
-//         const logicFunction = require(`./saveData/${savedGate.path}`);
-
-//         accumulatedCode += logicFunction.toString() + "\n";
-//         funcStr = accumulatedCode + `new ${savedGate.name}()`;
-
-//         if (!savedGate.hidden) {
-//             logicFunctions.push({
-//                 name: savedGate.name,
-//                 logic: funcStr,
-//                 order: savedGate.order,
-//                 ios: savedGate.ios,
-//             });
-//         }
-//     });
-
-//     response.send(logicFunctions);
-// });
 
 app.get("/savedGatesAndLoadLogic", (request, response) => {
     let savedGates = require("./saveData/savedGates.json");

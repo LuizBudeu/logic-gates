@@ -1,7 +1,12 @@
 [
     {
-        "name": "AND",
+        "name": "NOT",
         "order": 0,
+        "hidden": false
+    },
+    {
+        "name": "AND",
+        "order": 1,
         "hidden": false
     }
 ]

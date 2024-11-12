@@ -3,9 +3,9 @@ import Settings from "../settings.js";
 import IO from "./io.js";
 
 class Output extends IO {
-    constructor(ctx, debugName = "", gate = null) {
+    constructor(ctx, debugName = "", gate = null, IOLabelName = null) {
         debugName += "_Output";
-        super(ctx, debugName, gate);
+        super(ctx, debugName, gate, IOLabelName);
         this.type = "output";
     }
 }

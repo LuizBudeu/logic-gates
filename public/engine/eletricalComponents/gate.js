@@ -47,10 +47,10 @@ class Gate extends BaseComponent {
 
         // Position the inputs and output
         this.ios.inputs.forEach((input, index) => {
-            const i = input.IOId;
+            const i = index;
             const rectPos = this.calculateIOPosition(i, "input");
 
-            const inputComponent = new Input(this.ctx, false, debugName + `_${i}`, this, i, input.IOLabel);
+            const inputComponent = new Input(this.ctx, false, debugName + `_${i}`, this, input.IOLabel);
             inputComponent.circle.at(rectPos.x, rectPos.y).radius(Settings.COMPONENT_IO_CIRCLE_RADIUS).color(Settings.COMPONENT_IO_OFF_COLOR);
 
             this.inputs.push(inputComponent);
@@ -60,10 +60,10 @@ class Gate extends BaseComponent {
         });
 
         this.ios.outputs.forEach((output, index) => {
-            const i = output.IOId;
+            const i = index;
             const rectPos = this.calculateIOPosition(i, "output");
 
-            const outputComponent = new Output(this.ctx, debugName + `_${i}`, this, i, output.IOLabel);
+            const outputComponent = new Output(this.ctx, debugName + `_${i}`, this, output.IOLabel);
             outputComponent.circle.at(rectPos.x, rectPos.y).radius(Settings.COMPONENT_IO_CIRCLE_RADIUS).color(Settings.COMPONENT_IO_OFF_COLOR);
 
             this.outputs.push(outputComponent);
@@ -71,43 +71,6 @@ class Gate extends BaseComponent {
             outputComponent.IOId = i;
             Bridge.sceneInstance.place(outputComponent, Settings.FOREGROUND_LAYER, true);
         });
-
-        for (let i = 0; i < this.ios.outputs.length; i++) {
-            const rectPos = this.calculateIOPosition(i, "output");
-
-            const output = new Output(this.ctx, debugName + `_${i}`, this, i, this.ios.outputs[i].IOLabel);
-            output.circle.at(rectPos.x, rectPos.y).radius(Settings.COMPONENT_IO_CIRCLE_RADIUS).color(Settings.COMPONENT_IO_OFF_COLOR);
-
-            this.outputs.push(output);
-
-            output.IOId = i;
-            Bridge.sceneInstance.place(output, Settings.FOREGROUND_LAYER, true);
-        }
-
-        // // Position the inputs and output
-        // for (let i = 0; i < this.ios.inputs.length; i++) {
-        //     const rectPos = this.calculateIOPosition(i, "input");
-
-        //     const input = new Input(this.ctx, false, debugName + `_${i}`, this, i, this.ios.inputs[i].IOLabel);
-        //     input.circle.at(rectPos.x, rectPos.y).radius(Settings.COMPONENT_IO_CIRCLE_RADIUS).color(Settings.COMPONENT_IO_OFF_COLOR);
-
-        //     this.inputs.push(input);
-
-        //     input.IOId = i;
-        //     Bridge.sceneInstance.place(input, Settings.FOREGROUND_LAYER, true);
-        // }
-
-        // for (let i = 0; i < this.ios.outputs.length; i++) {
-        //     const rectPos = this.calculateIOPosition(i, "output");
-
-        //     const output = new Output(this.ctx, debugName + `_${i}`, this, i, this.ios.outputs[i].IOLabel);
-        //     output.circle.at(rectPos.x, rectPos.y).radius(Settings.COMPONENT_IO_CIRCLE_RADIUS).color(Settings.COMPONENT_IO_OFF_COLOR);
-
-        //     this.outputs.push(output);
-
-        //     output.IOId = i;
-        //     Bridge.sceneInstance.place(output, Settings.FOREGROUND_LAYER, true);
-        // }
 
         Mouse.addLeftClickDraggingEvent(this.handleDragging.bind(this), this.rect);
     }
@@ -131,12 +94,12 @@ class Gate extends BaseComponent {
         if (IOtype === "input") {
             return {
                 x: rectPos.x,
-                y: rectPos.y + (this.rect.height * (index + 1)) / (this.ios.inputs + 1),
+                y: rectPos.y + (this.rect.height * (index + 1)) / (this.ios.inputs.length + 1),
             };
         } else {
             return {
                 x: rectPos.x + this.rect.width,
-                y: rectPos.y + (this.rect.height * (index + 1)) / (this.ios.outputs + 1),
+                y: rectPos.y + (this.rect.height * (index + 1)) / (this.ios.outputs.length + 1),
             };
         }
     }
@@ -203,7 +166,7 @@ class Gate extends BaseComponent {
         const baseHeight = Settings.GATE_BASE_HEIGHT;
         const baseWidth = Settings.GATE_BASE_WIDTH;
 
-        const height = baseHeight + Settings.GATE_BASE_HEIGHT_MULTIPLIER * (Math.max(this.ios.inputs, this.ios.outputs) - 1);
+        const height = baseHeight + Settings.GATE_BASE_HEIGHT_MULTIPLIER * (Math.max(this.ios.inputs.length, this.ios.outputs.length) - 1);
         const textWidth = this.ctx.measureText(this.name).width;
         const padding = 30;
         const width = Math.max(baseWidth, textWidth + padding);

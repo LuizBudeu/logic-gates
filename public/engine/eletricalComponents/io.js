@@ -39,6 +39,7 @@ class IO extends BaseComponent {
 
     start() {
         this.IOLabel = new IOLabel(this.ctx, this, this.IOLabelName);
+        console.log(this.IOLabelName);
         Bridge.sceneInstance.place(this.IOLabel, Settings.UI_LAYER, true);
     }
 
