@@ -24,10 +24,10 @@ export function Header({ showActivities }) {
           :
             <>
               <RowItem>
-                <OptionsText clickable onClick={() => navigate('/login')}>Login</OptionsText>
+                <OptionsText clickable onClick={() => navigate('/login')}>Entrar</OptionsText>
               </RowItem>
               <RowItem>
-                <OptionsText clickable onClick={() => navigate('/register')}>Register</OptionsText>
+                <OptionsText clickable onClick={() => navigate('/register')}>Cadastrar-se</OptionsText>
               </RowItem>
             </>
           }
