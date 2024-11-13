@@ -5,9 +5,9 @@ import Mouse from "../input/mouse.js";
 import IO from "./io.js";
 
 class Input extends IO {
-    constructor(ctx, interactive = false, debugName = "", gate = null, IOLabelName = null) {
+    constructor(ctx, interactive = false, debugName = "", gate = null) {
         debugName += "_Input";
-        super(ctx, debugName, gate, IOLabelName);
+        super(ctx, debugName, gate);
         this.type = "input";
 
         if (interactive) {

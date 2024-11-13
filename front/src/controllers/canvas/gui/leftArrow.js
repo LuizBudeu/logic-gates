@@ -1,23 +1,22 @@
 import Button from "../UIComponents/button.js";
 import Sprite from "../UIComponents/sprite.js";
 import Settings from "../settings.js";
-import Bridge from "../bridge.js";
-import Core from "../core.js";
 
-class Reset extends Button {
-    constructor(ctx) {
+export default class LeftArrow extends Button {
+    constructor(ctx, shiftingBar) {
         super(ctx);
+        this.shiftingBar = shiftingBar;
 
-        this.debugName = "Reset";
+        this.debugName = "LeftArrow";
         this.isSelected = false;
 
         const imageSize = 40;
-        this.image = new Sprite(this.ctx, "/images/reset.png");
+        this.image = new Sprite(this.ctx, "/images/left_arrow.png");
         this.image.size(imageSize, imageSize);
 
         this.rect.size(imageSize + 10, imageSize + 10);
         this.rect.color(Settings.TOOLBOX_BUTTON_COLOR);
-        this.rect.at(Settings.CANVAS_WIDTH - 55, Settings.CANVAS_HEIGHT - 55);
+        this.rect.at(10, Settings.CANVAS_HEIGHT - 55);
 
         this.image.centerInRect(this.rect);
     }
@@ -43,12 +42,7 @@ class Reset extends Button {
             this.rect.color(Settings.TOOLBOX_BUTTON_COLOR);
             this.isSelected = false;
         }
-        // Confirm clear with user
-        const result = window.confirm("This action will delete all saved gates. Are you sure you want to continue? (No action)"); // TODO: no action for now
-        if (!result) return;
 
-        Core.reload();
+        this.shiftingBar.shiftLeft();
     }
 }
-
-export default Reset;

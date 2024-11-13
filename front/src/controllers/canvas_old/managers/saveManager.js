@@ -3,13 +3,11 @@ import Core from "../core.js";
 import { Component } from "react";
 
 class SaveManager extends Component {
+
     static savedGates = [];
 
-    static axios = null;
-
-    static loadSavedGatesFromFile(finalCallback) {
-        SaveManager.axios
-            .get(process.env.REACT_APP_API_HOSTNAME_PORT + "/api/listCircuits")
+    static loadSavedGatesFromFile(axios, finalCallback) {
+        axios.get(process.env.REACT_APP_API_HOSTNAME_PORT + "/api/listCircuits")
             .then((response) => {
                 let resp = response.data;
                 resp.sort((a, b) => a.order - b.order);
@@ -34,17 +32,16 @@ class SaveManager extends Component {
         return SaveManager.savedGates;
     }
 
-    static saveCircuitToGate(gateName) {
+    static saveCircuitToGate(axios, gateName) {
         const body = JSON.stringify({
             gateName: gateName,
             circuit: CircuitManager.serialize(),
         });
         try {
-            SaveManager.axios
-                .post(process.env.REACT_APP_API_HOSTNAME_PORT + "/api/saveCircuit", body, {
-                    headers: {
+            axios.post(process.env.REACT_APP_API_HOSTNAME_PORT + "/api/saveCircuit", body, {
+                headers: {
                         "Content-Type": "application/json",
-                    },
+                    } 
                 })
                 .then((response) => {
                     let resp = response.data;
