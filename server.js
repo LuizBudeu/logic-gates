@@ -191,7 +191,7 @@ app.get("/savedGatesAndLoadLogic", authenticateToken, async (request, response) 
         const circuit = require(`./saveData/circuits/${savedGate.name}.json`); // TODO: pegar circuit json da coluna da tabela
         const logicFunctionString = generateLogicFunctionString(circuit, savedGate.name);
 
-        // Get global IO labels
+        // Get global IO labels and set inputs and outputs
         const globalIOs = circuit.components.filter((component) => component.isGlobal);
         const ios = {
             inputs: [],
@@ -204,7 +204,6 @@ app.get("/savedGatesAndLoadLogic", authenticateToken, async (request, response) 
                 IOLabel: input.label,
             });
         });
-
         const outputs = globalIOs.filter((io) => io.type === "output");
         outputs.forEach((input) => {
             ios.outputs.push({
