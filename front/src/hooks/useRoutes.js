@@ -6,6 +6,8 @@ import { Simulator } from '../interfaces/Simulator.js';
 import { Classrooms } from '../interfaces/Classrooms.js';
 import { Classroom } from '../interfaces/Classroom.js';
 import { ClassroomDetailsPage } from '../interfaces/ClassroomDetailsPage.js';
+import { Documentation } from "../interfaces/Documentation.js";
+import { Solution } from "../interfaces/Solution.js";
 
 export default function Router() {
     let routes = useRoutes([
@@ -20,6 +22,14 @@ export default function Router() {
       {
         path: "/simulator",
         element: <ProtectedRoute element={<Simulator />} />
+      },
+      {
+        path: "/docs",
+        element: <ProtectedRoute element={<Documentation />} />
+      },
+      {
+        path: "/solution/:id",
+        element: <ProtectedRoute element={<Solution />} />
       },
       {
         path: "/professor/classrooms",

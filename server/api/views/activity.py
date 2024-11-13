@@ -42,8 +42,7 @@ def listActivities(request):
         'id', 
         'name', 
         'order', 
-        'description_url', 
-        'solution_url', 
+        'description_url',
         'starts_at', 
         'ends_at', 
         'score'
@@ -57,8 +56,7 @@ def listActivities(request):
         'id', 
         'name', 
         'order', 
-        'description_url', 
-        'solution_url', 
+        'description_url',
         'score'
       ).order_by('order')
 
@@ -197,5 +195,41 @@ def activityDetails(request, classroom_id, activity_id):
         })
         
     return Response(students)
+  else:
+    return Response("Token inválido", 401)
+  
+@api_view(['GET'])
+def activitySolution(request, activity_id):
+  token = request.headers.get('Authorization')
+
+  print("token")
+  print(token)
+
+  if(token != ""):
+    token = token.split(" ",1)[1]
+
+    user_id = jwt.decode(token, options={"verify_signature": False})['user_id']
+
+    print(user_id)
+
+    try: 
+      user = User.objects.get(
+        id = user_id
+      )
+    except User.DoesNotExist:
+      raise ParseError("Usuário não foi encontrado.")
+    
+    try: 
+      activity = Activity.objects.get(
+        id = activity_id
+      )
+    except Activity.DoesNotExist:
+      raise ParseError("Atividade não foi encontrada.")
+    
+    resp={
+      'solution_image': activity.solution_image
+    }
+    
+    return Response(resp)
   else:
     return Response("Token inválido", 401)
