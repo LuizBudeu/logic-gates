@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Register as RegisterController } from '../controllers/AuthController';
-import Form from 'react-bootstrap/Form';
 import { Header } from "../components/Header";
+import { Input, InputButton, InputSelect, WarningLabel } from "../components/Inputs";
+import { Container } from "../components/Container";
+import { Background } from "../components/Background";
 
 export const Register = () => {
 	const {email, setEmail, password, setPassword, name, setName, role, setRole, classroomIdentification, setClassroomIdentification, registerError, register} = RegisterController();
@@ -19,51 +21,58 @@ export const Register = () => {
 	return(
 		<div>
 			<Header/>
-			<input
-				value={name}
-				placeholder="Nome"
-				onChange={(ev) => setName(ev.target.value)}
-				className={'inputBox'}
-			/>
-			<br/>
-			<input
-				value={email}
-				placeholder="Email"
-				onChange={(ev) => setEmail(ev.target.value)}
-				className={'inputBox'}
-			/>
-			<br/>
-			<input
-				value={password}
-				placeholder="Senha"
-				onChange={(ev) => setPassword(ev.target.value)}
-				className={'inputBox'}
-				type="password"
-			/>
-			<br/>
-			<Form.Select onChange={(ev) => setRole(ev.target.value)} value={role} disabled={block_classroom_identification}>
-				<option>Escolha uma opção</option>
-				<option value="0">Estudante</option>
-				<option value="1">Professor</option>
-			</Form.Select>
-			<br/>
-			{role == '0' && 
-				<div>
-					<input
-						value={classroomIdentification}
-						placeholder="Código de turma"
-						onChange={(ev) => setClassroomIdentification(ev.target.value)}
+			<Background>
+				<Container
+					title="Cadastro"
+				>
+					<Input
+						value={name}
+						title="Nome"
+						onChange={(ev) => setName(ev.target.value)}
 						className={'inputBox'}
-						type="text"
-						disabled={block_classroom_identification}
+						isMandatory
 					/>
+					<Input
+						value={email}
+						title="Email"
+						placeholder="email@email.com"
+						onChange={(ev) => setEmail(ev.target.value)}
+						className={'inputBox'}
+						isMandatory
+					/>
+					<Input
+						value={password}
+						title="Senha"
+						onChange={(ev) => setPassword(ev.target.value)}
+						className={'inputBox'}
+						type="password"
+						isMandatory
+					/>
+					<InputSelect title="Tipo de conta" isMandatory onChange={(ev) => setRole(ev.target.value)} value={role} disabled={block_classroom_identification}>
+						<option>Escolha uma opção</option>
+						<option value="0">Estudante</option>
+						<option value="1">Professor</option>
+					</InputSelect>
 					<br/>
-				</div>
-			}
-			
-			<text>{registerError}</text>
-			<br/>
-			<input className={'inputButton'} type="button" onClick={register} value={'Cadastrar'} />
+					{role == '0' && 
+						<div>
+							<Input
+								value={classroomIdentification}
+								title="Código de turma"
+								placeholder="XXXX-XXXX"
+								onChange={(ev) => setClassroomIdentification(ev.target.value)}
+								className={'inputBox'}
+								type="text"
+								disabled={block_classroom_identification}
+							/>
+						</div>
+					}
+					
+					<WarningLabel>{registerError}</WarningLabel>
+					<InputButton className={'inputButton'} type="button" onClick={register} value={'Cadastrar'} />
+				</Container>
+				
+			</Background>
 		</div>
 	)
 
