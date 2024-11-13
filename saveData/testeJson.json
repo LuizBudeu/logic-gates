@@ -1,0 +1,24 @@
+{
+    "components": [
+        { "type": "input", "circuitId": "0", "isGlobal": true, "IOId": "0", "label": "G.in0" },
+        { "type": "input", "circuitId": "1", "isGlobal": true, "IOId": "1", "label": "G.in1" },
+        { "type": "output", "circuitId": "2", "isGlobal": true, "IOId": "0", "label": "G.out0" },
+        { "type": "gate", "name": "NOT", "circuitId": "3", "inputs": [{ "IOId": "0", "label": "in0" }], "outputs": [{ "IOId": "0", "label": "out0" }] },
+        {
+            "type": "gate",
+            "name": "NAND",
+            "circuitId": "4",
+            "inputs": [
+                { "IOId": "0", "label": "in0" },
+                { "IOId": "1", "label": "in1" }
+            ],
+            "outputs": [{ "IOId": "0", "label": "out0" }]
+        }
+    ],
+    "connections": [
+        { "upstream": "0", "downstream": "4_input0" },
+        { "upstream": "1", "downstream": "4_input1" },
+        { "upstream": "4_output0", "downstream": "3_input0" },
+        { "upstream": "3_output0", "downstream": "2" }
+    ]
+}

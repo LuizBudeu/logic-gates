@@ -81,10 +81,14 @@ class Wire {
         if (deleteMode) {
             const mousePos = Mouse.getPosition();
             if (this.ctx.isPointInPath(mousePos.x, mousePos.y)) {
-                CircuitManager.removeConnection(this.connection);
-                DeleteManager.deleteGameObject(this);
+                this.delete();
             }
         }
+    }
+
+    delete() {
+        CircuitManager.removeConnection(this.connection);
+        DeleteManager.deleteGameObject(this);
     }
 }
 

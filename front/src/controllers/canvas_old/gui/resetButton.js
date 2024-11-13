@@ -3,6 +3,7 @@ import Sprite from "../UIComponents/sprite.js";
 import Settings from "../settings.js";
 import Bridge from "../bridge.js";
 import Core from "../core.js";
+// import {Alert} from 'react-native';
 
 class Reset extends Button {
     constructor(ctx) {
@@ -43,9 +44,27 @@ class Reset extends Button {
             this.rect.color(Settings.TOOLBOX_BUTTON_COLOR);
             this.isSelected = false;
         }
+
         // Confirm clear with user
-        const result = window.confirm("This action will delete all saved gates. Are you sure you want to continue? (No action)"); // TODO: no action for now
+        // let result = false
+        const result = window.confirm("This action will delete all saved gates. Are you sure you want to continue?");
+        // Alert.alert('Delete all saved gates', 'This action will delete all saved gates. Are you sure you want to continue?', [
+        //     {
+        //       text: 'Cancel',
+        //       onPress: () => console.log('Cancel Pressed'),
+        //       style: 'cancel',
+        //     },
+        //     {text: 'OK', onPress: () => {
+        //         console.log('OK Pressed');
+        //         result = true;
+        //     }},
+        //   ]);
+      
+
         if (!result) return;
+
+        // Clear local storage
+        localStorage.clear();
 
         Core.reload();
     }
