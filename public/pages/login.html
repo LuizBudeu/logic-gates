@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="style.css" />
+        <title>Logic Gates Circuit Builder</title>
+    </head>
+    <body oncontextmenu="return false;">
+        <form action="" id="loginForm">
+            Email: <input id="email" type="text"/>
+            <br/>
+            Senha: <input id="password" type="password"/>
+            <br/>
+            <button id="submitButton" type="submit">Entrar</button>
+        </form>
+    </body>
+    <script type="text/javascript">
+        let loginForm = document.getElementById("loginForm");
+        loginForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+
+            let email = document.getElementById("email");
+            let password = document.getElementById("password");
+
+            if (email.value == "" || password.value == "") {
+                alert("Campos não preenchidos");
+            } else {
+                fetch("/login", {
+                    method: "POST",
+                    body: JSON.stringify({
+                        email: email.value,
+                        password: password.value
+                    }),
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                })
+                .then((response) => response.json())
+                .then((data) => {
+                    if(data.message == "Falha login"){
+                        alert("Falha no login, verifique as credenciais");
+                    }else{
+                        window.location.href = '../home';
+                    }
+                });
+            }
+        });
+  
+      </script>
+</html>

@@ -5,13 +5,16 @@ class SaveManager {
     static savedGates = [];
 
     static loadSavedGatesFromFile(finalCallback) {
-        fetch("/savedGatesAndLoadLogic")
+        fetch("/savedGatesAndLoadLogic", {
+            credentials: 'include'
+        })
             .then((response) => response.json())
             .then((data) => {
                 data.sort((a, b) => a.order - b.order);
 
                 data.forEach((gate) => {
                     SaveManager.savedGates.push({
+                        id: gate.id,
                         name: gate.name,
                         logicFunction: gate.logic,
                         ios: gate.ios,
@@ -29,6 +32,7 @@ class SaveManager {
     static saveCircuitToGate(gateName) {
         try {
             fetch("/circuitToGate", {
+                credentials: 'include',
                 method: "POST",
                 body: JSON.stringify({
                     gateName,
