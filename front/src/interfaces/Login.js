@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { Auth } from '../controllers/AuthController';
+import { Header } from "../components/Header";
 
 export const Login = () => {
 	const [email, setEmail, password, setPassword, loginError, login] = Auth();
 
 	return(
 		<div>
+			<Header/>
 			<input
 				value={email}
 				placeholder="Email"

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Register as RegisterController } from '../controllers/AuthController';
 import Form from 'react-bootstrap/Form';
+import { Header } from "../components/Header";
 
 export const Register = () => {
 	const {email, setEmail, password, setPassword, name, setName, role, setRole, classroomIdentification, setClassroomIdentification, registerError, register} = RegisterController();
@@ -17,6 +18,7 @@ export const Register = () => {
 
 	return(
 		<div>
+			<Header/>
 			<input
 				value={name}
 				placeholder="Nome"

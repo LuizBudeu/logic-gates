@@ -7,7 +7,7 @@ export const Simulator = () => {
 
 	return(
 		<div className="App">
-			<Header/>
+			<Header showActivities/>
 			<CustomCanvas/>
 		</div>
 	)
