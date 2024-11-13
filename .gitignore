@@ -3,7 +3,7 @@ node_modules/
 env/
 __pycache__
 debug.log
-*.env
+*.env*
 tls.crt
 tls.key
 .idea
