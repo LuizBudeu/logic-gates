@@ -128,15 +128,13 @@ def saveCircuit(request):
 
     data = json.loads(request.body)
     gateName = data['gateName']
-    print(data['circuit'])
 
     saved_gates = Gate.objects.filter(
         user_id=user_id,
-        name=gateName,
         hidden=False
     ).values()
 
-    if (len(saved_gates) != 0):
+    if (any([saved_gate['name'] == gateName for saved_gate in saved_gates])):
         return Response({
             'gateName': gateName,
             'message': "Gate name already exists. Please choose a different name.",
