@@ -6,10 +6,8 @@ import CircuitManager from "../managers/circuitManager.js";
 import Bridge from "../bridge.js";
 
 class Save extends Button {
-    constructor(ctx, axios) {
+    constructor(ctx) {
         super(ctx);
-
-        this.axios = axios;
 
         this.debugName = "Save";
         this.isSelected = false;
@@ -88,9 +86,9 @@ class Save extends Button {
             alert(`Gate name "${gateName}" already exists`);
             return;
         }
-        
+
         // Save circuit to gate
-        SaveManager.saveCircuitToGate(this.axios, gateName.toUpperCase());
+        SaveManager.saveCircuitToGate(gateName.toUpperCase());
     }
 }
 

@@ -6,10 +6,9 @@ import Mouse from "../input/mouse.js";
 import DeleteManager from "../managers/deleteManager.js";
 
 class SavedGate extends Button {
-    constructor(ctx, axios, toolbox, id, name, logicFunction, ios) {
+    constructor(ctx, toolbox, id, name, logicFunction, ios) {
         super(ctx);
         this.ctx = ctx;
-        this.axios = axios;
         this.toolbox = toolbox;
         this.id = id;
         this.name = name;
@@ -59,7 +58,7 @@ class SavedGate extends Button {
     }
 
     delete() {
-        DeleteManager.deleteSavedGate(this.axios, this);
+        DeleteManager.deleteSavedGate(this);
     }
 }
 

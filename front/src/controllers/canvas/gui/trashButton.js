@@ -43,7 +43,7 @@ class Trash extends Button {
             this.rect.color(Settings.TOOLBOX_BUTTON_SELECTED_COLOR);
             this.isSelected = true;
 
-            Mouse.setCursorStyle("url(./assets/images/trash24px.png), auto");
+            Mouse.setCursorStyle("url(/images/trash24px.png), auto");
 
             Settings.SCENE_MODE = Settings.SCENE_MODE_OPTIONS.DELETE;
         }

@@ -7,20 +7,23 @@ import CircuitManager from "../managers/circuitManager.js";
 import DeleteManager from "../managers/deleteManager.js";
 import BaseComponent from "./baseComponent.js";
 import Text from "../UIComponents/text.js";
+import IOLabel from "../gui/IOLabel.js";
 
 class IO extends BaseComponent {
-    constructor(ctx, debugName = "", gate = null) {
+    constructor(ctx, debugName = "", gate = null, IOLabelName = null) {
         super(debugName);
 
         /** @type {CanvasRenderingContext2D} */
         this.ctx = ctx;
         this.gate = gate;
+        this.IOLabelName = IOLabelName;
 
         this.circle = new Circle(this.ctx);
         this._value = false;
         this.isSelected = false;
         this.type = null;
         this.IOId = null;
+        this.IOLabel = null;
 
         this.IOConnections = [];
 
@@ -34,7 +37,10 @@ class IO extends BaseComponent {
         CircuitManager.addComponent(this);
     }
 
-    start() {}
+    start() {
+        this.IOLabel = new IOLabel(this.ctx, this, this.IOLabelName);
+        Bridge.sceneInstance.place(this.IOLabel, Settings.UI_LAYER, true);
+    }
 
     update(deltaTime) {}
 
@@ -83,6 +89,8 @@ class IO extends BaseComponent {
             CircuitManager.removeConnection(connection);
         });
         DeleteManager.deleteGameObject(this.selectionCircle, Settings.BACKGROUND_LAYER);
+        DeleteManager.deleteGameObject(this.IOLabel, Settings.UI_LAYER);
+
         CircuitManager.removeComponent(this);
         DeleteManager.deleteGameObject(this);
     }
@@ -91,6 +99,7 @@ class IO extends BaseComponent {
         if (!this.isGlobal()) {
             return {
                 IOId: `${this.IOId}`,
+                label: `${this.IOLabel.name}`,
             };
         } else {
             return {
@@ -98,6 +107,7 @@ class IO extends BaseComponent {
                 circuitId: `${this.circuitId}`,
                 isGlobal: true,
                 IOId: `${this.IOId}`,
+                label: `${this.IOLabel.name}`,
             };
         }
     }

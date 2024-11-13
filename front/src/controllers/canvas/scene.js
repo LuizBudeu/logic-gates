@@ -11,9 +11,12 @@ import Reset from "./gui/resetButton.js";
 import Mouse from "./input/mouse.js";
 import Text from "./UIComponents/text.js";
 import CircuitManager from "./managers/circuitManager.js";
+import SaveManager from "./managers/saveManager.js";
+import DeleteManager from "./managers/deleteManager.js";
 import PlusIO from "./gui/plusIO.js";
 import MinusIO from "./gui/minusIO.js";
 import WiringManager from "./managers/wiringManager.js";
+import Keyboard, { Keys } from "./input/keyboard.js";
 
 class Scene {
     constructor(canvas, ctx, axios) {
@@ -42,6 +45,10 @@ class Scene {
         this.gameObjectsMap = new TwoWayMap();
 
         Bridge.setSceneInstance(this);
+
+        // Pass axios to managers
+        SaveManager.axios = this.axios;
+        DeleteManager.axios = this.axios;
     }
 
     start() {
@@ -53,6 +60,7 @@ class Scene {
         this.setupBackground();
         this.setupToolbox();
         this.setupIOButtons();
+        this.setupInitialListeners();
 
         this.setupInitialComponents();
 
@@ -142,85 +150,65 @@ class Scene {
     setupInitialComponents() {
         this.addGlobalIO("input");
         this.addGlobalIO("input");
-
         this.addGlobalIO("output");
     }
 
     setupToolbox() {
         // Toolbox
-        this.toolbox = new Toolbox(this.canvas, this.ctx, this.axios);
-        this.place(this.toolbox, 0);
+        this.toolbox = new Toolbox(this.canvas, this.ctx);
+        this.place(this.toolbox, Settings.BACKGROUND_LAYER);
 
         // Trash and save buttons
-        this.place(new Trash(this.ctx), 0);
-        this.place(new Save(this.ctx, this.axios), 0);
-        this.place(new Reset(this.ctx), 0);
+        this.place(new Trash(this.ctx), Settings.BACKGROUND_LAYER);
+        this.place(new Save(this.ctx), Settings.BACKGROUND_LAYER);
+        this.place(new Reset(this.ctx), Settings.BACKGROUND_LAYER);
+    }
+
+    setupInitialListeners() {
+        // Press H to hide/show IO labels
+        Keyboard.addKeyDownEvent(() => {
+            Settings.IS_SHOWING_IO_LABELS = !Settings.IS_SHOWING_IO_LABELS;
+        }, Keys.H);
     }
 
     setupIOButtons() {
         this.plusInput = new PlusIO(this.ctx, "input");
-        this.place(this.plusInput, 0);
+        this.place(this.plusInput, Settings.BACKGROUND_LAYER);
 
         this.plusOutput = new PlusIO(this.ctx, "output");
-        this.place(this.plusOutput, 0);
+        this.place(this.plusOutput, Settings.BACKGROUND_LAYER);
 
         this.minusInput = new MinusIO(this.ctx, "input");
-        this.place(this.minusInput, 0);
+        this.place(this.minusInput, Settings.BACKGROUND_LAYER);
 
         this.minusOutput = new MinusIO(this.ctx, "output");
-        this.place(this.minusOutput, 0);
+        this.place(this.minusOutput, Settings.BACKGROUND_LAYER);
     }
 
     addGlobalIO(IOtype) {
-        if (IOtype === "input") {
-            const input = new Input(this.ctx, true, "Global");
-            input.circle.radius(Settings.IO_CIRCLE_RADIUS).color(Settings.COMPONENT_IO_OFF_COLOR);
+        const io = IOtype === "input" ? new Input(this.ctx, true, "Global") : new Output(this.ctx, "Global");
+        io.circle.radius(Settings.IO_CIRCLE_RADIUS).color(Settings.COMPONENT_IO_OFF_COLOR);
 
-            this.globalIOs.inputs.push(input);
-            input.debugName += "_" + (this.globalIOs.inputs.length - 1);
-            input.IOId = this.globalIOs.inputs.length - 1;
-            this.place(input);
-        } else {
-            const output = new Output(this.ctx, "Global");
-            output.circle.radius(Settings.IO_CIRCLE_RADIUS).color(Settings.COMPONENT_IO_OFF_COLOR);
-
-            this.globalIOs.outputs.push(output);
-            output.debugName += "_" + (this.globalIOs.outputs.length - 1);
-            output.IOId = this.globalIOs.outputs.length - 1;
-            this.place(output);
-        }
+        const ioArray = IOtype === "input" ? this.globalIOs.inputs : this.globalIOs.outputs;
+        ioArray.push(io);
+        io.debugName += "_" + (ioArray.length - 1);
+        io.IOId = ioArray.length - 1;
+        this.place(io, Settings.FOREGROUND_LAYER);
 
         this.repositionGlobalIOs(IOtype);
     }
 
     removeGlobalIO(IOtype) {
-        if (IOtype === "input") {
-            if (this.globalIOs.inputs.length === 1) {
-                alert("Cannot remove the last global input");
-                return;
-            }
+        const ioArray = IOtype === "input" ? this.globalIOs.inputs : this.globalIOs.outputs;
 
-            const input = this.globalIOs.inputs.pop();
-            input.IOConnections.forEach((connection) => {
-                CircuitManager.removeConnection(connection);
-            });
-            this.remove(input.selectionCircle, 0);
-            CircuitManager.removeComponent(input);
-            this.remove(input);
-        } else {
-            if (this.globalIOs.outputs.length === 1) {
-                alert("Cannot remove the last global output");
-                return;
-            }
-
-            const output = this.globalIOs.outputs.pop();
-            output.IOConnections.forEach((connection) => {
-                CircuitManager.removeConnection(connection);
-            });
-            this.remove(output.selectionCircle, 0);
-            CircuitManager.removeComponent(output);
-            this.remove(output);
+        if (ioArray.length === 1) {
+            alert(`Cannot remove the last global ${IOtype}`);
+            return;
         }
+
+        const io = ioArray.pop();
+        io.delete();
+
         this.repositionGlobalIOs(IOtype);
     }
 

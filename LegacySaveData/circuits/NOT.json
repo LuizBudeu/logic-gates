@@ -1,0 +1,53 @@
+{
+    "components": [
+        {
+            "type": "input",
+            "circuitId": "0",
+            "isGlobal": true,
+            "IOId": "0",
+            "label": "en0"
+        },
+        {
+            "type": "output",
+            "circuitId": "2",
+            "isGlobal": true,
+            "IOId": "0",
+            "label": "s0"
+        },
+        {
+            "type": "gate",
+            "name": "NAND",
+            "circuitId": "3",
+            "inputs": [
+                {
+                    "IOId": "0",
+                    "label": "in0"
+                },
+                {
+                    "IOId": "1",
+                    "label": "in1"
+                }
+            ],
+            "outputs": [
+                {
+                    "IOId": "0",
+                    "label": "out0"
+                }
+            ]
+        }
+    ],
+    "connections": [
+        {
+            "upstream": "0",
+            "downstream": "3_input0"
+        },
+        {
+            "upstream": "0",
+            "downstream": "3_input1"
+        },
+        {
+            "upstream": "3_output0",
+            "downstream": "2"
+        }
+    ]
+}
