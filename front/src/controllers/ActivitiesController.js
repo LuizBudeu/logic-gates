@@ -151,3 +151,29 @@ export const ManegeActivities = (activity, classroomId) => {
   };
   
 };
+
+export const SolutionMenager = (activity_id) => {
+  const [activity, setActivity] = useState();
+  const [axios, hasToken] = useAxiosWithToken();
+
+  const getSolution = () => {
+      axios.get(process.env.REACT_APP_API_HOSTNAME_PORT + "/api/activitySolution/"+activity_id,
+      ).then((response) => {
+          let resp = response.data;
+          console.log(resp);  
+          if(resp != null)
+            setActivity(resp);
+      }).catch((e) => {
+          console.log(e);
+      });
+  }
+
+  useEffect(() => {
+    getSolution(); 
+  }, [activity_id]);
+
+  return {
+    activity,
+  };
+  
+};

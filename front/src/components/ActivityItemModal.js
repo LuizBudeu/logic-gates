@@ -33,10 +33,10 @@ export const ActivityItemModal = ({activity, sendCircuitToJudge}) => {
                 <JudgeIcon onClick={sendCircuitToJudge} title="Validar circuito"/>
               </CenterContent>
             </div>
-          }   
+          }
 
           {[ActivityStatus.finalizada, ActivityStatus.naoConfigurada].includes(status) &&
-            <a href={activity.solution_url} target="_blank" title="Ver solução">
+            <a href={"/solution/"+activity.id} target="_blank" title="Ver solução">
               <CenterContent>
                 <SolutionIcon/>
               </CenterContent>

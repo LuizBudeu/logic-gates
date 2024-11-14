@@ -6,8 +6,39 @@ import { ActivitiesModal } from "./ActivitiesModal.js";
 import { Logout } from "../controllers/AuthController.js";
 import { UserInfo } from "../controllers/UserController.js";
 import { ClassroomModal } from "./ClassroomModal.js";
+import { useAuth } from "../hooks/useAuth.js";
 
-export function Header() {
+export function Header({ showActivities }) {
+
+  const { user: userAuth } = useAuth();
+
+  const navigate = useNavigate();
+
+  return (
+    <div>
+      <HeaderContainer>
+        <NandesisTitle>NANDesis.io</NandesisTitle>
+        <LeftMenuContainer>
+          {userAuth ?
+            <AuthenticatedHeader showActivities={showActivities} />
+          :
+            <>
+              <RowItem>
+                <OptionsText clickable onClick={() => navigate('/login')}>Entrar</OptionsText>
+              </RowItem>
+              <RowItem>
+                <OptionsText clickable onClick={() => navigate('/register')}>Cadastrar-se</OptionsText>
+              </RowItem>
+            </>
+          }
+        </LeftMenuContainer>
+      </HeaderContainer>
+    </div>
+    
+  );
+}
+
+export function AuthenticatedHeader({ showActivities }) {
 
   const [user, getUserInfo] = UserInfo();
   const [showConfigOptions, setShowConfigOptions] = React.useState(false);
@@ -18,60 +49,51 @@ export function Header() {
   const navigate = useNavigate();
 
   return (
-    <div>
-      <HeaderContainer>
-        <NandesisTitle>NANDesis.io</NandesisTitle>
-        <LeftMenuContainer>
-          <RowItem>
-            <OptionsText clickable onClick={() => navigate('./')}>Home</OptionsText>
-          </RowItem>
-          <RowItem>
-            <OptionsText clickable onClick={() => navigate('./')}>Sobre nós</OptionsText>
-          </RowItem>
-          {user?.role == '0' && 
-            <>
-              <RowItem>
-                <OptionsText clickable onClick={() => setShowClassroomModal(true)}>Minha turma</OptionsText>
-              </RowItem>
-              <RowItem>
-                <OptionsText clickable onClick={() => setShowActivitiesModal(true)}>Atividades</OptionsText>
-              </RowItem>
-            </>
-          }
-          {user?.role == '1' && 
-            <RowItem>
-              <OptionsText clickable onClick={() => navigate('./professor/classrooms')}>Minhas turmas</OptionsText>
-            </RowItem>
-          }          
-          <VerticalLine/>
-          <RowItem>
-            <OptionsText>Olá, {user?.name}!</OptionsText>
-          </RowItem>
-          <RowItem>
-            <IconStyle  onClick={() => setShowConfigOptions(!showConfigOptions)}></IconStyle >
-            {showConfigOptions &&
-              <DropdownMenu>
-                <DropdownMenuText onClick={() => navigate('./')}>Meu perfil</DropdownMenuText>
-                <DropdownMenuText onClick={() => logout()}>Sair</DropdownMenuText>
-              </DropdownMenu>
-            }
-          </RowItem>
-        </LeftMenuContainer>
-      </HeaderContainer>
+    <>
+      <RowItem>
+        <OptionsText clickable onClick={() => navigate('/simulator')}>Simulador</OptionsText>
+      </RowItem>
       {user?.role == '0' && 
-      <>
-        <ActivitiesModal
-          showModal={showActivitiesModal}
-          setShowModal={setShowActivitiesModal}
-        />
+        <RowItem>
+          <OptionsText clickable onClick={() => setShowClassroomModal(true)}>Minha turma</OptionsText>
+        </RowItem>
+      }
+      {user?.role == '1' && 
+        <RowItem>
+          <OptionsText clickable onClick={() => navigate('/professor/classrooms')}>Minhas turmas</OptionsText>
+        </RowItem>
+      }
+      {showActivities && 
+        <RowItem>
+          <OptionsText clickable onClick={() => setShowActivitiesModal(true)}>Atividades</OptionsText>
+        </RowItem>
+      }          
+      <VerticalLine/>
+      <RowItem>
+        <OptionsText>Olá, {user?.name}!</OptionsText>
+      </RowItem>
+      <RowItem>
+        <IconStyle  onClick={() => setShowConfigOptions(!showConfigOptions)}></IconStyle >
+        {showConfigOptions &&
+          <DropdownMenu>
+            <DropdownMenuText onClick={() => navigate('./')}>Meu perfil</DropdownMenuText>
+            <DropdownMenuText onClick={() => logout()}>Sair</DropdownMenuText>
+          </DropdownMenu>
+        }
+      </RowItem>
+      {user?.role == '0' && 
         <ClassroomModal
           showModal={showClassroomModal}
           setShowModal={setShowClassroomModal}
         />
-      </>
-        
       }
-    </div>
+      {showActivities && 
+        <ActivitiesModal
+          showModal={showActivitiesModal}
+          setShowModal={setShowActivitiesModal}
+        />
+      }      
+    </>
     
   );
 }

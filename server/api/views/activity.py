@@ -5,6 +5,7 @@ from django.db.models import Exists, OuterRef, Max, Q, F, Value, CharField
 from rest_framework.exceptions import ParseError
 import pytz
 from datetime import datetime
+from django.utils import timezone
 
 import jwt
 import json
@@ -42,8 +43,7 @@ def listActivities(request):
         'id', 
         'name', 
         'order', 
-        'description_url', 
-        'solution_url', 
+        'description_url',
         'starts_at', 
         'ends_at', 
         'score'
@@ -57,8 +57,7 @@ def listActivities(request):
         'id', 
         'name', 
         'order', 
-        'description_url', 
-        'solution_url', 
+        'description_url',
         'score'
       ).order_by('order')
 
@@ -164,8 +163,6 @@ def activityDetails(request, classroom_id, activity_id):
     ).filter(
       classroom=classroom,
     ).values('user_id', 'name', 'email', 'max_score', 'scores')
-
-    # return Response(user_scores)
     
     user_scores = User_Activity.objects.annotate(
       name=F('user__name')
@@ -174,13 +171,10 @@ def activityDetails(request, classroom_id, activity_id):
       activity_id=activity_id
     ).values('user_id', 'score', 'created_at')
 
-    # students = []
-
     for user_score in user_scores:
       score_student = None
       for student in students:
         if student['user_id'] == user_score['user_id']:
-          print("i found it!")
           score_student = student
           break
       
@@ -197,5 +191,73 @@ def activityDetails(request, classroom_id, activity_id):
         })
         
     return Response(students)
+  else:
+    return Response("Token inválido", 401)
+  
+@api_view(['GET'])
+def activitySolution(request, activity_id):
+  token = request.headers.get('Authorization')
+
+  print("token")
+  print(token)
+
+  if(token != ""):
+    token = token.split(" ",1)[1]
+
+    user_id = jwt.decode(token, options={"verify_signature": False})['user_id']
+
+    print(user_id)
+
+    try: 
+      user = User.objects.get(
+        id = user_id
+      )
+    except User.DoesNotExist:
+      raise ParseError("Usuário não foi encontrado.")
+    
+    data_atual = timezone.now()
+
+    print(user)
+    
+    try: 
+      activity = Activity.objects.get(
+        id = activity_id
+      )
+    except Activity.DoesNotExist:
+      raise ParseError("Atividade não foi encontrada.")
+    
+    print(activity)
+    
+    try: 
+      classroom = Classroom_Student.objects.get(
+        student = user
+      )
+
+      print(classroom)
+
+      classroom_activity = Classroom_Activity.objects.annotate(
+        solution_image=F('activity__solution_image')
+      ).filter(
+          activity = activity,
+          classroom__classroom_student__student=user,
+          starts_at__isnull=False,
+          ends_at__isnull=False,
+          starts_at__lte=data_atual,
+          ends_at__lte=data_atual,
+        ).values(
+          'solution_image'
+        ).first()
+
+      if(not classroom_activity):
+        raise ParseError("Usuário não tem acesso.")
+    except Classroom_Student.DoesNotExist:
+      print("Sem classroom")
+      pass
+    
+    resp={
+      'solution_image': activity.solution_image
+    }
+    
+    return Response(resp)
   else:
     return Response("Token inválido", 401)

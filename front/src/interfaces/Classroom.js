@@ -4,6 +4,8 @@ import { Header } from "../components/Header.js"
 import { ClassroomInfo } from "../controllers/ClassroomController.js"
 import { Background } from '../components/Background.js';
 import { useParams } from 'react-router';
+import { Input, InputButton, WarningLabel } from '../components/Inputs.js';
+import { Container } from '../components/Container.js';
 
 export const Classroom = (props) => {
 
@@ -14,17 +16,19 @@ export const Classroom = (props) => {
 		<div className="App">
 			<Header/>
 			<Background>
-				<input
-					value={name}
-					placeholder="Nome"
-					onChange={(ev) => setName(ev.target.value)}
-					className={'inputBox'}
-				/>
-				<br/>
-				<text>{error}</text>
-				<input className={'inputButton'} type="button" onClick={saveClassroom} value={'Criar'} />
-			</Background>
-			
+				<Container 
+					title={id ? "Editar turma" : "Nova turma"}
+				>				
+					<Input
+						value={name}
+						title="Nome"
+						onChange={(ev) => setName(ev.target.value)}
+						className={'inputBox'}
+					/>
+					<WarningLabel>{error}</WarningLabel>
+					<InputButton className={'inputButton'} type="button" onClick={saveClassroom} value={'Criar'} />
+				</Container>
+			</Background>	
 		</div>
 	)
 
