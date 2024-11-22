@@ -27,6 +27,7 @@ class Activity(models.Model):
   order = models.IntegerField()
   description_url = models.CharField(max_length=100)
   solution_image = models.CharField(max_length=100)
+  testbench = models.TextField(blank=True)
   created_at = models.DateTimeField(auto_now_add=True)
   updated_at = models.DateTimeField(auto_now=True) 
 
