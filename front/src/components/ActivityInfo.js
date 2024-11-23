@@ -83,7 +83,7 @@ export const ActivityInfo = ({activity, onUpdate, classroomId}) => {
               />
               :
               getDateTime(activity.starts_at)}</text>
-            <text>Data de fechamaneto: {edit ? 
+            <text>Data de fechamento: {edit ? 
               <input
                 value={editActivity.ends_at ? new Date(editActivity.ends_at).toISOString().slice(0, 16) : null}
                 onChange={(ev) => setEditActivity(prevValue => ({...prevValue, ends_at: ev.target.value}))}
