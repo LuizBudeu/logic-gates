@@ -1,3 +1,89 @@
+from ..models import Gate
+import json
+
+
+NandGate = {
+    'name': "NAND",
+    'logic': """function NAND() {
+        this.lastOutput = null;
+        this.compute = function (input0, input1) {
+            let output = {
+                output0: !(input0 && input1),
+            };
+            this.lastOutput = output;
+            return output;
+        };
+    }
+
+    new NAND();""",
+    'order': 0,
+    'ios': {
+        'inputs': [
+            {'IOId': "0", 'IOLabel': "in0"},
+            {'IOId': "1", 'IOLabel': "in1"},
+        ],
+        'outputs': [{'IOId': "0", 'IOLabel': "out0"}]
+    },
+}
+
+
+def get_saved_gates_logics(user_id, should_instantiate_in_the_end=True):
+    # Get user saved gates
+    saved_gates = Gate.objects.filter(
+        user_id=user_id,
+        hidden=0
+    ).order_by('function_order').values()
+
+    accumulated_code = NandGate["logic"] + "\n"
+    logic_functions = [NandGate]
+
+    # For each saved gate, grab circuit JSON and generate logic function string
+    for saved_gate in saved_gates:
+        circuit_json = saved_gate["circuit_json"]
+        circuit = json.loads(circuit_json)
+        logic_function_string = generate_logic_function_string(circuit, saved_gate['name'])
+
+        ios = get_ios_from_circuit(circuit)
+
+        accumulated_code += logic_function_string + "\n"
+
+        func_str = accumulated_code
+        if should_instantiate_in_the_end:
+            func_str += f"new {saved_gate['name']}()"
+
+        logic_functions.append({
+            "id": saved_gate["id"],
+            "name": saved_gate["name"],
+            "logic": func_str,
+            "order": saved_gate["function_order"],
+            "ios": ios
+        })
+
+    return logic_functions
+
+
+def get_ios_from_circuit(circuit):
+    # Get global IO labels and set inputs and outputs
+    global_ios = [component for component in circuit["components"] if component.get("isGlobal")]
+    ios = {
+        "inputs": [],
+        "outputs": [],
+    }
+    inputs = [io for io in global_ios if io["type"] == "input"]
+    for input_io in inputs:
+        ios["inputs"].append({
+            "IOId": input_io["IOId"],
+            "IOLabel": input_io["label"],
+        })
+    outputs = [io for io in global_ios if io["type"] == "output"]
+    for output_io in outputs:
+        ios["outputs"].append({
+            "IOId": output_io["IOId"],
+            "IOLabel": output_io["label"],
+        })
+    return ios
+
+
 def generate_logic_function_string(circuit, new_gate_name):
     components = circuit["components"]
     connections = circuit["connections"]
