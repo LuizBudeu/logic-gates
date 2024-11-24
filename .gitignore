@@ -7,4 +7,6 @@ debug.log
 tls.crt
 tls.key
 .idea
-
+server/server/__pycache__
+server/api/__pycache__
+/server/api/__pycache__/
