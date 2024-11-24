@@ -26,7 +26,7 @@ export const Classroom = (props) => {
 						className={'inputBox'}
 					/>
 					<WarningLabel>{error}</WarningLabel>
-					<InputButton className={'inputButton'} type="button" onClick={saveClassroom} value={'Criar'} />
+					<InputButton className={'inputButton'} type="button" onClick={saveClassroom} value={id ? 'Alterar' : 'Criar'} />
 				</Container>
 			</Background>	
 		</div>

@@ -38,7 +38,8 @@ def listActivities(request):
       ).annotate(
         starts_at=Max('classroom_activity__starts_at'),
         ends_at=Max('classroom_activity__ends_at'),
-        score=Max('user_activity__score'),
+        score=Max('user_activity__score',
+          filter=Q(user_activity__user=user)),
       ).values(
         'id', 
         'name', 
