@@ -2,7 +2,32 @@ from .models import Activity
 
 
 
+"""Combinatórios:
+    NAND
+    NOT
+    AND
+    OR
+    NOR
+    XOR
+    ONEBITADDER
+    FOURBITADDER
+    MUX
+    ANDUNIT
+    ORUNIT
+    ARITUNIT
+    ALU
 
+Sequenciais:
+    SRLTACH
+    DLATCH
+    DFLIPFLOP (tem clock)
+    COUNTER
+    REGISTER
+
+Memória: 
+    ROM
+    RAM
+"""
 activities = [
     'NOT',
     'AND',
