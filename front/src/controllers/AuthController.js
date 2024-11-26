@@ -112,10 +112,7 @@ export const Register = () => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ name, email, password, role, classroomIdentification }),
-      headers: {
-          "Content-Type": "application/json",
-      },
+      body: JSON.stringify({ name, email, password, role, classroomIdentification })
     })
       .then((r) => r.json())
       .then((r) => {
