@@ -14,6 +14,8 @@ class SaveManager extends Component {
                 let resp = response.data;
                 resp.sort((a, b) => a.order - b.order);
 
+                SaveManager.savedGates = [];
+
                 resp.forEach((gate) => {
                     SaveManager.savedGates.push({
                         id: gate.id,
