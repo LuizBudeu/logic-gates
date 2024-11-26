@@ -9,4 +9,8 @@ export const Colors = {
   ConfirmBlue: "#0B6A99",
   WarningYellow: "#F5D531",
   CancelRed: "#F64932",
+  DocsBlue: "#a4c2f4",
+  DocsGreen: "#b6d7a8",
+  DocsYellow: "#ffe599",
+  DocsOrange: "#f6b26b",
 };
