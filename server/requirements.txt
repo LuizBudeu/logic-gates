@@ -10,3 +10,4 @@ requests==2.31.0
 mssql-django
 python-dotenv
 pyjwt[crypto]
+js2py
