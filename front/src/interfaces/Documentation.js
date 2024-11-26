@@ -15,7 +15,7 @@
 
 // };
 
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import { Header } from "../components/Header.js"
 import { Background } from '../components/Background.js';
@@ -25,6 +25,7 @@ import { Colors } from "../utils/colors.js";
 export const Documentation = () => {
   return (
 		<div>
+			<ScrollToSection />
 			<Header/>
 			<Background>
 				<Container>
@@ -307,6 +308,20 @@ const CustomTh = styled.th`
   background-color: ${({color}) => color};
 	color: ${Colors.Black};
 `;
+
+const ScrollToSection = () => {
+  useEffect(() => {
+    // Se o ID corresponder à URL, faça o scroll até o elemento
+    const hash = window.location.hash;
+		console.log(hash);
+		const element = document.getElementById(hash.substring(1));
+		if (element) {
+			element.scrollIntoView({ behavior: "smooth" });
+		}
+  }, []);
+
+  return null;
+};
 
 const Formula = ({children}) => {
 	return(<FormulaStyle><em>{children}</em></FormulaStyle>)
