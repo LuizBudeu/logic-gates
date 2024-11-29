@@ -54,6 +54,29 @@ class Command(BaseCommand):
             'RAM'
         ]
 
+        types = {
+            'NOT': 'combinatorial',
+            'AND': 'combinatorial',
+            'OR': 'combinatorial',
+            'NOR': 'combinatorial',
+            'XOR': 'combinatorial',
+            'HALFADDER': 'combinatorial',
+            'FULLADDER': 'combinatorial',
+            'FOURBITADDER': 'combinatorial',
+            'MUX4X1': 'combinatorial',
+            'DMUX1X4': 'combinatorial',
+            'ENCODER4X2': 'combinatorial',
+            'DECODER2X4': 'combinatorial',
+            'ALU': 'combinatorial',
+            'SRLATCH': 'sequential',
+            'DLATCH': 'sequential',
+            'DFLIPFLOP': 'sequential',
+            'REGISTER': 'sequential',
+            'COUNTER': 'sequential',
+            'ROM': 'memory',
+            'RAM': 'memory'
+        }
+
         tbs = {
             'NOT': [
           {"in0":  0, "out0": 1},
@@ -208,10 +231,11 @@ class Command(BaseCommand):
             Activity.objects.update_or_create(
                 name=activity,
                 order=i,
-                description_url=f"./docs#{activity}",
+                description_url=f"./docs#{types[activity]}-circuits-{activity.lower()}",
                 solution_image=f"{activity}.PNG",
                 testbench=json.dumps(tbs[activity])
-            )
+            ,
+            defaults={'name': activity})
 
             i += 1
 
