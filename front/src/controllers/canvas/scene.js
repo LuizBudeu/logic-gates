@@ -194,6 +194,7 @@ class Scene {
         io.debugName += "_" + (ioArray.length - 1);
         io.IOId = ioArray.length - 1;
         this.place(io, Settings.FOREGROUND_LAYER);
+        io.start();
 
         this.repositionGlobalIOs(IOtype);
     }

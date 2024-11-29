@@ -35,7 +35,7 @@ class Gate extends BaseComponent {
 
         this.rect = new Rect(this.ctx)
             .at(Settings.CANVAS_WIDTH / 2 - 50, Settings.CANVAS_HEIGHT / 2 - 50)
-            .size(rectSize.width, rectSize.height)
+            .size(rectSize.width + 20, rectSize.height)
             .color(Settings.GATE_COLOR);
 
         this.rect.innerText.style("Arial", Settings.GATE_NAME_FONT_SIZE, "#fff").content(this.name);
