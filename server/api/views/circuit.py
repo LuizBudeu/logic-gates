@@ -176,11 +176,15 @@ while (i < tests.length) {
 
     const results = j.compute.apply(this, inputs)
 
-    for (const key in results) {
-        if (results[key] === outs[key]) {
-            total_points += points_per_test;
-        }
+    let hasOneIncorrect = false;
+  for (const key in results) {
+    if (results[key] !== outs[key]) {
+      hasOneIncorrect = true;
     }
+  }
+  if (!hasOneIncorrect){
+      total_points += points_per_test;
+  }
     i++;
 }
 total_points

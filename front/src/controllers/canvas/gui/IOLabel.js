@@ -11,7 +11,7 @@ export default class IOLabel extends Button {
 
         if (name === null) {
             this.name = io.type === "input" ? "in" : "out";
-            const prefix = io.isGlobal() ? "G." : "";
+            const prefix = io.isGlobal() ? "" : "";
             this.name = prefix + this.name + io.IOId;
         } else {
             this.name = name;

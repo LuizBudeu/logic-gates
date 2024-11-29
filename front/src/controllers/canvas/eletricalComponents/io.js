@@ -38,8 +38,10 @@ class IO extends BaseComponent {
     }
 
     start() {
-        this.IOLabel = new IOLabel(this.ctx, this, this.IOLabelName);
-        Bridge.sceneInstance.place(this.IOLabel, Settings.UI_LAYER, true);
+        if (!this.IOLabel) {
+            this.IOLabel = new IOLabel(this.ctx, this, this.IOLabelName);
+            Bridge.sceneInstance.place(this.IOLabel, Settings.UI_LAYER, true);
+        }
     }
 
     update(deltaTime) {}
