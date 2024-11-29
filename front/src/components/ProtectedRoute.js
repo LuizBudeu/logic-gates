@@ -6,7 +6,7 @@ export const ProtectedRoute = ({ element, roles = [0, 1] }) => {
   if (!user) {
     // user is not authenticated
     return <Navigate to="/login" />;
-  }else if(!roles.includes(user.role)){
+  }else if(!roles.includes(parseInt(user.role))){
     // user does not have access to page
     if(user.role == 0){
       return <Navigate to="/simulator" />;

@@ -23,6 +23,7 @@ def create(request):
       )
     except Classroom.DoesNotExist:
       raise ParseError(f"Turma com identificador '{data['classroomIdentification']}' não foi encontrada")
+    
   try: 
     user = User.objects.create(
       name = data['name'],
@@ -33,7 +34,7 @@ def create(request):
   except IntegrityError:
     raise ParseError("Email já está em uso. Por favor, escolha um email diferente.")
   
-  if(classroom):
+  if(data['role'] == '0' and data['classroomIdentification'] != '' and classroom):
     Classroom_Student.objects.create(
       classroom = classroom,
       student = user,
