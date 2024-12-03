@@ -228,14 +228,12 @@ class Command(BaseCommand):
         i = 4
         skip = 4
         for activity in activities[skip:]:
-            Activity.objects.update_or_create(
+            Activity.objects.get_or_create(
                 name=activity,
                 order=i,
                 description_url=f"./docs#{types[activity]}-circuits-{activity.lower()}",
                 solution_image=f"{activity}.PNG",
-                testbench=json.dumps(tbs[activity])
-            ,
-            defaults={'name': activity})
+                testbench=json.dumps(tbs[activity]))
 
             i += 1
 
