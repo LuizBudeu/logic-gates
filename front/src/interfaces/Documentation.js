@@ -211,7 +211,293 @@ export const Documentation = () => {
 									<ImageStyle src={"/images/docs/Mux2x1.png"} alt=""/>
 								</Section>
 
-								
+								<Section id="complex-combinatorial-circuits-logic-gates">
+									<h1>3.2. Portas lógicas a partir de multiplexadores</h1>
+									<p>Um aspecto interessante sobre esse componente é o fato que a partir de um ou mais multiplexador 2X1 é possível criar diversas portas lógicas.</p>
+								</Section>
+								<Section id="complex-combinatorial-circuits-logic-gates-and">
+									<h1>3.2.1. Porta AND</h1>
+									<p>Para a construção de uma porta AND via o uso de um multiplexador é possível analisar o comportamento geral de um MUX 2x1, em que um input seletor permite escolher qual de duas entradas irá corresponder a saída.</p>
+									<MuxAndTable/>
+									<p>Revisando a tabela verdade de um componente AND, percebe-se que a uma vez com a entrada A sendo verdadeira, o valor da saída é correspondente ao valor da entrada B. Assim, é possível construir uma  porta AND via o uso de A como o input seletor, com as duas entradas do MUX sendo uma entrada nula 0 e uma entrada B, dessa forma a saída default (seletor não ativo) é sempre 0 e uma vez com seletor ativo a entrada B define o valor da saída.</p>
+								</Section>
+								<Section id="complex-combinatorial-circuits-logic-gates-not">
+									<h1>3.2.2. Porta NOT</h1>
+									<p>A porta NOT pode ser construída de forma análoga, em que basta que a entrada a ser negada seja o input seletor do MUX, com as entradas sendo escolhidas de forma inversa: primeira entrada 1 (escolhida quando seletor é falso) e segunda entrada 0 (escolhida quando seletor é verdadeiro).</p>
+								</Section>
+								<Section id="complex-combinatorial-circuits-logic-gates-nand">
+									<h1>3.2.3. Porta NAND</h1>
+									<p>Relembrando as propriedades de uma porta NAND, ela pode ser representada por NAND = NOT (A AND B) com a seguinte tabela verdade:</p>
+									<MuxNandTable/>
+									<p>A tabela teve seus valores de output destacados pois apresentam um comportamento interessante para os propósitos do exercício: quando o valor da entrada A é falso, a saída é sempre 1, mas quando o valor de A é verdadeiro, o output observado é equivalente ao inverso da entrada de B. Assim, é possível construir uma porta lógica NAND via dois multiplexadores 2x1, um para inverter o sinal de entrada B, transformando-o em um seletor de entradas 1 e 0 (ou seja, uma porta NOT), e outro utilizando o sinal A como seletor de uma entrada 1 quando A = 0 e NOT B quando A = 1 persistida do MUX anterior.</p>
+								</Section>
+								<Section id="complex-combinatorial-circuits-logic-gates-or">
+									<h1>3.2.4. Porta OR</h1>
+									<p>Observando-se a tabela verdade:</p>
+									<MuxOrTable/>
+									<p>Percebe-se que a forma de obter a porta OR é análoga a construção da uma porta AND, com a diferença sendo em qual caso uma certa entrada é selecionada. Uma vez com a entrada A sendo verdadeira, o valor da saída é sempre 1, mas quando é falsa a saída é correspondente ao valor da entrada B. Assim, é possível construir uma  porta OR via o uso de A como o input seletor, com as duas entradas do MUX sendo uma entrada 1 e uma entrada B, dessa forma a saída default (seletor não ativo) é definida pela entrada B e uma vez com seletor ativo saída é sempre 1.</p>
+								</Section>
+								<Section id="complex-combinatorial-circuits-logic-gates-nor">
+									<h1>3.2.5. Porta NOR</h1>
+									<p>Entendendo a lógica empregada para a criação das portas lógicas NAND e OR, a criação de uma porta NOR ocorre de forma similar. Assim, deve-se empregar o uso de dois multiplexadores, um para a realização da inversão do sinal, e outro para empregar a lógica OR.</p>
+									<MuxNorTable/>
+								</Section>
+								<Section id="complex-combinatorial-circuits-logic-gates-xor">
+									<h1>3.2.6. Porta XOR</h1>
+									<p>Uma porta XOR segue a seguinte tabela verdade:</p>
+									<MuxXorTable/>
+									<p>Percebe-se então que essa porta possui uma lógica similar à empregada pelas portas NAND e NOR, mas com o detalhe diferencial sendo o fato que a entrada A faz a escolha se o valor da saída final será a entrada B natural ou B invertida. Ou seja, o primeiro MUX é uma porta NOT e o segundo faz a escolha entre B e NOT B.</p>
+								</Section>
+								<Section id="complex-combinatorial-circuits-logic-gates-xnor">
+									<h1>3.2.7. Porta XNOR</h1>
+									<p>A porta XNOR demonstra o inverso do funcionamento da porta NOR, com sua tabela verdade sendo observada abaixo:</p>
+									<MuxXnorTable/>
+									<p>Analogamente ao observado em XOR, uma mesma lógica pode ser empregada para a criação da porta via o uso de dois multiplexadores: a entrada A faz a escolha se o valor da saída final será a entrada B invertida ou B natural. Ou seja, o primeiro MUX é uma porta NOT e o segundo faz a escolha entre NOT B e B.</p>
+								</Section>
+
+
+
+
+								<Section id="complex-combinatorial-circuits-encoder">
+									<h1>3.3. Codificadores (Encoders)</h1>
+									<p>Um codificador é um componente responsável por codificar um número binário de 2<sup>n</sup> bits em uma informação de n bits (<b>OBS:</b> valores de input e output também são comumente referidos como linhas).</p>
+									<p>Algumas tabelas verdades podem ser disponibilizadas para facilitar a compreensão de seu funcionamento:</p>
+									<p><b>n = 1:</b></p>
+									<p>Para o caso, observa-se que a primeira linha de entrada  resulta na saída 0, ou seja, ele codificou o valor de 01 no valor 0.</p>
+									<Encoder1Table/>
+
+									<p><b>n = 2:</b></p>
+									<p>Analogamente, o mesmo ocorre para o caso de 2 outputs;</p>
+									<Encoder2Table/>
+
+									<p><b>n = 3:</b></p>
+									<p>Seguindo a mesma lógica, um caso de uso comum é a transformação de um sinal de entrada específico em sua representação análoga em binário, ou seja, a entrada 5 representada pela entrada com sinal E5 ativa tem como codificação o número 5 em binário (101).</p>
+									<Encoder3Table/>
+
+									<p>Em seu uso é geralmente considerado que apenas um dos bits de entrada é ativo para cada input, mas existem alternativas que podem considerar mais de um input como ativo, escolhendo assim o bit mais significativo como prioritário na escolha de output, com os demais menos significativos sendo desconsiderados (<i>don’t care</i>).</p>
+									<p>Um exemplo de tabela verdade de um codificador com prioridade é observado a seguir, com x representando a condição de <i>don’t care</i>. Nota-se também a presença de uma saída adicional que define se o input é válido ou não.</p>
+									<EncoderxTable/>
+									<p>A construção do circuito referente ao componente pode ser realizada via a análise da tabela verdade, destacando os valores relativos a 1, ou seja, realizando a soma de mintermos. Com mais entradas é recomendado a realização de um mapa de Karnaugh.</p>
+									<p>Uma representação do elemento pode ser observada a seguir:</p>
+
+									<ImageStyle src={"/images/docs/encoder.png"} alt=""/>
+								</Section>
+
+								<Section id="complex-combinatorial-circuits-demux">
+									<h1>3.4. Demultiplexadores DMUX (Demultiplexers)</h1>
+									<p>Demultiplexadores fazem o inverso de um multiplexador, em que os bits seletores escolhem a partir de uma única entrada o valor da saída. </p>
+									<p>A tabela verdade de um DEMUX 1x2 pode ser observada a seguir:</p>
+									<Demux1x2Table/>
+									<p>Observa-se que o bit seletor define qual das saídas recebe o valor do input de entrada. Assim, a tabela verdade pode ser simplificada da seguinte forma:</p>
+									<DemuxSimplifiedTable/>
+									<p>Analogamente, um DEMUX 1x4 poderia ser representado da seguinte forma, com os demais demultiplexadores seguindo o mesmo padrão.</p>
+									<Demux1x4Table/>
+									<p>Uma representação de um demultiplexador 1x2 pode ser observada a seguir:</p>
+									<ImageStyle src={"/images/docs/DEMUX1x2.png"} alt=""/>
+									<p>Uma representação de um demultiplexador 1x4 pode ser observada a seguir:</p>
+									<ImageStyle src={"/images/docs/DEMUX1x4.png"} alt=""/>
+								</Section>
+
+								<Section id="complex-combinatorial-circuits-decoder">
+									<h1>3.5. Codificadores (Encoders)</h1>
+									<p>Com funcionamento inverso a um codificador, decodificadores são componentes cujo objetivo é decodificar um número binário de n bits em um de 2<sup>n</sup>.</p>
+									<p>Duas tabelas verdades de casos comuns podem ser disponibilizadas para facilitar a compreensão de seu funcionamento:</p>
+								</Section>
+
+
+
+								<Section id="arithmetic-circuits">
+									<h1>4. Circuitos aritméticos</h1>
+								</Section>
+								<Section id="arithmetic-circuits-half-adder">
+									<h1>4.1. HALF ADDER</h1>
+									<p></p>
+									<p></p>
+								</Section>
+
+								<Section id="arithmetic-circuits-full-adder">
+									<h1>4.2. FULL ADDER</h1>
+									<p></p>
+									<p></p>
+								</Section>
+
+								<Section id="arithmetic-circuits-n-bit-adder">
+									<h1>4.3. n-BIT ADDER</h1>
+									<p>Com os FULL ADDERS em mãos, é possível manipulá-los para criar um componentes que possa atuar como somador de não apenas dois bits, mas de quaisquer n bits. Para isso, basta que eles sejam concatenados em cascata de forma que os sinais de carry-out de somas de bits menos significativos enviem os sinais para os carry-in de bits mais significativos.</p>
+								</Section>
+
+								<Section id="arithmetic-circuits-alu">
+									<h1>4.4. ALU (Arithmetic Logic Unit)</h1>
+									<p></p>
+									<p></p>
+								</Section>
+
+
+
+								<Section id="sequential-circuits">
+									<h1>5. Circuitos sequenciais</h1>
+								</Section>
+								<Section id="sequential-circuits-latch">
+									<h1>5.1. LATCH</h1>
+									<p></p>
+									<p></p>
+								</Section>
+								<Section id="sequential-circuits-latch-sr">
+									<h1>5.1.1. SR Latches (Set-Reset)</h1>
+									<p></p>
+									<p></p>
+								</Section>
+								<Section id="sequential-circuits-latch-d">
+									<h1>5.1.2. D Latches (Data ou Transparente)</h1>
+									<p></p>
+									<p></p>
+								</Section>
+								<Section id="sequential-circuits-latch-t">
+									<h1>5.1.3. T Latches (Toggle)
+									</h1>
+									<p></p>
+									<p></p>
+								</Section>
+
+								<Section id="sequential-circuits-flip-flop">
+									<h1>5.2. FLIP-FLOP</h1>
+									<p></p>
+									<p></p>
+								</Section>
+
+								<Section id="sequential-circuits-register">
+									<h1>5.3. REGISTER</h1>
+									<p></p>
+									<p></p>
+								</Section>
+
+								<Section id="sequential-circuits-couter">
+									<h1>5.4. COUNTER</h1>
+									<p></p>
+									<p></p>
+								</Section>
+								<Section id="sequential-circuits-couter-async">
+									<h1>5.4.1. Contadores assíncronos</h1>
+									<p></p>
+									<p></p>
+								</Section>
+								<Section id="sequential-circuits-couter-sync">
+									<h1>5.4.1. Contadores síncronos</h1>
+									<p></p>
+									<p></p>
+								</Section>
+
+								<Section id="sequential-circuits-shift">
+									<h1>5.5. SHIFT-REGISTERS (Deslocadores)</h1>
+									<p></p>
+									<p></p>
+								</Section>
+								<Section id="sequential-circuits-shift-siso">
+									<h1>5.5.1. Serial-in serial-out</h1>
+									<p></p>
+									<p></p>
+								</Section>
+								<Section id="sequential-circuits-shift-siso">
+									<h1>5.5.2. Serial-in serial-out</h1>
+									<p></p>
+									<p></p>
+								</Section>
+								<Section id="sequential-circuits-shift-siso">
+									<h1>5.5.3. Serial-in serial-out</h1>
+									<p></p>
+									<p></p>
+								</Section>
+								<Section id="sequential-circuits-shift-siso">
+									<h1>5.5.4. Serial-in serial-out</h1>
+									<p></p>
+									<p></p>
+								</Section>
+								<Section id="sequential-circuits-shift-siso">
+									<h1>5.5.5. Serial-in serial-out</h1>
+									<p></p>
+									<p></p>
+								</Section>
+								<Section id="sequential-circuits-shift-siso">
+									<h1>5.5.6. Serial-in serial-out</h1>
+									<p></p>
+									<p></p>
+								</Section>
+
+
+								<Section id="memory">
+									<h1>6. Memórias</h1>
+								</Section>
+
+								<Section id="memory-ram">
+									<h1>6.1. Memória RAM</h1>
+									<p></p>
+									<p></p>
+								</Section>
+
+								<Section id="memory-rom">
+									<h1>6.2. Memória ROM</h1>
+									<p></p>
+									<p></p>
+								</Section>
+
+								<Section id="memory-uses">
+									<h1>6.3. Aplicações de memórias</h1>
+									<p>Memórias digitais podem possuir muitas aplicações em computadores, algumas delas estão listadas nas seções seguintes.</p>
+								</Section>
+								<Section id="memory-uses-register">
+									<h1>6.3.1. Banco de registradores</h1>
+									<p></p>
+									<p></p>
+								</Section>
+								<Section id="memory-uses-main">
+									<h1>6.3.2. Memória principal</h1>
+									<p></p>
+									<p></p>
+								</Section>
+								<Section id="memory-uses-cache">
+									<h1>6.3.3. Cache</h1>
+									<p></p>
+									<p></p>
+								</Section>
+
+
+								<Section id="state-machine">
+									<h1>7. Máquinas de Estado</h1>
+									<p>Memórias digitais podem possuir muitas aplicações em computadores, algumas delas estão listadas nas seções seguintes.</p>
+								</Section>
+								<Section id="state-machine-example">
+									<h1>7.1. Exemplo</h1>
+									<p></p>
+									<p></p>
+									<NextStateTable/>
+								</Section>
+
+
+								<Section id="datapath">
+									<h1>8. Fluxo de dados & Unidade de controle</h1>
+									<p>Um sistema digital pode ser dito como a união entre o fluxo de dados com a unidade de controle. Assim, é necessário compreender o papel destes dois elementos para melhor compreender como construir circuitos e sistemas digitais.</p>
+									<p><b>Fluxo de dados:</b> ele é responsável por armazenar, rotear, combinação e processar dos dados de um circuito lógico, necessitando ser construído como um circuito no nível de transferência de registradores para que os dados possam ser usados pelos componentes combinatórios internos ao circuito lógico criado, com as informações fluindo através de componentes de memória e registradores.</p>
+									<p>Ele recebe comandos da unidade de controle, sendo composto por componentes como registradores, memórias, elementos funcionais, etc.</p>
+									<p><b>Unidade de controle:</b> ele é responsável pelo controle e sequenciamento das operações realizadas pelo circuito lógico criado, comunicando-se com o fluxo de dados para o envio de sinais de tomada de decisões, definindo o comportamento de elementos como componentes combinatórios do fluxo de dados e elementos registradores. Em geral, a unidade de controle é desenvolvida a partir de um circuito sequencial fundamentado em uma máquina de estados finita.</p>
+									<p>A seguir pode ser observada uma figura exemplificando uma unidade de controle e um fluxo de dados:</p>
+									<ImageStyle src={"/images/docs/DatapathControlUnit.png"} alt=""/>
+								</Section>
+
+								<Section id="strategies">
+									<h1>8. Estratégias de projeto de sistemas</h1>
+									<p>A estratégia de modularização refere-se a fragmentação de um sistema mais complexo em partes mais simples que podem ser projetadas e testadas individualmente, sem precisar integrá-las ao circuito completo, facilitando aspectos essenciais como otimização e depuração. Ou seja, no contexto observado, torna-se possível o desenvolvimento de componentes de unidades funcionais para então se construir um elemento complexo posteriormente. Assim, a modularização se torna uma estratégia essencial para a projeção de sistemas como processadores.</p>
+									<p>Ademais, com relação a paradigmas de desenvolvimento, existem duas abordagens relevantes que devem ser comentadas: a top-down e a bottom-up.</p>
+									<p>A <b>top-down</b> é uma abordagem que inicia com uma visão geral do sistema a ser desenvolvido,  partindo do alto-nível e decompondo-o então em partes menores para então identificar seus requisitos e melhor implementar componentes e circuitos lógicos de seus módulos funcionais. Dessa forma, o aspecto de modularização previamente estudado permite que estas partes menores sejam melhor gerenciadas, desenvolvendo estes módulos de maneira independente.</p>
+									<p>Já a <b>bottom-up</b> é fundamentada no desenvolvimento de um sistema a partir de seus elementos mais simples, criando inicialmente os componentes individuais para que eles sejam posteriormente integrados para formar o sistema final, com a visão global do sistema não sendo definida no início do processo. Deve-se mencionar, contudo, que a ausência de uma visão global pode dificultar a integração final quando comparada com a metodologia empregada em top-down.</p>
+									<p>Destarte, estratégias que melhor gerenciam a hierarquia de componentes podem facilitar o desenvolvimento de módulos complexos, uma vez que podem ser implementados a partir de módulos mais básicos.</p>
+								</Section>
+
+								<Section id="processor">
+									<h1>3.4. Arquitetura de um processador</h1>
+									<p>Por fim, como um exemplo de um processador RISC-V, a seguinte imagem detalha seu fluxo de dados e unidade de controle (PATTERSON; HENNESSY, 2014):</p>
+									<ImageStyle src={"/images/docs/riscV.png"} alt=""/>
+								</Section>
+
 							</Padding>
 							
 						</ScrollContainer>
@@ -637,21 +923,21 @@ const AndTable = () => {
 					<td>0</td>
 					<td>0</td>
 				</tr>
-        <tr>
+				<tr>
 					<td>0</td>
 					<td>1</td>
 					<td>0</td>
-        </tr>
-        <tr>
+				</tr>
+				<tr>
 					<td>1</td>
 					<td>0</td>
 					<td>0</td>
-        </tr>
-        <tr>
+				</tr>
+				<tr>
 					<td>1</td>
 					<td>1</td>
 					<td>1</td>
-        </tr>
+        		</tr>
 			</tbody>
 		</Table>
 	)
@@ -708,22 +994,22 @@ const NorTable = () => {
 					<td>0</td>
 					<td>0</td>
 					<td>1</td>
-        </tr>
-        <tr>
+				</tr>
+				<tr>
 					<td>0</td>
 					<td>1</td>
 					<td>0</td>
-        </tr>
-        <tr>
+				</tr>
+				<tr>
 					<td>1</td>
 					<td>0</td>
 					<td>0</td>
-        </tr>
-        <tr>
+				</tr>
+				<tr>
 					<td>1</td>
 					<td>1</td>
 					<td>0</td>
-        </tr>
+        		</tr>
 			</tbody>
 		</Table>
 	)
@@ -744,22 +1030,22 @@ const XorTable = () => {
 					<td>0</td>
 					<td>0</td>
 					<td>0</td>
-        </tr>
-        <tr>
+				</tr>
+				<tr>
 					<td>0</td>
 					<td>1</td>
 					<td>1</td>
-        </tr>
-        <tr>
+				</tr>
+				<tr>
 					<td>1</td>
 					<td>0</td>
 					<td>1</td>
-        </tr>
-        <tr>
+				</tr>
+				<tr>
 					<td>1</td>
 					<td>1</td>
 					<td>0</td>
-        </tr>
+				</tr>
 			</tbody>
 		</Table>
 	)
@@ -782,23 +1068,23 @@ const MuxNx1Table = () => {
 					<td>0</td>
 					<td rowspan="2">valor irrelevante</td>
 					<td>0</td>
-        </tr>
-        <tr>
+				</tr>
+				<tr>
 					<td>0</td>
 					<td>1</td>
 					<td>1</td>
-        </tr>
-        <tr>
+				</tr>
+				<tr>
 					<td>1</td>
 					<td rowspan="2">valor irrelevante</td>
 					<td>0</td>
 					<td>1</td>
-        </tr>
-        <tr>
+				</tr>
+				<tr>
 					<td>1</td>
 					<td>1</td>
 					<td>0</td>
-        </tr>
+        		</tr>
 			</tbody>
 		</Table>
 	)
@@ -821,13 +1107,13 @@ const MuxNx1CompactTable = () => {
 					<td>valor bit A</td>
 					<td>-</td>
 					<td>valor bit A</td>
-        </tr>
-        <tr>
+				</tr>
+				<tr>
 					<td>1</td>
 					<td>-</td>
 					<td>valor bit B</td>
 					<td>valor bit B</td>
-        </tr>
+        		</tr>
 			</tbody>
 		</Table>
 	)
@@ -856,8 +1142,8 @@ const Mux4x1Table = () => {
 					<td>-</td>
 					<td>-</td>
 					<td>valor bit A</td>
-        </tr>
-        <tr>
+				</tr>
+				<tr>
 					<td>0</td>
 					<td>1</td>
 					<td>-</td>
@@ -865,7 +1151,7 @@ const Mux4x1Table = () => {
 					<td>-</td>
 					<td>-</td>
 					<td>valor bit B</td>
-        </tr>
+       			</tr>
 				<tr>
 					<td>1</td>
 					<td>0</td>
@@ -874,7 +1160,7 @@ const Mux4x1Table = () => {
 					<td>valor bit C</td>
 					<td>-</td>
 					<td>valor bit C</td>
-        </tr>
+        		</tr>
 				<tr>
 					<td>1</td>
 					<td>1</td>
@@ -883,7 +1169,985 @@ const Mux4x1Table = () => {
 					<td>-</td>
 					<td>valor bit D</td>
 					<td>valor bit D</td>
-        </tr>
+        		</tr>
+			</tbody>
+		</Table>
+	)
+}
+
+const MuxAndTable = () => {
+	return(
+		<Table>
+			<thead>
+				<tr>
+					<CustomTh color={Colors.DocsBlue}>Entrada A</CustomTh>
+					<CustomTh color={Colors.DocsBlue}>Entrada B</CustomTh>
+					<CustomTh color={Colors.DocsGreen}>Saída</CustomTh>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>0</td>
+					<td>0</td>
+					<td>0</td>
+				</tr>
+				<tr>
+					<td>0</td>
+					<td>1</td>
+					<td>0</td>
+        		</tr>
+				<tr>
+					<td><CustomTh color={Colors.DocsYellow}>1</CustomTh></td>
+					<td><CustomTh color={Colors.DocsOrange}>0</CustomTh></td>
+					<td><CustomTh color={Colors.DocsOrange}>0</CustomTh></td>
+        		</tr>
+				<tr>
+					<td><CustomTh color={Colors.DocsYellow}>1</CustomTh></td>
+					<td><CustomTh color={Colors.DocsOrange}>1</CustomTh></td>
+					<td><CustomTh color={Colors.DocsOrange}>1</CustomTh></td>
+        		</tr>
+			</tbody>
+		</Table>
+	)
+}
+
+const MuxNandTable = () => {
+	return(
+		<Table>
+			<thead>
+				<tr>
+					<CustomTh color={Colors.DocsBlue}>Entrada A</CustomTh>
+					<CustomTh color={Colors.DocsBlue}>Entrada B</CustomTh>
+					<CustomTh color={Colors.DocsGreen}>Saída</CustomTh>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>0</td>
+					<td>0</td>
+					<td><CustomTh color={Colors.DocsYellow}>1</CustomTh></td>
+				</tr>
+				<tr>
+					<td>0</td>
+					<td>1</td>
+					<td><CustomTh color={Colors.DocsYellow}>1</CustomTh></td>
+        		</tr>
+				<tr>
+					<td>1</td>
+					<td>0</td>
+					<td><CustomTh color={Colors.DocsOrange}>1</CustomTh></td>
+        		</tr>
+				<tr>
+					<td>1</td>
+					<td>1</td>
+					<td><CustomTh color={Colors.DocsOrange}>0</CustomTh></td>
+        		</tr>
+			</tbody>
+		</Table>
+	)
+}
+
+const MuxOrTable = () => {
+	return(
+		<Table>
+			<thead>
+				<tr>
+					<CustomTh color={Colors.DocsBlue}>Entrada A</CustomTh>
+					<CustomTh color={Colors.DocsBlue}>Entrada B</CustomTh>
+					<CustomTh color={Colors.DocsGreen}>Saída</CustomTh>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td><CustomTh color={Colors.DocsYellow}>0</CustomTh></td>
+					<td><CustomTh color={Colors.DocsOrange}>0</CustomTh></td>
+					<td><CustomTh color={Colors.DocsOrange}>0</CustomTh></td>
+				</tr>
+				<tr>
+					<td><CustomTh color={Colors.DocsYellow}>0</CustomTh></td>
+					<td><CustomTh color={Colors.DocsOrange}>1</CustomTh></td>
+					<td><CustomTh color={Colors.DocsOrange}>1</CustomTh></td>
+        		</tr>
+				<tr>
+					<td>1</td>
+					<td>0</td>
+					<td>1</td>
+        		</tr>
+				<tr>
+					<td>1</td>
+					<td>1</td>
+					<td>1</td>
+        		</tr>
+			</tbody>
+		</Table>
+	)
+}
+
+const MuxNorTable = () => {
+	return(
+		<Table>
+			<thead>
+				<tr>
+					<CustomTh color={Colors.DocsBlue}>Entrada A</CustomTh>
+					<CustomTh color={Colors.DocsBlue}>Entrada B</CustomTh>
+					<CustomTh color={Colors.DocsGreen}>Saída</CustomTh>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>0</td>
+					<td>0</td>
+					<td>1</td>
+				</tr>
+				<tr>
+					<td>1</td>
+					<td>0</td>
+					<td>1</td>
+        		</tr>
+				<tr>
+					<td>1</td>
+					<td>0</td>
+					<td>0</td>
+        		</tr>
+				<tr>
+					<td>1</td>
+					<td>1</td>
+					<td>0</td>
+        		</tr>
+			</tbody>
+		</Table>
+	)
+}
+
+const MuxXorTable = () => {
+	return(
+		<Table>
+			<thead>
+				<tr>
+					<CustomTh color={Colors.DocsBlue}>Entrada A</CustomTh>
+					<CustomTh color={Colors.DocsBlue}>Entrada B</CustomTh>
+					<CustomTh color={Colors.DocsGreen}>Saída</CustomTh>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>0</td>
+					<td>0</td>
+					<td>0</td>
+				</tr>
+				<tr>
+					<td>0</td>
+					<td>1</td>
+					<td>1</td>
+        		</tr>
+				<tr>
+					<td>1</td>
+					<td>0</td>
+					<td>1</td>
+        		</tr>
+				<tr>
+					<td>1</td>
+					<td>1</td>
+					<td>0</td>
+        		</tr>
+			</tbody>
+		</Table>
+	)
+}
+
+const MuxXnorTable = () => {
+	return(
+		<Table>
+			<thead>
+				<tr>
+					<CustomTh color={Colors.DocsBlue}>Entrada A</CustomTh>
+					<CustomTh color={Colors.DocsBlue}>Entrada B</CustomTh>
+					<CustomTh color={Colors.DocsGreen}>Saída</CustomTh>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>0</td>
+					<td>0</td>
+					<td>1</td>
+				</tr>
+				<tr>
+					<td>0</td>
+					<td>1</td>
+					<td>0</td>
+        		</tr>
+				<tr>
+					<td>1</td>
+					<td>0</td>
+					<td>0</td>
+        		</tr>
+				<tr>
+					<td>1</td>
+					<td>1</td>
+					<td>1</td>
+        		</tr>
+			</tbody>
+		</Table>
+	)
+}
+
+const Encoder1Table = () => {
+	return(
+		<Table>
+			<thead>
+				<tr>
+					<CustomTh color={Colors.DocsBlue}>E1</CustomTh>
+					<CustomTh color={Colors.DocsBlue}>E0</CustomTh>
+					<CustomTh color={Colors.DocsGreen}>S</CustomTh>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>0</td>
+					<td>1</td>
+					<td>0</td>
+				</tr>
+				<tr>
+					<td>1</td>
+					<td>0</td>
+					<td>1</td>
+        		</tr>
+			</tbody>
+		</Table>
+	)
+}
+
+const Encoder2Table = () => {
+	return(
+		<Table>
+			<thead>
+				<tr>
+					<CustomTh color={Colors.DocsBlue}>E3</CustomTh>
+					<CustomTh color={Colors.DocsBlue}>E2</CustomTh>
+					<CustomTh color={Colors.DocsBlue}>E1</CustomTh>
+					<CustomTh color={Colors.DocsBlue}>E0</CustomTh>
+					<CustomTh color={Colors.DocsGreen}>S1</CustomTh>
+					<CustomTh color={Colors.DocsGreen}>S0</CustomTh>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>0</td>
+					<td>0</td>
+					<td>0</td>
+					<td>1</td>
+					<td>0</td>
+					<td>0</td>
+				</tr>
+				<tr>
+					<td>0</td>
+					<td>0</td>
+					<td>1</td>
+					<td>0</td>
+					<td>0</td>
+					<td>1</td>
+        		</tr>
+				<tr>
+					<td>0</td>
+					<td>1</td>
+					<td>0</td>
+					<td>0</td>
+					<td>1</td>
+					<td>0</td>
+        		</tr>
+				<tr>
+					<td>1</td>
+					<td>0</td>
+					<td>0</td>
+					<td>0</td>
+					<td>1</td>
+					<td>1</td>
+        		</tr>
+			</tbody>
+		</Table>
+	)
+}
+
+const Encoder3Table = () => {
+	return(
+		<Table>
+			<thead>
+				<tr>
+					<CustomTh color={Colors.DocsBlue}>E7</CustomTh>
+					<CustomTh color={Colors.DocsBlue}>E6</CustomTh>
+					<CustomTh color={Colors.DocsBlue}>E5</CustomTh>
+					<CustomTh color={Colors.DocsBlue}>E4</CustomTh>
+					<CustomTh color={Colors.DocsBlue}>E3</CustomTh>
+					<CustomTh color={Colors.DocsBlue}>E2</CustomTh>
+					<CustomTh color={Colors.DocsBlue}>E1</CustomTh>
+					<CustomTh color={Colors.DocsBlue}>E0</CustomTh>
+					<CustomTh color={Colors.DocsGreen}>S2</CustomTh>
+					<CustomTh color={Colors.DocsGreen}>S1</CustomTh>
+					<CustomTh color={Colors.DocsGreen}>S0</CustomTh>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>0</td>
+					<td>0</td>
+					<td>0</td>
+					<td>0</td>
+					<td>0</td>
+					<td>0</td>
+					<td>0</td>
+					<td>1</td>
+
+					<td>0</td>
+					<td>0</td>
+					<td>0</td>
+				</tr>
+				<tr>
+					<td>0</td>
+					<td>0</td>
+					<td>0</td>
+					<td>0</td>
+					<td>0</td>
+					<td>0</td>
+					<td>1</td>
+					<td>0</td>
+
+					<td>0</td>
+					<td>0</td>
+					<td>1</td>
+        		</tr>
+				<tr>
+					<td>0</td>
+					<td>0</td>
+					<td>0</td>
+					<td>0</td>
+					<td>0</td>
+					<td>1</td>
+					<td>0</td>
+					<td>0</td>
+
+					<td>0</td>
+					<td>1</td>
+					<td>0</td>
+        		</tr>
+				<tr>
+					<td>0</td>
+					<td>0</td>
+					<td>0</td>
+					<td>0</td>
+					<td>1</td>
+					<td>0</td>
+					<td>0</td>
+					<td>0</td>
+
+					<td>0</td>
+					<td>1</td>
+					<td>1</td>
+        		</tr>
+				<tr>
+					<td>0</td>
+					<td>0</td>
+					<td>0</td>
+					<td>1</td>
+					<td>0</td>
+					<td>0</td>
+					<td>0</td>
+					<td>0</td>
+
+					<td>1</td>
+					<td>0</td>
+					<td>0</td>
+				</tr>
+				<tr>
+					<td>0</td>
+					<td>0</td>
+					<td>1</td>
+					<td>0</td>
+					<td>0</td>
+					<td>0</td>
+					<td>0</td>
+					<td>0</td>
+
+
+					<td>1</td>
+					<td>0</td>
+					<td>1</td>
+				</tr>
+				<tr>
+					<td>0</td>
+					<td>1</td>
+					<td>0</td>
+					<td>0</td>
+					<td>0</td>
+					<td>0</td>
+					<td>0</td>
+					<td>0</td>
+
+					<td>1</td>
+					<td>1</td>
+					<td>0</td>
+				</tr>
+				<tr>
+					<td>1</td>
+					<td>0</td>
+					<td>0</td>
+					<td>0</td>
+					<td>0</td>
+					<td>0</td>
+					<td>0</td>
+					<td>0</td>
+
+					<td>1</td>
+					<td>1</td>
+					<td>1</td>
+				</tr>
+			</tbody>
+		</Table>
+	)
+}
+
+const EncoderxTable = () => {
+	return(
+		<Table>
+			<thead>
+				<tr>
+					<CustomTh color={Colors.DocsBlue}>E3</CustomTh>
+					<CustomTh color={Colors.DocsBlue}>E2</CustomTh>
+					<CustomTh color={Colors.DocsBlue}>E1</CustomTh>
+					<CustomTh color={Colors.DocsBlue}>E0</CustomTh>
+					<CustomTh color={Colors.DocsGreen}>S1</CustomTh>
+					<CustomTh color={Colors.DocsGreen}>S0</CustomTh>
+					<CustomTh color={Colors.DocsYellow}>Válido</CustomTh>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>0</td>
+					<td>0</td>
+					<td>0</td>
+					<td>0</td>
+					<td colspan="2">x</td>
+					<td>0</td>
+				</tr>
+				<tr>
+					<td>0</td>
+					<td>0</td>
+					<td>0</td>
+					<td>1</td>
+					<td>0</td>
+					<td>0</td>
+					<td>1</td>
+				</tr>
+				<tr>
+					<td>0</td>
+					<td>0</td>
+					<td>1</td>
+					<td>x</td>
+					<td>0</td>
+					<td>1</td>
+					<td>1</td>
+				</tr>
+				<tr>
+					<td>0</td>
+					<td>1</td>
+					<td>x</td>
+					<td>x</td>
+					<td>1</td>
+					<td>0</td>
+					<td>1</td>
+				</tr>
+				<tr>
+					<td>1</td>
+					<td>x</td>
+					<td>x</td>
+					<td>x</td>
+					<td>1</td>
+					<td>1</td>
+					<td>1</td>
+				</tr>
+			</tbody>
+		</Table>
+	)
+}
+
+const Demux1x2Table = () => {
+	return(
+		<Table>
+			<thead>
+				<tr>
+					<CustomTh color={Colors.DocsBlue}>Entrada</CustomTh>
+					<CustomTh color={Colors.DocsYellow}>Bit seletor/controle</CustomTh>
+					<CustomTh color={Colors.DocsGreen}>Saída A</CustomTh>
+					<CustomTh color={Colors.DocsGreen}>Saída B</CustomTh>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>0</td>
+					<td>0</td>
+					<td>0</td>
+					<td>0</td>
+				</tr>
+				<tr>
+					<td>0</td>
+					<td>1</td>
+					<td>0</td>
+					<td>0</td>
+				</tr>
+				<tr>
+					<td>1</td>
+					<td>0</td>
+					<td>1</td>
+					<td>0</td>
+				</tr>
+				<tr>
+					<td>1</td>
+					<td>1</td>
+					<td>0</td>
+					<td>1</td>
+				</tr>
+			</tbody>
+		</Table>
+	)
+}
+
+const DemuxSimplifiedTable = () => {
+	return(
+		<Table>
+			<thead>
+				<tr>
+					<CustomTh color={Colors.DocsYellow}>Bit seletor/controle</CustomTh>
+					<CustomTh color={Colors.DocsGreen}>Saída A</CustomTh>
+					<CustomTh color={Colors.DocsGreen}>Saída B</CustomTh>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>0</td>
+					<td>Entrada</td>
+					<td>0</td>
+				</tr>
+				<tr>
+					<td>1</td>
+					<td>0</td>
+					<td>Entrada</td>
+				</tr>
+			</tbody>
+		</Table>
+	)
+}
+
+const Demux1x4Table = () => {
+	return(
+		<Table>
+			<thead>
+				<tr>
+					<CustomTh color={Colors.DocsYellow}>Seletor 1</CustomTh>
+					<CustomTh color={Colors.DocsYellow}>Seletor 0</CustomTh>
+					<CustomTh color={Colors.DocsGreen}>Saída 3</CustomTh>
+					<CustomTh color={Colors.DocsGreen}>Saída 2</CustomTh>
+					<CustomTh color={Colors.DocsGreen}>Saída 1</CustomTh>
+					<CustomTh color={Colors.DocsGreen}>Saída 0</CustomTh>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>0</td>
+					<td>0</td>
+					<td>0</td>
+					<td>0</td>
+					<td>0</td>
+					<td>Entrada</td>
+				</tr>
+				<tr>
+					<td>0</td>
+					<td>1</td>
+					<td>0</td>
+					<td>0</td>
+					<td>Entrada</td>
+					<td>0</td>
+				</tr>
+				<tr>
+					<td>1</td>
+					<td>0</td>
+					<td>0</td>
+					<td>Entrada</td>
+					<td>0</td>
+					<td>0</td>
+				</tr>
+				<tr>
+					<td>1</td>
+					<td>1</td>
+					<td>Entrada</td>
+					<td>0</td>
+					<td>0</td>
+					<td>0</td>
+				</tr>
+			</tbody>
+		</Table>
+	)
+}
+
+const Decoder1Table = () => {
+	return(
+		<Table>
+			<thead>
+				<tr>
+					<CustomTh color={Colors.DocsBlue}>Entrada</CustomTh>
+					<CustomTh color={Colors.DocsGreen}>Saída 1</CustomTh>
+					<CustomTh color={Colors.DocsGreen}>Saída 0</CustomTh>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>0</td>
+					<td>0</td>
+					<td><CustomTh color={Colors.DocsYellow}>1</CustomTh></td>
+				</tr>
+				<tr>
+					<td>1</td>
+					<td><CustomTh color={Colors.DocsYellow}>1</CustomTh></td>
+					<td>0</td>
+        		</tr>
+			</tbody>
+		</Table>
+	)
+}
+
+const Decoder2Table = () => {
+	return(
+		<Table>
+			<thead>
+				<tr>
+					<CustomTh color={Colors.DocsBlue}>Entrada 1</CustomTh>
+					<CustomTh color={Colors.DocsBlue}>Entrada 0</CustomTh>
+					<CustomTh color={Colors.DocsGreen}>Saída 3</CustomTh>
+					<CustomTh color={Colors.DocsGreen}>Saída 2</CustomTh>
+					<CustomTh color={Colors.DocsGreen}>Saída 1</CustomTh>
+					<CustomTh color={Colors.DocsGreen}>Saída 0</CustomTh>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>0</td>
+					<td>0</td>
+					<td>0</td>
+					<td>0</td>
+					<td>0</td>
+					<td><CustomTh color={Colors.DocsYellow}>1</CustomTh></td>
+				</tr>
+				<tr>
+					<td>0</td>
+					<td>1</td>
+					<td>0</td>
+					<td>0</td>
+					<td><CustomTh color={Colors.DocsYellow}>1</CustomTh></td>
+					<td>0</td>
+        		</tr>
+				<tr>
+					<td>1</td>
+					<td>0</td>
+					<td>0</td>
+					<td><CustomTh color={Colors.DocsYellow}>1</CustomTh></td>
+					<td>0</td>
+					<td>0</td>
+        		</tr>
+				<tr>
+					<td>1</td>
+					<td>1</td>
+					<td><CustomTh color={Colors.DocsYellow}>1</CustomTh></td>
+					<td>0</td>
+					<td>0</td>
+					<td>0</td>
+        		</tr>
+			</tbody>
+		</Table>
+	)
+}
+
+const HalfAdderTable = () => {
+	return(
+		<Table>
+			<thead>
+				<tr>
+					<CustomTh color={Colors.DocsBlue}>Entrada A</CustomTh>
+					<CustomTh color={Colors.DocsBlue}>Entrada B</CustomTh>
+					<CustomTh color={Colors.DocsGreen}>Carry-out</CustomTh>
+					<CustomTh color={Colors.DocsOrange}>Soma</CustomTh>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>0</td>
+					<td>0</td>
+					<td>0</td>
+					<td>0</td>
+				</tr>
+				<tr>
+					<td>0</td>
+					<td>1</td>
+					<td>0</td>
+					<td>1</td>
+        		</tr>
+				<tr>
+					<td>1</td>
+					<td>0</td>
+					<td>0</td>
+					<td>1</td>
+        		</tr>
+				<tr>
+					<td>1</td>
+					<td>1</td>
+					<td>1</td>
+					<td>0</td>
+        		</tr>
+			</tbody>
+		</Table>
+	)
+}
+
+const FullAdderTable = () => {
+	return(
+		<Table>
+			<thead>
+				<tr>
+					<CustomTh color={Colors.DocsBlue}>Entrada A</CustomTh>
+					<CustomTh color={Colors.DocsBlue}>Entrada B</CustomTh>
+					<CustomTh color={Colors.DocsBlue}>Carry-in</CustomTh>
+					<CustomTh color={Colors.DocsGreen}>Carry-out</CustomTh>
+					<CustomTh color={Colors.DocsOrange}>Soma</CustomTh>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>0</td>
+					<td>0</td>
+					<td>0</td>
+					<td>0</td>
+					<td>0</td>
+				</tr>
+				<tr>
+					<td>0</td>
+					<td>1</td>
+					<td>0</td>
+					<td>0</td>
+					<td>1</td>
+        		</tr>
+				<tr>
+					<td>1</td>
+					<td>0</td>
+					<td>0</td>
+					<td>0</td>
+					<td>1</td>
+        		</tr>
+				<tr>
+					<td>1</td>
+					<td>1</td>
+					<td>0</td>
+					<td>1</td>
+					<td>0</td>
+        		</tr>
+				<tr>
+					<td><CustomTh color={Colors.DocsYellow}>0</CustomTh></td>
+					<td><CustomTh color={Colors.DocsYellow}>0</CustomTh></td>
+					<td><CustomTh color={Colors.DocsYellow}>1</CustomTh></td>
+					<td><CustomTh color={Colors.DocsYellow}>0</CustomTh></td>
+					<td><CustomTh color={Colors.DocsYellow}>1</CustomTh></td>
+        		</tr>
+				<tr>
+					<td><CustomTh color={Colors.DocsYellow}>0</CustomTh></td>
+					<td><CustomTh color={Colors.DocsYellow}>1</CustomTh></td>
+					<td><CustomTh color={Colors.DocsYellow}>1</CustomTh></td>
+					<td><CustomTh color={Colors.DocsYellow}>1</CustomTh></td>
+					<td><CustomTh color={Colors.DocsYellow}>0</CustomTh></td>
+        		</tr>
+				<tr>
+					<td><CustomTh color={Colors.DocsYellow}>1</CustomTh></td>
+					<td><CustomTh color={Colors.DocsYellow}>0</CustomTh></td>
+					<td><CustomTh color={Colors.DocsYellow}>1</CustomTh></td>
+					<td><CustomTh color={Colors.DocsYellow}>1</CustomTh></td>
+					<td><CustomTh color={Colors.DocsYellow}>0</CustomTh></td>
+        		</tr>
+				<tr>
+					<td><CustomTh color={Colors.DocsYellow}>1</CustomTh></td>
+					<td><CustomTh color={Colors.DocsYellow}>1</CustomTh></td>
+					<td><CustomTh color={Colors.DocsYellow}>1</CustomTh></td>
+					<td><CustomTh color={Colors.DocsYellow}>1</CustomTh></td>
+					<td><CustomTh color={Colors.DocsYellow}>1</CustomTh></td>
+        		</tr>
+			</tbody>
+		</Table>
+	)
+}
+
+const CounterTable = () => {
+	return(
+		<Table>
+			<thead>
+				<tr>
+					<CustomTh color={Colors.DocsBlue}>Clock</CustomTh>
+					<CustomTh color={Colors.DocsGreen}>Bit 1</CustomTh>
+					<CustomTh color={Colors.DocsGreen}>Bit 0</CustomTh>
+					<CustomTh color={Colors.DocsOrange}>Contegem</CustomTh>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>0</td>
+					<td>0</td>
+					<td>0</td>
+					<td>0</td>
+				</tr>
+				<tr>
+					<td>1</td>
+					<td>0</td>
+					<td>1</td>
+					<td>1</td>
+        		</tr>
+				<tr>
+					<td>2</td>
+					<td>1</td>
+					<td>0</td>
+					<td>2</td>
+        		</tr>
+				<tr>
+					<td>3</td>
+					<td>1</td>
+					<td>1</td>
+					<td>3</td>
+        		</tr>
+				<tr>
+					<td>4</td>
+					<td>0</td>
+					<td>0</td>
+					<td>4</td>
+        		</tr>
+			</tbody>
+		</Table>
+	)
+}
+
+const StateTable = () => {
+	return(
+		<Table>
+			<thead>
+				<tr>
+					<CustomTh color={Colors.DocsBlue} colspan="2">Estado</CustomTh>
+					<CustomTh color={Colors.DocsBlue}>S1 (bit 1 do estado)</CustomTh>
+					<CustomTh color={Colors.DocsBlue}>S0 (bit 0 do estado)</CustomTh>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<CustomTh color={Colors.DocsBlue}>1</CustomTh>
+					<td>00</td>
+					<td>0</td>
+					<td>0</td>
+				</tr>
+				<tr>
+					<CustomTh color={Colors.DocsBlue}>2</CustomTh>
+					<td>01</td>
+					<td>0</td>
+					<td>1</td>
+        		</tr>
+				<tr>
+					<CustomTh color={Colors.DocsBlue}>3</CustomTh>
+					<td>10</td>
+					<td>1</td>
+					<td>0</td>
+        		</tr>
+				<tr>
+					<CustomTh color={Colors.DocsBlue}>4</CustomTh>
+					<td>11</td>
+					<td>1</td>
+					<td>1</td>
+        		</tr>
+			</tbody>
+		</Table>
+	)
+}
+
+const NextStateTable = () => {
+	return(
+		<Table>
+			<thead>
+				<tr>
+					<CustomTh color={Colors.DocsBlue} colspan="2">Estado atual</CustomTh>
+					<CustomTh color={Colors.DocsGreen} rowspan="2">Botão (B)</CustomTh>
+					<CustomTh color={Colors.DocsYellow} colspan="2">Próximo estado</CustomTh>
+					<CustomTh color={Colors.DocsOrange} rowspan="2">Luz (L)</CustomTh>
+				</tr>
+				<tr>
+					<CustomTh color={Colors.DocsBlue}>S1</CustomTh>
+					<CustomTh color={Colors.DocsBlue}>S0</CustomTh>
+					<CustomTh color={Colors.DocsYellow}>S1</CustomTh>
+					<CustomTh color={Colors.DocsYellow}>S0</CustomTh>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>0</td>
+					<td>0</td>
+					<td>0</td>
+					<CustomTh color={Colors.DocsHighlight}>0</CustomTh>
+					<CustomTh color={Colors.DocsHighlight}>0</CustomTh>
+					<CustomTh color={Colors.DocsHighlight}>0</CustomTh>
+				</tr>
+				<tr>
+					<td>0</td>
+					<td>0</td>
+					<td>1</td>
+					<CustomTh color={Colors.DocsHighlight}>0</CustomTh>
+					<CustomTh color={Colors.DocsHighlight}>0</CustomTh>
+					<CustomTh color={Colors.DocsHighlight}>0</CustomTh>
+				</tr>
+				<tr>
+					<td>0</td>
+					<td>1</td>
+					<td>0</td>
+					<CustomTh color={Colors.DocsHighlight}>0</CustomTh>
+					<CustomTh color={Colors.DocsHighlight}>1</CustomTh>
+					<CustomTh color={Colors.DocsHighlight}>1</CustomTh>
+				</tr>
+				<tr>
+					<td>0</td>
+					<td>1</td>
+					<td>1</td>
+					<CustomTh color={Colors.DocsHighlight}>0</CustomTh>
+					<CustomTh color={Colors.DocsHighlight}>1</CustomTh>
+					<CustomTh color={Colors.DocsHighlight}>1</CustomTh>
+				</tr>
+				<tr>
+					<td>1</td>
+					<td>0</td>
+					<td>0</td>
+					<CustomTh color={Colors.DocsHighlight}>1</CustomTh>
+					<CustomTh color={Colors.DocsHighlight}>0</CustomTh>
+					<CustomTh color={Colors.DocsHighlight}>1</CustomTh>
+				</tr>
+				<tr>
+					<td>1</td>
+					<td>0</td>
+					<td>1</td>
+					<CustomTh color={Colors.DocsHighlight}>1</CustomTh>
+					<CustomTh color={Colors.DocsHighlight}>0</CustomTh>
+					<CustomTh color={Colors.DocsHighlight}>1</CustomTh>
+				</tr>
+				<tr>
+					<td>1</td>
+					<td>1</td>
+					<td>0</td>
+					<CustomTh color={Colors.DocsHighlight}>1</CustomTh>
+					<CustomTh color={Colors.DocsHighlight}>1</CustomTh>
+					<CustomTh color={Colors.DocsHighlight}>0</CustomTh>
+				</tr>
+				<tr>
+					<td>1</td>
+					<td>1</td>
+					<td>1</td>
+					<CustomTh color={Colors.DocsHighlight}>1</CustomTh>
+					<CustomTh color={Colors.DocsHighlight}>1</CustomTh>
+					<CustomTh color={Colors.DocsHighlight}>0</CustomTh>
+				</tr>
 			</tbody>
 		</Table>
 	)

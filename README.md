@@ -2,33 +2,69 @@
 
 Em um terminal:
 
+HTTPS
+
+```
 git clone https://github.com/LuizBudeu/logic-gates.git
+```
 
+SSH
+```
+git clone git@github.com:LuizBudeu/logic-gates.git
+```
+
+```
 cd logic-gates
+```
 
+## Servidor
+
+Criar um virtual enviroment:
+```
 cd server
 
 python -m venv env
-
+```
+Em CMD:
+```
 /env/Scripts/Activate.ps1
+```
 
+
+Em Linux:
+```
+source env/bin/activate
+```
+
+Instalar requerimentos e:
+```
 pip install -r requirements.txt
+```
 
+Iniciar servidor:
+```
 python manage.py runserver
+```
 
+## Frontend
 Outro terminal:
 
+```
 cd front
 
 npm install
+```
 
 Adicionar o `.env` em `./front`
 
 adicione `REACT_APP_API_HOSTNAME_PORT="http://127.0.0.1:8000"` ao `.env`
 
+Iniciar:
+```
 npm start
+```
 
-Utilização:
+## Utilização
 
 Backend API em `http://127.0.0.1:8000/`
 
