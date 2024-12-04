@@ -46,8 +46,55 @@ export const Documentation = () => {
 							<a href="#combinatorial-circuits-or">OR</a>
 							<a href="#combinatorial-circuits-nor">NOR</a>
 							<a href="#combinatorial-circuits-xor">XOR</a>
-							<a href="#boolean">Mintermos</a>
-							<a href="#">Link</a>
+							<a href="#complex-combinatorial-circuits">Circuitos combinatórios complexos</a>
+							<a href="#complex-combinatorial-circuits-mux-nx1">Multiplexadores - MUX nx1 (Multiplexers)</a>
+							<a href="#complex-combinatorial-circuits-logic-gates">Portas lógicas a partir de multiplexadores</a>
+							<a href="#complex-combinatorial-circuits-logic-gates-and">Porta AND</a>
+							<a href="#complex-combinatorial-circuits-logic-gates-not">Porta NOT</a>
+							<a href="#complex-combinatorial-circuits-logic-gates-nand">Porta NAND</a>
+							<a href="#complex-combinatorial-circuits-logic-gates-or">Porta OR</a>
+							<a href="#complex-combinatorial-circuits-logic-gates-nor">Porta NOR</a>
+							<a href="#complex-combinatorial-circuits-logic-gates-xor">Porta XOR</a>
+							<a href="#complex-combinatorial-circuits-logic-gates-xnor">Porta XNOR</a>
+							<a href="#complex-combinatorial-circuits-encoder">Codificadores (Encoders)</a>
+							<a href="#complex-combinatorial-circuits-demux">Demultiplexadores DMUX (Demultiplexers)</a>
+							<a href="#complex-combinatorial-circuits-decoder">Codificadores (Encoders)</a>
+							<a href="#arithmetic-circuits">Circuitos aritméticos</a>
+							<a href="#arithmetic-circuits-half-adder">HALF ADDER</a>
+							<a href="#arithmetic-circuits-full-adder">FULL ADDER</a>
+							<a href="#arithmetic-circuits-n-bit-adder">n-BIT ADDER</a>
+							<a href="#arithmetic-circuits-alu">ALU (Arithmetic Logic Unit)</a>
+							<a href="#sequential-circuits">Circuitos sequenciais</a>
+							<a href="#sequential-circuits-latch">LATCH</a>
+							<a href="#sequential-circuits-latch-sr">SR Latches (Set-Reset)</a>
+							<a href="#sequential-circuits-latch-d">D Latches (Data ou Transparente)</a>
+							<a href="#sequential-circuits-latch-jk">JK Latches (Inverte quando ambos 1)</a>
+							<a href="#sequential-circuits-latch-t">T Latches (Toggle)</a>
+							<a href="#sequential-circuits-flip-flop">FLIP-FLOP</a>
+							<a href="#sequential-circuits-register">REGISTER</a>
+							<a href="#sequential-circuits-counter">COUNTER</a>
+							<a href="#sequential-circuits-counter-async">Contadores assíncronos</a>
+							<a href="#sequential-circuits-counter-sync">Contadores síncronos</a>
+							<a href="#sequential-circuits-shift">SHIFT-REGISTERS (Deslocadores)</a>
+							<a href="#sequential-circuits-shift-siso">Serial-in serial-out</a>
+							<a href="#sequential-circuits-shift-sipo">Serial-in parallel-out</a>
+							<a href="#sequential-circuits-shift-piso">Parallel-in serial-out</a>
+							<a href="#sequential-circuits-shift-pipo">Parallel-in parallel-out</a>
+							<a href="#sequential-circuits-shift-bidirectional">Bidirectional Shift Register</a>
+							<a href="#sequential-circuits-shift-universal">Universal Shift Register</a>
+							<a href="#sequential-circuits-shift-counter">Shift Register Counter</a>
+							<a href="#memory">Memórias</a>
+							<a href="#memory-ram">Memória RAM</a>
+							<a href="#memory-rom">Memória ROM</a>
+							<a href="#memory-uses">Aplicações de memórias</a>
+							<a href="#memory-uses-register">Banco de registradores</a>
+							<a href="#memory-uses-main">Memória principal</a>
+							<a href="#memory-uses-cache">Cache</a>
+							<a href="#state-machine">Máquinas de Estado</a>
+							<a href="#state-machine-example">Exemplo State Machine</a>
+							<a href="#datapath">Fluxo de dados & Unidade de controle</a>
+							<a href="#strategies">Estratégias de projeto de sistemas</a>
+							<a href="#processor">Arquitetura de um processador</a>
 						</ScrollContainer>
 					</Sidenav>
 
@@ -256,8 +303,6 @@ export const Documentation = () => {
 								</Section>
 
 
-
-
 								<Section id="complex-combinatorial-circuits-encoder">
 									<h1>3.3. Codificadores (Encoders)</h1>
 									<p>Um codificador é um componente responsável por codificar um número binário de 2<sup>n</sup> bits em uma informação de n bits (<b>OBS:</b> valores de input e output também são comumente referidos como linhas).</p>
@@ -265,15 +310,12 @@ export const Documentation = () => {
 									<p><b>n = 1:</b></p>
 									<p>Para o caso, observa-se que a primeira linha de entrada  resulta na saída 0, ou seja, ele codificou o valor de 01 no valor 0.</p>
 									<Encoder1Table/>
-
 									<p><b>n = 2:</b></p>
 									<p>Analogamente, o mesmo ocorre para o caso de 2 outputs;</p>
 									<Encoder2Table/>
-
 									<p><b>n = 3:</b></p>
 									<p>Seguindo a mesma lógica, um caso de uso comum é a transformação de um sinal de entrada específico em sua representação análoga em binário, ou seja, a entrada 5 representada pela entrada com sinal E5 ativa tem como codificação o número 5 em binário (101).</p>
 									<Encoder3Table/>
-
 									<p>Em seu uso é geralmente considerado que apenas um dos bits de entrada é ativo para cada input, mas existem alternativas que podem considerar mais de um input como ativo, escolhendo assim o bit mais significativo como prioritário na escolha de output, com os demais menos significativos sendo desconsiderados (<i>don’t care</i>).</p>
 									<p>Um exemplo de tabela verdade de um codificador com prioridade é observado a seguir, com x representando a condição de <i>don’t care</i>. Nota-se também a presença de uma saída adicional que define se o input é válido ou não.</p>
 									<EncoderxTable/>
@@ -311,7 +353,6 @@ export const Documentation = () => {
 									<p>Uma representação do elemento pode ser observada a seguir:</p>
 									<ImageStyle src={"/images/docs/Decoder.png"} alt=""/>
 								</Section>
-
 
 
 								<Section id="arithmetic-circuits">
@@ -352,7 +393,6 @@ export const Documentation = () => {
 								</Section>
 
 
-
 								<Section id="sequential-circuits">
 									<h1>5. Circuitos sequenciais</h1>
 								</Section>
@@ -370,7 +410,7 @@ export const Documentation = () => {
 									<h1>5.1.2. D Latches (Data ou Transparente)</h1>
 									<p>São LATCHES cujo status é definido pelo input único D, mas que somente atua quando o sinal de ENABLE estiver ativado.</p>
 								</Section>
-								<Section id="sequential-circuits-latch-t">
+								<Section id="sequential-circuits-latch-jk">
 									<h1>5.1.3. JK Latches (Inverte quando ambos 1)</h1>
 									<p>Similar ao SR, com o detalhe que o status é invertido quando ambas as entradas J e K são ativas.</p>
 								</Section>
@@ -395,21 +435,21 @@ export const Documentation = () => {
 									<p>Ademais, dependendo de sua complexidade, podem conter em si multiplexadores como no caso de registradores universais.</p>
 								</Section>
 
-								<Section id="sequential-circuits-couter">
+								<Section id="sequential-circuits-counter">
 									<h1>5.4. COUNTER</h1>
 									<p>Um contador é um componente sequencial utilizado para armazenar a quantidade de vezes que um evento ocorreu (pulsos de input), sendo um grupo de flip-flops associados a um clock.</p>
 									<ImageStyle src={"/images/docs/CounterClock.png"} alt=""/>
 									<p>Vale ressaltar que os sinais de clock de input podem ser relativos tanto a subida do sinal de clock quanto a sua descida.</p>
 									<p>Como forma de melhor detalhar estes componentes, podemos separá-los em dois tipos principais: assíncronos ou síncronos, sendo descritos a seguir:</p>
 								</Section>
-								<Section id="sequential-circuits-couter-async">
+								<Section id="sequential-circuits-counter-async">
 									<h1>5.4.1. Contadores assíncronos</h1>
 									<p>Também chamado de <i>ripple counter</i>, um contador assíncrono não faz uso de um clock universal, ou seja, apenas o primeiro flip-flop é conectado a um clock, com todos os flip-flops subsequentes sendo controlados pelo output do flip-flop anterior, ou seja, como “cascata”.</p>
 									<ImageStyle src={"/images/docs/CounterAsync.png"} alt=""/>
 									<p>Supondo que o evento contado é possui sempre valor 1 (high), a tabela verdade do comportamento do contador seria a seguinte:</p>
 									<CounterTable/>
 								</Section>
-								<Section id="sequential-circuits-couter-sync">
+								<Section id="sequential-circuits-counter-sync">
 									<h1>5.4.1. Contadores síncronos</h1>
 									<p>Também chamado de <i>parallel counter</i>, um contador síncrono possui um clock universal conectando todos os flip-flops do componente, de forma que as mudanças ocorram em paralelo, não possuindo a limitação de frequência observada em um contador assíncrono. Sua construção tem como base os flip-flops necessários para cada bit e portas AND para unir os sinais dos componentes.</p>
 								</Section>
@@ -441,40 +481,39 @@ export const Documentation = () => {
 								</Section>
 								<Section id="sequential-circuits-shift-pipo">
 									<h1>5.5.4. Parallel-in parallel-out</h1>
-									<p></p>
-									<p></p>
+									<p>Ambos os dados de input e de output são paralelos, com os flip-flops estando conectados a um mesmo clock, mas com seus sinais de entrada e saída não interagindo entre si. Assim, os dados de entrada são fornecidos individualmente assim como os seus sinais de saída.</p>
 								</Section>
 								<Section id="sequential-circuits-shift-bidirectional">
 									<h1>5.5.5. Bidirectional Shift Register</h1>
-									<p></p>
-									<p></p>
+									<p>Este componente deve ser capaz de deslocar os dados para qualquer direção desejada (para esquerda ou para direita), com este deslocamento sendo definido pelo modo escolhido. Sua construção é similar a um parallel-in serial-out, com a diferença sendo nos inputs das conexões entre os flip-flops.</p>
+									<p>Com relação a sua utilidade, um deslocador bidirecional pode ser utilizado para representar a multiplicação ou divisão de um número binário por 2.</p>
 								</Section>
 								<Section id="sequential-circuits-shift-universal">
 									<h1>5.5.6. Universal Shift Register</h1>
-									<p></p>
-									<p></p>
+									<p>Um deslocador universal é um componente capaz de tanto deslocar bidirecionalmente os dados armazenados quanto também realizar a operação de load paralelamente.</p>
 								</Section>
 								<Section id="sequential-circuits-shift-counter">
 									<h1>5.5.7. Shift Register Counter</h1>
-									<p></p>
-									<p></p>
+									<p>Uma de suas principais implementações é um contador em anel, ao qual o output do último flip-flop está conectado ao input do primeiro, assim formando um ciclo que se repete a cada n ciclos de clock (com n sendo relacionado ao número de flip-flops usados para a construção do componente).</p>
 								</Section>
 
 
 								<Section id="memory">
 									<h1>6. Memórias</h1>
 								</Section>
-
 								<Section id="memory-ram">
 									<h1>6.1. Memória RAM</h1>
-									<p></p>
-									<p></p>
+									<p>Uma memória RAM é um componente de memória volátil (ou seja, de armazenamento temporário, precisa de energia para guardar dados) que permite escrita e leitura de dados. Exemplos comumente observados de memórias RAM são DRAM e SRAM.</p>
+									<p>Elas são compostas, essencialmente, por flip-flops (para a construção de registradores), decodificadores e multiplexadores. Em tal, os registradores são escolhidos para serem lidos ou escritos via um endereço especificado, e estes bits de endereço podem ser escolhidos via decodificadores ou via multiplexadores. Uma representação de uma célula de memória de 4 bits pode ser observada abaixo, em que addr é um input de um decodificador para a escolha de um endereço da memória. A seguinte figura representa uma célula de memória (PLANTZ, 2019):</p>
+									<ImageStyle src={"/images/docs/Memory.png"} alt=""/>
 								</Section>
 
 								<Section id="memory-rom">
 									<h1>6.2. Memória ROM</h1>
-									<p></p>
-									<p></p>
+									<p>Uma memória ROM é um componente de memória não volátil, sendo usada para leitura de dados previamente escritos/programados. Exemplos comumente observados de memórias ROM são PROM, EPROM e EEPROM, com alguns dos modelos permitindo a reescrita de valores.</p>
+									<p>Na imagem abaixo é possível observar uma representação de uma memória ROM, em que os inputs definem o endereço da informação via as portas AND (essencialmente um decoder), e as conexões no plano das portas OR definem os padrões da informação armazenada. A seguinte figura representa uma seção de uma memória ROM (PLANTZ, 2019):</p>
+									<ImageStyle src={"/images/docs/rom.png"} alt=""/>
+									<p>Assim, pode-se dizer que a estrutura interna de uma ROM é composta por decodificadores e portas OU, em que os decoders atuam para transformar uma informação em binário para sua forma decimal, e essa informação é o input das portas OR da ROM, aos quais são organizadas em grade potencialmente conectadas, permitindo a passagem de energia e consequentemente o output da informação desejada.  </p>
 								</Section>
 
 								<Section id="memory-uses">
@@ -483,30 +522,61 @@ export const Documentation = () => {
 								</Section>
 								<Section id="memory-uses-register">
 									<h1>6.3.1. Banco de registradores</h1>
-									<p></p>
-									<p></p>
+									<p>Um banco de registradores é um componente importante para um processador, uma vez que permite o fluxo de dados importantes para seu funcionamento, sendo formado por múltiplos registradores diferentes que podem ser acessados para a escrita ou leitura de dados. Eles geralmente são operados via bits que indicam o endereço/identificação de um determinado registrador, uma via de dados para a escrita, um sinal que decide se algo será escrito ou lido, e um sinal de clock para a escrita (Patterson & Hennessy, 2020).</p>
+									<ImageStyle src={"/images/docs/BancoReg.png"} alt=""/>
 								</Section>
 								<Section id="memory-uses-main">
 									<h1>6.3.2. Memória principal</h1>
-									<p></p>
-									<p></p>
+									<p>São as memórias primárias de um sistema computacional, geralmente utilizadas para armazenamento de instruções de programas e seus dados. No contexto da engenharia de computação elas são as memórias que o processador consegue acessar, com os exemplos sendo a memória RAM e a ROM.</p>
+									<p>Memórias secundárias possuem um papel auxiliar, podendo armazenar uma grande quantidade de informações quando comparado com a memória principal, mas em contrapartida é consideravelmente mais lenta, também não podendo ser acessada diretamente pela CPU. Exemplos de memória secundárias são observadas em discos magnéticos (HDs, SSDs, etc.).</p>
 								</Section>
 								<Section id="memory-uses-cache">
 									<h1>6.3.3. Cache</h1>
-									<p></p>
-									<p></p>
+									<p>Por fim, a memória cache é um tipo de memória que atua como buffer, sendo mais rápida que a memória RAM. Ela fica entre a CPU e a memória principal, armazenando informações utilizadas com maior frequência, agilizando a busca por informações.</p>
+									<p>Ela geralmente possui múltiplos níveis (L1, L2, L3, etc.), aos quais são organizados de forma a ficar progressivamente maiores, aumentando sua capacidade, mas diminuindo sua velocidade.</p>
 								</Section>
 
 
 								<Section id="state-machine">
 									<h1>7. Máquinas de Estado</h1>
-									<p>Memórias digitais podem possuir muitas aplicações em computadores, algumas delas estão listadas nas seções seguintes.</p>
+									<p>Com o conhecimento obtido até o momento, é possível realizar a construção de circuitos sequenciais mais avançados. Para isso, é geralmente empregado o desenvolvimento de um diagrama de estados para representar de forma visual o funcionamento do circuito. Essas representações são denominadas máquinas de estados finitas e podem ser apresentadas de duas formas principais: máquinas de Moore e máquinas de Mealy. Máquinas de estado de Moore determinam o seu output com base apenas no estado atual da máquina, já os outputs das máquinas Mealy dependem tanto da transição quanto do estado atual.</p>
+									<p>Nos diagramas, os estados são representados por círculos e transições por setas. Os círculos geralmente possuem informações referentes a descrição do estado e o output/resultado referente, já as setas informam a transição de um estado a outro baseado no input detectado. Ademais, deve-se mencionar que as transições de estado ocorrem a cada ciclo de clock.</p>
+									<p>Uma vez definido o diagrama, é possível construir o circuito desejado ao organizar as informações referentes aos inputs, outputs, estados e transições.</p>
+									<ol>
+										<li>Para a construção dos circuitos, um primeiro passo é a representação dos estados como informação binária, uma vez que devem ser utilizados flip-flips para armazenar informações referentes ao estado atual da máquina;</li>
+										<li>Em seguida, é necessário a construção de tabelas verdade para cada um dos estados, informando aspectos como outputs e próximos estados a partir de determinados inputs;</li>
+										<li>Essas tabelas verdades podem ser transformadas em mapas de Karnaugh, e uma vez simplificadas, elas informam os componentes necessários para construir o circuito lógico desejado.</li>
+									</ol>
 								</Section>
 								<Section id="state-machine-example">
 									<h1>7.1. Exemplo</h1>
-									<p></p>
-									<p></p>
+									<p>Um exemplo de construção de uma máquina de estados a partir de um diagrama pode ser observado a seguir. Adaptado de David L. Tarnoff (<i>East Tennessee State University</i>).</p>
+									<ImageStyle src={"/images/docs/state0.png"} alt=""/>
+									<p>A máquina representa um sistema de ligar e apagar luzes, cujo funcionamento é o seguinte:</p>
+									<ul>
+										<li>A partir de seu estado inicial desligado (1) ele espera o pressionar do botão a cada ciclo de clock;</li>
+										<li>Uma vez apertando o botão o estado muda para a luz ligada (2), ao qual espera que o botão seja solto;</li>
+										<li>Uma vez solto, o é efetuada a transição de estado (3) e a luz continua ligada (3), mas espera o pressionar do botão para apagar a luz;</li>
+										<li>Apertando o  botão novamente, ele transiciona para o próximo estado (4), apagando a luz e esperando o botão ser solto para retornar ao estado inicial (1);</li>
+										<li><b>OBS:</b> Uma vez ativando o reset, é sempre retornado ao estado inicial.</li>
+									</ul>
+									<p>Para facilitar a construção do circuito e das tabelas verdade, é possível reescrever o circuito para uma representação a partir de bits.</p>
+									<ImageStyle src={"/images/docs/state1.png"} alt=""/>
+									<p>Os estados 00, 01, 10 e 11 (antes 1, 2, 3 e 4, respectivamente) podem ser representados de forma binária com dois bits, em que cada um dos dois bits que representam cada estado é armazenado por um flip flop.</p>
+									<StateTable/>
+									<ImageStyle src={"/images/docs/state3.png"} alt=""/>
+									<p>A partir das informações referentes aos estados, inputs do botão, e output da luz, é possível criar uma tabela verdade de transição de estados.</p>
 									<NextStateTable/>
+									<p>Cada uma das colunas destacadas deve ser utilizada para construir um mapa de Karnaugh referente ao valor de input do flip-flop de S1, flip-flop de S0 e do output da luz, pois são valores importantes na construção do  circuito lógico. A construção é similar ao processo visto na seção 1.4 do material teórico.</p>
+									<ImageStyle src={"/images/docs/state5.png"} alt=""/>
+									<p>Uma vez construídos, é necessário realizar a simplificação dos mapas a fim de obter as funções booleanas referente aos sinais de input.</p>
+									<ImageStyle src={"/images/docs/state6.png"} alt=""/>
+									<p>Obtendo assim a soma de produtos (mintermos) de cada um dos mapas, temos os valores referentes aos sinais de próximo estado S1', próximo estado S0' e L.</p>
+									<Formula>S<sub>1</sub>'=(¬S<sub>1</sub>×S<sub>0</sub>×B)+(S<sub>1</sub>×¬S<sub>0</sub>)+(S<sub>1</sub>×B)</Formula>
+									<Formula>S<sub>0</sub>'=B</Formula>
+									<Formula>B=(¬S<sub>1</sub>×S<sub>0</sub>)+(S<sub>1</sub>×¬S<sub>0</sub>)</Formula>
+									<p>Com isso, se torna possível montar o circuito lógico.</p>
+									<ImageStyle src={"/images/docs/state7.png"} alt=""/>
 								</Section>
 
 
@@ -534,9 +604,7 @@ export const Documentation = () => {
 									<p>Por fim, como um exemplo de um processador RISC-V, a seguinte imagem detalha seu fluxo de dados e unidade de controle (PATTERSON; HENNESSY, 2014):</p>
 									<ImageStyle src={"/images/docs/riscV.png"} alt=""/>
 								</Section>
-
 							</Padding>
-							
 						</ScrollContainer>
 					</Content>
 					
@@ -566,6 +634,7 @@ const Sidenav = styled.div`
     text-decoration: none;
     color: black;
     display: block;
+	font-size: 10px;
   }
 
   a:hover {
