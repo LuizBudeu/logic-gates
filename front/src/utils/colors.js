@@ -13,4 +13,5 @@ export const Colors = {
   DocsGreen: "#b6d7a8",
   DocsYellow: "#ffe599",
   DocsOrange: "#f6b26b",
+  DocsHighlight: "#a5a5a5",
 };
