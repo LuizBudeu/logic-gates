@@ -302,6 +302,14 @@ export const Documentation = () => {
 									<h1>3.5. Codificadores (Encoders)</h1>
 									<p>Com funcionamento inverso a um codificador, decodificadores são componentes cujo objetivo é decodificar um número binário de n bits em um de 2<sup>n</sup>.</p>
 									<p>Duas tabelas verdades de casos comuns podem ser disponibilizadas para facilitar a compreensão de seu funcionamento:</p>
+									<p><b>n = 1:</b></p>
+									<p>Com apenas uma linha de entrada, observa-se que existem duas linhas de saída (uma para cada input possível):</p>
+									<Decoder1Table/>
+									<p><b>n = 2:</b></p>
+									<p>No caso de duas entradas, existem quatro linhas de saída, em que cada combinação de entradas fornece como output uma informação (ex: 01 → 0100):</p>
+									<Decoder2Table/>
+									<p>Uma representação do elemento pode ser observada a seguir:</p>
+									<ImageStyle src={"/images/docs/Decoder.png"} alt=""/>
 								</Section>
 
 
@@ -311,14 +319,23 @@ export const Documentation = () => {
 								</Section>
 								<Section id="arithmetic-circuits-half-adder">
 									<h1>4.1. HALF ADDER</h1>
-									<p></p>
-									<p></p>
+									<p>Uma funcionalidade que vai se tornar essencial na criação de um processador é a capacidade de realizar operações aritméticas, para isso é necessário desenvolver os componentes individuais que irão permitir a construção de uma Unidade Lógica Aritmética (ALU).</p>
+									<p>Com esse intuito, é possível iniciar com um HALF ADDER, um elemento capaz de realizar a adição de bits. Ele possui duas entradas e duas saídas, sendo os inputs os bits a serem somados e os outputs o resultado da soma e o bit de carry-out, respectivamente. Em suma, o resultado é o bit menos significativo de uma soma, e o carry-out é o bit mais significativo.</p>
+									<p>É possível representar sua tabela verdade da seguinte forma:</p>
+									<HalfAdderTable/>
+									<p>Observa-se que a tabela de fato representa a realidade, uma vez que ao somar um bit 1 com um bit 0, o resultado é 1, e ao somar dois bits 1, o resultado é 2 (em binário: 10). Percebe-se também que os resultados obtidos são equivalentes a duas portas lógicas previamente estudadas (AND e XOR).</p>
+									<p>Uma representação do componente pode ser exemplificada abaixo:</p>
+									<ImageStyle src={"/images/docs/AdderHalf.png"} alt=""/>
 								</Section>
 
 								<Section id="arithmetic-circuits-full-adder">
 									<h1>4.2. FULL ADDER</h1>
-									<p></p>
-									<p></p>
+									<p>Como progressão lógica da funcionalidade de adição de bits, é possível agora estudar um pouco sobre os FULL ADDERS: componentes de soma que possuem o input de carry-in, permitindo que o bit de carry-out de uma etapa de uma soma anterior possa influenciar em uma próxima etapa (ex: somador de múltiplos bits via cascata). No caso, o bit de carry-in é somado ao resultado da soma das entradas A e B, com o resultado também influenciando no carry out do somador.</p>
+									<p>É possível representar sua tabela verdade da seguinte forma:</p>
+									<FullAdderTable/>
+									<p>Para o seu desenvolvimento no simulador, é possível tanto fazer uso de dois half adder desenvolvidos anteriormente com uma porta OU, quanto via portas simples diretamente (XOR, AND e OR).</p>
+									<p>Uma representação do componente pode ser exemplificada abaixo:</p>
+									<ImageStyle src={"/images/docs/AdderFull.png"} alt=""/>
 								</Section>
 
 								<Section id="arithmetic-circuits-n-bit-adder">
@@ -328,8 +345,10 @@ export const Documentation = () => {
 
 								<Section id="arithmetic-circuits-alu">
 									<h1>4.4. ALU (Arithmetic Logic Unit)</h1>
-									<p></p>
-									<p></p>
+									<p>Uma Unidade Lógica Aritmética é um circuito digital de lógica combinatória capaz de realizar operações lógicas (AND, OR) e operações aritméticas (adição, subtração).</p>
+									<ImageStyle src={"/images/docs/ALU.png"} alt=""/>
+									<p>As operações a serem realizadas são decididas via o valor de OPCODE, que junto com as informações provenientes do status conseguem enfim manipular os operandos para obter os resultados desejados (caso de carry-out, valores nulos ou negativos, etc.).</p>
+									<p>Para isso, ela faz uso de diversos componentes vistos previamente para conseguir estruturar as operações e os seus sinais de entrada, como multiplexadores, somadores e outros componentes lógicos.</p>
 								</Section>
 
 
@@ -339,86 +358,104 @@ export const Documentation = () => {
 								</Section>
 								<Section id="sequential-circuits-latch">
 									<h1>5.1. LATCH</h1>
-									<p></p>
-									<p></p>
+									<p>Latches são circuitos digitais utilizados para armazenar uma informação binária, sendo muito utilizadas para a construção de componentes observados em partes futuras da teoria estudada (ex: FLIP-FLOPs). A implementação delas é, portanto, essencial no desenvolvimento de circuitos sequenciais como memórias e máquinas de estados. Em geral, existem diversos tipo de LATCHES, com eles também podendo possuir um sinal de ENABLE para controlar ativações, como:</p>
 								</Section>
 								<Section id="sequential-circuits-latch-sr">
 									<h1>5.1.1. SR Latches (Set-Reset)</h1>
-									<p></p>
-									<p></p>
+									<p>Uma representação didática de um LATCH SET-RESET pode ser observada no diagrama abaixo:</p>
+									<ImageStyle src={"/images/docs/Latch.png"} alt=""/>
+									<p>A realimentação nos componentes é o que permite o armazenamento de estados, com a estrutura deste LATCH sendo o tipo mais simples e que serve como base para todas as outras variações e tipos.</p>
 								</Section>
 								<Section id="sequential-circuits-latch-d">
 									<h1>5.1.2. D Latches (Data ou Transparente)</h1>
-									<p></p>
-									<p></p>
+									<p>São LATCHES cujo status é definido pelo input único D, mas que somente atua quando o sinal de ENABLE estiver ativado.</p>
 								</Section>
 								<Section id="sequential-circuits-latch-t">
-									<h1>5.1.3. T Latches (Toggle)
-									</h1>
-									<p></p>
-									<p></p>
+									<h1>5.1.3. JK Latches (Inverte quando ambos 1)</h1>
+									<p>Similar ao SR, com o detalhe que o status é invertido quando ambas as entradas J e K são ativas.</p>
+								</Section>
+								<Section id="sequential-circuits-latch-t">
+									<h1>5.1.4. T Latches (Toggle)</h1>
+									<p>Possui apenas o input T que inverte o estado do sinal toda vez que é ativado.</p>
 								</Section>
 
 								<Section id="sequential-circuits-flip-flop">
 									<h1>5.2. FLIP-FLOP</h1>
-									<p></p>
-									<p></p>
+									<p>Similarmente a LATCHES, atuam como armazenamento de memória binária, com a diferença essencial entre ambos é que LATCHES independentemente de timings, já FLIP-FLOPs dependem do sinal de um clock para serem alteradas.</p>
+									<p>Em essência, sua construção é similar, possuindo também as variações observadas em LATCHES (SR, D, JK, T), mas geralmente contém uma porta lógica alimentada por sinal de clock (CLK) que limita a atuação do componente.</p>
+									<p>O diagrama do JK FLIP-FLOP abaixo serve como exemplo de composição deste tipo de componente:</p>
+									<ImageStyle src={"/images/docs/FlipFlopJK.png"} alt=""/>
+									<p>Este padrão de composição é repetido para as demais variações.</p>
 								</Section>
 
 								<Section id="sequential-circuits-register">
 									<h1>5.3. REGISTER</h1>
-									<p></p>
-									<p></p>
+									<p>Registradores são formados por dois ou mais FLIP-FLOPs associados a um sinal de clock, permitindo assim armazenar um conjunto de bits (8 flip-flops formam um registrador de um byte). Dentre suas propriedades, eles podem ser síncronos ou assíncronos, podendo também estar interligados entre si (SHIFT-REGISTER).</p>
+									<p>Alguns de seus sinais de controle possíveis são o clock, enable, set, reset, shift, etc. Com relação aos seus sinais, podem ter entradas em série com saídas em paralelo, ou entradas e saídas em paralelo.</p>
+									<p>Ademais, dependendo de sua complexidade, podem conter em si multiplexadores como no caso de registradores universais.</p>
 								</Section>
 
 								<Section id="sequential-circuits-couter">
 									<h1>5.4. COUNTER</h1>
-									<p></p>
-									<p></p>
+									<p>Um contador é um componente sequencial utilizado para armazenar a quantidade de vezes que um evento ocorreu (pulsos de input), sendo um grupo de flip-flops associados a um clock.</p>
+									<ImageStyle src={"/images/docs/CounterClock.png"} alt=""/>
+									<p>Vale ressaltar que os sinais de clock de input podem ser relativos tanto a subida do sinal de clock quanto a sua descida.</p>
+									<p>Como forma de melhor detalhar estes componentes, podemos separá-los em dois tipos principais: assíncronos ou síncronos, sendo descritos a seguir:</p>
 								</Section>
 								<Section id="sequential-circuits-couter-async">
 									<h1>5.4.1. Contadores assíncronos</h1>
-									<p></p>
-									<p></p>
+									<p>Também chamado de <i>ripple counter</i>, um contador assíncrono não faz uso de um clock universal, ou seja, apenas o primeiro flip-flop é conectado a um clock, com todos os flip-flops subsequentes sendo controlados pelo output do flip-flop anterior, ou seja, como “cascata”.</p>
+									<ImageStyle src={"/images/docs/CounterAsync.png"} alt=""/>
+									<p>Supondo que o evento contado é possui sempre valor 1 (high), a tabela verdade do comportamento do contador seria a seguinte:</p>
+									<CounterTable/>
 								</Section>
 								<Section id="sequential-circuits-couter-sync">
 									<h1>5.4.1. Contadores síncronos</h1>
-									<p></p>
-									<p></p>
+									<p>Também chamado de <i>parallel counter</i>, um contador síncrono possui um clock universal conectando todos os flip-flops do componente, de forma que as mudanças ocorram em paralelo, não possuindo a limitação de frequência observada em um contador assíncrono. Sua construção tem como base os flip-flops necessários para cada bit e portas AND para unir os sinais dos componentes.</p>
 								</Section>
 
 								<Section id="sequential-circuits-shift">
 									<h1>5.5. SHIFT-REGISTERS (Deslocadores)</h1>
-									<p></p>
-									<p></p>
+									<p>Shift-registers são registradores cujo conteúdo armazenado (n bits) pode ser deslocado via o input de pulsos, movendo o dado binário de um flip-flop para outro.</p>
+									<p>Existem diversos tipos diferentes de deslocadores, com os principais podendo ser mencionados a seguir:</p>
 								</Section>
 								<Section id="sequential-circuits-shift-siso">
 									<h1>5.5.1. Serial-in serial-out</h1>
+									<p>A entrada de dados ocorre em série, com o valor menos significativo do dado entrando primeiro, deslocando os valores previamente armazenados entre os flip-flops, e resultando em um output de dados também em série.</p>
+									<p>Ou seja, com um shift-register inicialmente armazenando 000, ao receber um input 111 o valor armazenado vai sendo alterado a cada ciclo de clock (100 &gt; 110 &gt; 111), com o output sendo sempre o valor que foi deslocado obtido pelo último flip-flop.</p>
+									<p>Sua construção se baseia em posicionar os flip-flops em série conectados a um único sinal de clock.</p>
+								</Section>
+								<Section id="sequential-circuits-shift-sipo">
+									<h1>5.5.2. Serial-in parallel-out</h1>
+									<p>Construído de forma similar ao serial-in serial-out, mas a diferença ocorrendo no fato que o output é obtido em paralelo via o output de cada flip-flop que compõe o componente.</p>
+								</Section>
+								<Section id="sequential-circuits-shift-piso">
+									<h1>5.5.3. Parallel-in serial-out</h1>
+									<p>O dado de input é inserido de forma paralela via uma mesma lógica combinatória, com o output de cada flip-flop sendo usado como input do próximo flip-flop fazendo o uso deste mesmo circuito.</p>
+									<p>Ele possui duas funções, o modo de deslocamento (shift) e o modo de carregamento (load):</p>
+									<ul>
+										<li><b>SHIFT:</b> os valores são inseridos bit a bit nos flip-flops similarmente ao observado em serial-in serial-out, com um deslocamento ocorrendo a cada pulso de clock;</li>
+										<li><b>LOAD:</b> os valores do dado de input são carregados paralelamente nos flip-flops.</li>
+									</ul>
+									<p>A lógica combinatória utilizada em sua construção são multiplexadores que recebem um dos dados a serem inseridos, o sinal indicando a operação (shift ou load) e o output do flip-flop anterior, com o output do mux sendo o input do próximo flip-flop.</p>
+								</Section>
+								<Section id="sequential-circuits-shift-pipo">
+									<h1>5.5.4. Parallel-in parallel-out</h1>
 									<p></p>
 									<p></p>
 								</Section>
-								<Section id="sequential-circuits-shift-siso">
-									<h1>5.5.2. Serial-in serial-out</h1>
+								<Section id="sequential-circuits-shift-bidirectional">
+									<h1>5.5.5. Bidirectional Shift Register</h1>
 									<p></p>
 									<p></p>
 								</Section>
-								<Section id="sequential-circuits-shift-siso">
-									<h1>5.5.3. Serial-in serial-out</h1>
+								<Section id="sequential-circuits-shift-universal">
+									<h1>5.5.6. Universal Shift Register</h1>
 									<p></p>
 									<p></p>
 								</Section>
-								<Section id="sequential-circuits-shift-siso">
-									<h1>5.5.4. Serial-in serial-out</h1>
-									<p></p>
-									<p></p>
-								</Section>
-								<Section id="sequential-circuits-shift-siso">
-									<h1>5.5.5. Serial-in serial-out</h1>
-									<p></p>
-									<p></p>
-								</Section>
-								<Section id="sequential-circuits-shift-siso">
-									<h1>5.5.6. Serial-in serial-out</h1>
+								<Section id="sequential-circuits-shift-counter">
+									<h1>5.5.7. Shift Register Counter</h1>
 									<p></p>
 									<p></p>
 								</Section>
@@ -1197,14 +1234,14 @@ const MuxAndTable = () => {
 					<td>0</td>
         		</tr>
 				<tr>
-					<td><CustomTh color={Colors.DocsYellow}>1</CustomTh></td>
-					<td><CustomTh color={Colors.DocsOrange}>0</CustomTh></td>
-					<td><CustomTh color={Colors.DocsOrange}>0</CustomTh></td>
+					<CustomTh color={Colors.DocsYellow}>1</CustomTh>
+					<CustomTh color={Colors.DocsOrange}>0</CustomTh>
+					<CustomTh color={Colors.DocsOrange}>0</CustomTh>
         		</tr>
 				<tr>
-					<td><CustomTh color={Colors.DocsYellow}>1</CustomTh></td>
-					<td><CustomTh color={Colors.DocsOrange}>1</CustomTh></td>
-					<td><CustomTh color={Colors.DocsOrange}>1</CustomTh></td>
+					<CustomTh color={Colors.DocsYellow}>1</CustomTh>
+					<CustomTh color={Colors.DocsOrange}>1</CustomTh>
+					<CustomTh color={Colors.DocsOrange}>1</CustomTh>
         		</tr>
 			</tbody>
 		</Table>
@@ -1225,22 +1262,22 @@ const MuxNandTable = () => {
 				<tr>
 					<td>0</td>
 					<td>0</td>
-					<td><CustomTh color={Colors.DocsYellow}>1</CustomTh></td>
+					<CustomTh color={Colors.DocsYellow}>1</CustomTh>
 				</tr>
 				<tr>
 					<td>0</td>
 					<td>1</td>
-					<td><CustomTh color={Colors.DocsYellow}>1</CustomTh></td>
+					<CustomTh color={Colors.DocsYellow}>1</CustomTh>
         		</tr>
 				<tr>
 					<td>1</td>
 					<td>0</td>
-					<td><CustomTh color={Colors.DocsOrange}>1</CustomTh></td>
+					<CustomTh color={Colors.DocsOrange}>1</CustomTh>
         		</tr>
 				<tr>
 					<td>1</td>
 					<td>1</td>
-					<td><CustomTh color={Colors.DocsOrange}>0</CustomTh></td>
+					<CustomTh color={Colors.DocsOrange}>0</CustomTh>
         		</tr>
 			</tbody>
 		</Table>
@@ -1259,14 +1296,14 @@ const MuxOrTable = () => {
 			</thead>
 			<tbody>
 				<tr>
-					<td><CustomTh color={Colors.DocsYellow}>0</CustomTh></td>
-					<td><CustomTh color={Colors.DocsOrange}>0</CustomTh></td>
-					<td><CustomTh color={Colors.DocsOrange}>0</CustomTh></td>
+					<CustomTh color={Colors.DocsYellow}>0</CustomTh>
+					<CustomTh color={Colors.DocsOrange}>0</CustomTh>
+					<CustomTh color={Colors.DocsOrange}>0</CustomTh>
 				</tr>
 				<tr>
-					<td><CustomTh color={Colors.DocsYellow}>0</CustomTh></td>
-					<td><CustomTh color={Colors.DocsOrange}>1</CustomTh></td>
-					<td><CustomTh color={Colors.DocsOrange}>1</CustomTh></td>
+					<CustomTh color={Colors.DocsYellow}>0</CustomTh>
+					<CustomTh color={Colors.DocsOrange}>1</CustomTh>
+					<CustomTh color={Colors.DocsOrange}>1</CustomTh>
         		</tr>
 				<tr>
 					<td>1</td>
@@ -1801,11 +1838,11 @@ const Decoder1Table = () => {
 				<tr>
 					<td>0</td>
 					<td>0</td>
-					<td><CustomTh color={Colors.DocsYellow}>1</CustomTh></td>
+					<CustomTh color={Colors.DocsYellow}>1</CustomTh>
 				</tr>
 				<tr>
 					<td>1</td>
-					<td><CustomTh color={Colors.DocsYellow}>1</CustomTh></td>
+					<CustomTh color={Colors.DocsYellow}>1</CustomTh>
 					<td>0</td>
         		</tr>
 			</tbody>
@@ -1833,28 +1870,28 @@ const Decoder2Table = () => {
 					<td>0</td>
 					<td>0</td>
 					<td>0</td>
-					<td><CustomTh color={Colors.DocsYellow}>1</CustomTh></td>
+					<CustomTh color={Colors.DocsYellow}>1</CustomTh>
 				</tr>
 				<tr>
 					<td>0</td>
 					<td>1</td>
 					<td>0</td>
 					<td>0</td>
-					<td><CustomTh color={Colors.DocsYellow}>1</CustomTh></td>
+					<CustomTh color={Colors.DocsYellow}>1</CustomTh>
 					<td>0</td>
         		</tr>
 				<tr>
 					<td>1</td>
 					<td>0</td>
 					<td>0</td>
-					<td><CustomTh color={Colors.DocsYellow}>1</CustomTh></td>
+					<CustomTh color={Colors.DocsYellow}>1</CustomTh>
 					<td>0</td>
 					<td>0</td>
         		</tr>
 				<tr>
 					<td>1</td>
 					<td>1</td>
-					<td><CustomTh color={Colors.DocsYellow}>1</CustomTh></td>
+					<CustomTh color={Colors.DocsYellow}>1</CustomTh>
 					<td>0</td>
 					<td>0</td>
 					<td>0</td>
@@ -1947,32 +1984,32 @@ const FullAdderTable = () => {
 					<td>0</td>
         		</tr>
 				<tr>
-					<td><CustomTh color={Colors.DocsYellow}>0</CustomTh></td>
-					<td><CustomTh color={Colors.DocsYellow}>0</CustomTh></td>
-					<td><CustomTh color={Colors.DocsYellow}>1</CustomTh></td>
-					<td><CustomTh color={Colors.DocsYellow}>0</CustomTh></td>
-					<td><CustomTh color={Colors.DocsYellow}>1</CustomTh></td>
+					<CustomTh color={Colors.DocsYellow}>0</CustomTh>
+					<CustomTh color={Colors.DocsYellow}>0</CustomTh>
+					<CustomTh color={Colors.DocsYellow}>1</CustomTh>
+					<CustomTh color={Colors.DocsYellow}>0</CustomTh>
+					<CustomTh color={Colors.DocsYellow}>1</CustomTh>
         		</tr>
 				<tr>
-					<td><CustomTh color={Colors.DocsYellow}>0</CustomTh></td>
-					<td><CustomTh color={Colors.DocsYellow}>1</CustomTh></td>
-					<td><CustomTh color={Colors.DocsYellow}>1</CustomTh></td>
-					<td><CustomTh color={Colors.DocsYellow}>1</CustomTh></td>
-					<td><CustomTh color={Colors.DocsYellow}>0</CustomTh></td>
+					<CustomTh color={Colors.DocsYellow}>0</CustomTh>
+					<CustomTh color={Colors.DocsYellow}>1</CustomTh>
+					<CustomTh color={Colors.DocsYellow}>1</CustomTh>
+					<CustomTh color={Colors.DocsYellow}>1</CustomTh>
+					<CustomTh color={Colors.DocsYellow}>0</CustomTh>
         		</tr>
 				<tr>
-					<td><CustomTh color={Colors.DocsYellow}>1</CustomTh></td>
-					<td><CustomTh color={Colors.DocsYellow}>0</CustomTh></td>
-					<td><CustomTh color={Colors.DocsYellow}>1</CustomTh></td>
-					<td><CustomTh color={Colors.DocsYellow}>1</CustomTh></td>
-					<td><CustomTh color={Colors.DocsYellow}>0</CustomTh></td>
+					<CustomTh color={Colors.DocsYellow}>1</CustomTh>
+					<CustomTh color={Colors.DocsYellow}>0</CustomTh>
+					<CustomTh color={Colors.DocsYellow}>1</CustomTh>
+					<CustomTh color={Colors.DocsYellow}>1</CustomTh>
+					<CustomTh color={Colors.DocsYellow}>0</CustomTh>
         		</tr>
 				<tr>
-					<td><CustomTh color={Colors.DocsYellow}>1</CustomTh></td>
-					<td><CustomTh color={Colors.DocsYellow}>1</CustomTh></td>
-					<td><CustomTh color={Colors.DocsYellow}>1</CustomTh></td>
-					<td><CustomTh color={Colors.DocsYellow}>1</CustomTh></td>
-					<td><CustomTh color={Colors.DocsYellow}>1</CustomTh></td>
+					<CustomTh color={Colors.DocsYellow}>1</CustomTh>
+					<CustomTh color={Colors.DocsYellow}>1</CustomTh>
+					<CustomTh color={Colors.DocsYellow}>1</CustomTh>
+					<CustomTh color={Colors.DocsYellow}>1</CustomTh>
+					<CustomTh color={Colors.DocsYellow}>1</CustomTh>
         		</tr>
 			</tbody>
 		</Table>
