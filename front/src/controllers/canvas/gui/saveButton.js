@@ -52,7 +52,7 @@ class Save extends Button {
         }
 
         // Prompt user for gate name
-        const gateName = prompt("Enter gate name:");
+        let gateName = prompt("Enter gate name:");
 
         // Check if user cancelled
         if (gateName === null) {
@@ -76,6 +76,8 @@ class Save extends Button {
             alert("Saved gate name cannot start with a number");
             return;
         }
+
+        gateName = gateName.replaceAll(" ", "_");
 
         // Check if gate name already exists
         const savedGates = SaveManager.getSavedGates();
