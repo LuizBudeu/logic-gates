@@ -1,3 +1,8 @@
+# NANDesis
+
+O NANDesis é o projeto de formatura do curso de Engenharia de Computação da POLI USP (2024), sendo uma plataforma educativa focada no ensino de sistemas digitais, com suas principais features sendo a capacidade de simular circuitos lógicos e o gerenciamento de alunos cadastrados. Ademais, ele conta com um material teórico e exercícios que o professor pode disponibilizar aos alunos, possibilitando a avaliação dos circuitos montados pelos alunos. Sobre o aspecto de simulação, é inicialmente fornecida apenas a porta lógica NAND, sendo assim um objetivo do usuário construir e salvar todos os demais componentes elaborados, uma vez que essa porta é capaz de criar todos os outros circuitos exigidos pelos desafios.
+
+
 # Developer setup
 
 Em um terminal:
