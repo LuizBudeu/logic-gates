@@ -73,6 +73,11 @@ export default class ShiftingBar {
                 this.visibleOptions = endSlice.concat(startSlice);
             }
         }
+
+        const notVisible = this._allOptions.filter((x) => !this.visibleOptions.includes(x));
+        notVisible.forEach((savedGate) => {
+            savedGate.at(-100, -100);
+        });
     }
 
     at(x = null, y = null) {
