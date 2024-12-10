@@ -17,7 +17,7 @@ export function Header({ showActivities }) {
   return (
     <div>
       <HeaderContainer>
-        <NandesisTitle>NANDesis.io</NandesisTitle>
+        <NandesisTitle>NANDesis</NandesisTitle>
         <LeftMenuContainer>
           {userAuth ?
             <AuthenticatedHeader showActivities={showActivities} />
@@ -76,7 +76,7 @@ export function AuthenticatedHeader({ showActivities }) {
         <IconStyle  onClick={() => setShowConfigOptions(!showConfigOptions)}></IconStyle >
         {showConfigOptions &&
           <DropdownMenu>
-            <DropdownMenuText onClick={() => navigate('./')}>Meu perfil</DropdownMenuText>
+            {/* <DropdownMenuText onClick={() => navigate('./')}>Meu perfil</DropdownMenuText> */}
             <DropdownMenuText onClick={() => logout()}>Sair</DropdownMenuText>
           </DropdownMenu>
         }

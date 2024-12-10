@@ -101,7 +101,7 @@ export const Documentation = () => {
 					<Content>
 						<ScrollContainer>
 							<Padding>
-								<ContentTitle>NANDesis.io Docs</ContentTitle>
+								<ContentTitle>NANDesis Docs</ContentTitle>
 
 								<Section id="boolean-algebra">
 									<h1>1. Algebra Booleana</h1>
@@ -175,7 +175,7 @@ export const Documentation = () => {
 								</Section>
 								<Section id="combinatorial-circuits-nand">
 									<h2>2.1. NAND</h2>
-									<p>A porta NAND é a porta universal inicial do NANDesis.io, essa porta lógica já foi fornecida no simulador e com ela é possível construir todos os componentes necessários para se criar um processador.</p>
+									<p>A porta NAND é a porta universal inicial do NANDesis, essa porta lógica já foi fornecida no simulador e com ela é possível construir todos os componentes necessários para se criar um processador.</p>
 									<p>Seu funcionamento é simples: ela possui duas (ou mais) entradas e uma saída, com o valor da saída sendo representada por “NOT ((entrada A) AND (entrada B))”, ou seja, a saída possui valor falso (0) quando ambas as suas entradas A e B forem verdadeiras (1), e quaisquer outras entradas retornará uma saída verdadeira.</p>
 									<p>É possível representar sua tabela verdade da seguinte forma:</p>
 									<NandTable/>
